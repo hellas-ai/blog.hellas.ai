@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" class="dark:bg-hellas-black bg-hellas-white">
+
+<head>
+  
+  
+  <!-- HTML Meta Tags -->
+  <title>Visualising LLMs with Open Hypergraphs and Catgrad</title>
+  <meta name="description" content="Generate LLM architecture diagrams with open hypergraphs and catgrad.">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <link rel="stylesheet" type="text/css" href="https://blog.hellas.ai/style.css">
+  <link rel="alternate" type="application/atom+xml" title="Hellas Blog Atom Feed" href="https://blog.hellas.ai/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Hellas Blog RSS Feed" href="https://blog.hellas.ai/rss.xml">
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Visualising LLMs with Open Hypergraphs and Catgrad">
+  <meta property="og:description" content="Generate LLM architecture diagrams with open hypergraphs and catgrad.">
+  <meta property="og:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="hellas.ai">
+  <meta property="twitter:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta name="twitter:title" content="Visualising LLMs with Open Hypergraphs and Catgrad">
+  <meta name="twitter:description" content="Generate LLM architecture diagrams with open hypergraphs and catgrad.">
+  <meta name="twitter:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- e.g. for safari tab bar -->
+  <meta name="theme-color" content="#1C1C1C" />
+
+  <!-- MathJax for LaTeX support -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Mobile menu toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+
+</head>
+
+<body class="dark:bg-hellas-black bg-hellas-white dark:text-hellas-white text-hellas-black flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30">
+    <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="flex items-center">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_Black.svg" alt="Hellas" class="h-8 dark:hidden">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 hidden dark:block">
+      </a>
+      <nav class="hidden md:flex space-x-8 font-sans">
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Home</a>
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Blog</a>
+        <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200">Main Site</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobile-menu-button" type="button" class="text-hellas-cool-grey">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+      <!-- Mobile menu, hidden by default -->
+      <div id="mobile-menu" class="hidden fixed top-[70px] right-0 left-0 bg-hellas-white dark:bg-hellas-black border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30 md:hidden">
+        <nav class="container mx-auto px-4 py-4 flex flex-col space-y-4 font-sans">
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Home</a>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Blog</a>
+          <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Main Site</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    
+
+
+
+<article class="py-12">
+  <!-- Post Header -->
+  <header class="mb-8">
+    <h1 class="font-paplane text-7xl mb-4 text-hellas-black dark:text-hellas-white">
+      Visualising LLMs with Open Hypergraphs and Catgrad
+    </h1>
+    <div class="flex items-center text-hellas-cool-grey">
+      <time datetime="2025-06-10">June 10, 2025</time>
+      
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <div class="prose prose-lg dark:prose-invert max-w-3xl mb-12 text-hellas-black dark:text-hellas-white font-sans">
+    <p>Let's visualise some LLM architectures!
+In this blog post, I'll show you how to generate these diagrams
+using
+<a rel="external" href="https://github.com/hellas-ai/open-hypergraphs">open hypergraphs</a>
+and
+<a rel="external" href="https://github.com/hellas-ai/catgrad">catgrad</a>.
+We'll produce three examples, including the attention diagram above and a
+huge SVG of every single op in the Qwen architecture.</p>
+<h2 id="open-hypergraphs">Open Hypergraphs</h2>
+<p>Let's start with
+a simple example -- a residual connection around a linear layer.
+In catgrad, layers and architectures are represented as <em>Open Hypergraphs</em>:
+a datastructure for representing "circuit-like" syntax.
+Here's the code defining our layer:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span style="color: #F97583;">pub fn</span><span style="color: #B392F0;"> residual</span><span>(x</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> Var</span><span>&lt;</span><span style="color: #B392F0;">NdArrayType</span><span>,</span><span style="color: #B392F0;"> Operation</span><span>&gt;)</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> Var</span><span>&lt;</span><span style="color: #B392F0;">NdArrayType</span><span>,</span><span style="color: #B392F0;"> Operation</span><span>&gt; {</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    linear_layer</span><span>(</span><span style="color: #9ECBFF;">&quot;linear&quot;</span><span>, x</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">clone</span><span>())</span><span style="color: #F97583;"> +</span><span> x</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>Under the hood, this constructs an open hypergraph
+which we can visualise with the
+<a rel="external" href="https://docs.rs/open-hypergraphs-dot/">open-hypergraphs-dot</a> library:</p>
+<p><img src="https://blog.hellas.ai/blog/visualising-llms/./residual.svg" alt="residual" /></p>
+<p>Let's break this down:</p>
+<ol>
+<li>Nodes are depicted as black circles ● labeled with an <em>array shape</em> (e.g., <code>[8, 8]</code>).</li>
+<li>Hyperedges are depicted as boxes with multiple inputs and outputs. They correspond to <em>operations</em> like <code>MatrixMultiply</code>.</li>
+<li>Some nodes are designated as inputs and outputs: these are depicted as dashed, open-ended lines.</li>
+</ol>
+<p>Point (3) is why these are <strong>open</strong> hypergraphs, and not just hypergraphs.</p>
+<p>Importantly, <strong>copying is explicit in the hypergraph structure</strong>.
+See the multiple outgoing edges of the top-right node ● which encode the reuse of
+the <code>x</code> variable inside the <code>residual</code> function.
+Aside from being a useful way to visualise variable sharing, representing
+copying explicitly is important to how our
+<a rel="external" href="https://arxiv.org/pdf/2305.01041">ahead-of-time autodiff algorithm</a> works,
+enabling <em>decentralised training</em> on the Hellas Network.<sup class="footnote-reference"><a href="#details">1</a></sup></p>
+<h2 id="attention-please">Attention Please</h2>
+<p>Now let's do a complete, self-contained example: an Attention layer. Here's the code:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="rust"><span class="giallo-l"><span style="color: #F97583;">use</span><span style="color: #B392F0;"> catgrad</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">core</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">nn</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">layers</span><span style="color: #F97583;">::*</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">use</span><span style="color: #B392F0;"> catgrad</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">core</span><span style="color: #F97583;">::</span><span>{</span><span style="color: #B392F0;">Dtype</span><span>,</span><span style="color: #B392F0;"> NdArrayType</span><span>,</span><span style="color: #B392F0;"> Operation</span><span>,</span><span style="color: #B392F0;"> Shape</span><span>};</span></span>
+<span class="giallo-l"><span style="color: #F97583;">use</span><span style="color: #B392F0;"> open_hypergraphs</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">lax</span><span style="color: #F97583;">::</span><span>{</span><span style="color: #B392F0;">OpenHypergraph</span><span>,</span><span style="color: #B392F0;"> functor</span><span style="color: #F97583;">::*</span><span>, var,</span><span style="color: #B392F0;"> var</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Var</span><span>};</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">use</span><span style="color: #B392F0;"> std</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">cell</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">RefCell</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">use</span><span style="color: #B392F0;"> std</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">rc</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Rc</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">// 1. Create an OpenHypergraph for Gemma&#39;s attention layer,</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">// 2. Turn explicit copy operations into *nodes* in the hypergraph</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">// 3. Save as an SVG.</span></span>
+<span class="giallo-l"><span style="color: #F97583;">pub fn</span><span style="color: #B392F0;"> main</span><span>()</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> std</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">io</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Result</span><span>&lt;()&gt; {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> arrow</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> attention_arrow</span><span>();</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> arrow</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> var</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">forget</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Forget</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">map_arrow</span><span>(</span><span style="color: #F97583;">&amp;</span><span>arrow);</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    save_svg</span><span>(</span><span style="color: #F97583;">&amp;</span><span>arrow,</span><span style="color: #9ECBFF;"> &quot;images/attention.svg&quot;</span><span>)</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">pub fn</span><span style="color: #B392F0;"> attention</span><span>(</span></span>
+<span class="giallo-l"><span>    builder</span><span style="color: #F97583;">: &amp;</span><span style="color: #B392F0;">Rc</span><span>&lt;</span><span style="color: #B392F0;">RefCell</span><span>&lt;</span><span style="color: #B392F0;">OpenHypergraph</span><span>&lt;</span><span style="color: #B392F0;">NdArrayType</span><span>,</span><span style="color: #B392F0;"> Operation</span><span>&gt;&gt;&gt;,</span></span>
+<span class="giallo-l"><span>    dim</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> usize</span><span>,</span></span>
+<span class="giallo-l"><span>    name</span><span style="color: #F97583;">: &amp;</span><span style="color: #B392F0;">str</span><span>,</span></span>
+<span class="giallo-l"><span>    x</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> Var</span><span>&lt;</span><span style="color: #B392F0;">NdArrayType</span><span>,</span><span style="color: #B392F0;"> Operation</span><span>&gt;,</span></span>
+<span class="giallo-l"><span>)</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> Var</span><span>&lt;</span><span style="color: #B392F0;">NdArrayType</span><span>,</span><span style="color: #B392F0;"> Operation</span><span>&gt; {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> num_heads</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 4</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> head_dim</span><span style="color: #F97583;"> =</span><span> dim</span><span style="color: #F97583;"> /</span><span> num_heads;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> b</span><span style="color: #F97583;"> =</span><span> x</span><span style="color: #F97583;">.</span><span>label</span><span style="color: #F97583;">.</span><span>shape</span><span style="color: #F97583;">.</span><span style="color: #79B8FF;">0</span><span>[</span><span style="color: #79B8FF;">0</span><span>];</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> s</span><span style="color: #F97583;"> =</span><span> x</span><span style="color: #F97583;">.</span><span>label</span><span style="color: #F97583;">.</span><span>shape</span><span style="color: #F97583;">.</span><span style="color: #79B8FF;">0</span><span>[</span><span style="color: #79B8FF;">1</span><span>];</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> k</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> linear</span><span>(builder, dim, dim,</span><span style="color: #F97583;"> &amp;</span><span style="color: #B392F0;">format!</span><span>(</span><span style="color: #9ECBFF;">&quot;{name}.key&quot;</span><span>), x</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">clone</span><span>());</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> q</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> linear</span><span>(builder, dim, dim,</span><span style="color: #F97583;"> &amp;</span><span style="color: #B392F0;">format!</span><span>(</span><span style="color: #9ECBFF;">&quot;{name}.query&quot;</span><span>), x</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">clone</span><span>());</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> v</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> linear</span><span>(builder, dim, dim,</span><span style="color: #F97583;"> &amp;</span><span style="color: #B392F0;">format!</span><span>(</span><span style="color: #9ECBFF;">&quot;{name}.value&quot;</span><span>), x);</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> q</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> reshape</span><span>(builder,</span><span style="color: #B392F0;"> Shape</span><span>(</span><span style="color: #B392F0;">vec!</span><span>[b, s, num_heads, head_dim]), q);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> k</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> reshape</span><span>(builder,</span><span style="color: #B392F0;"> Shape</span><span>(</span><span style="color: #B392F0;">vec!</span><span>[b, s, num_heads, head_dim]), k);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> v</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> reshape</span><span>(builder,</span><span style="color: #B392F0;"> Shape</span><span>(</span><span style="color: #B392F0;">vec!</span><span>[b, s, num_heads, head_dim]), v);</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> q</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> transpose</span><span>(builder,</span><span style="color: #79B8FF;"> 1</span><span>,</span><span style="color: #79B8FF;"> 2</span><span>, q);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> k</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> transpose</span><span>(builder,</span><span style="color: #79B8FF;"> 1</span><span>,</span><span style="color: #79B8FF;"> 2</span><span>, k);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> v</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> transpose</span><span>(builder,</span><span style="color: #79B8FF;"> 1</span><span>,</span><span style="color: #79B8FF;"> 2</span><span>, v);</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> tk</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> transpose</span><span>(builder,</span><span style="color: #79B8FF;"> 2</span><span>,</span><span style="color: #79B8FF;"> 3</span><span>, k);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> attn</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> mat_mul</span><span>(builder, q, tk);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> denom</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> constant</span><span>(builder, attn</span><span style="color: #F97583;">.</span><span>label</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">clone</span><span>(),</span><span style="color: #B392F0;"> f32</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">sqrt</span><span>(head_dim</span><span style="color: #F97583;"> as</span><span style="color: #B392F0;"> f32</span><span>));</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> attn</span><span style="color: #F97583;"> =</span><span> attn</span><span style="color: #F97583;"> /</span><span> denom;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> attn</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> softmax</span><span>(builder, attn);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> attn</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> mat_mul</span><span>(builder, attn, v);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> x</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> transpose</span><span>(builder,</span><span style="color: #79B8FF;"> 1</span><span>,</span><span style="color: #79B8FF;"> 2</span><span>, attn);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> x</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> reshape</span><span>(builder,</span><span style="color: #B392F0;"> Shape</span><span>(</span><span style="color: #B392F0;">vec!</span><span>[b, s, dim]), x);</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    linear</span><span>(builder, dim, dim,</span><span style="color: #F97583;"> &amp;</span><span style="color: #B392F0;">format!</span><span>(</span><span style="color: #9ECBFF;">&quot;{name}.proj&quot;</span><span>), x)</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">// Build the open hypergraph by creating a Var and calling the attention function</span></span>
+<span class="giallo-l"><span style="color: #F97583;">fn</span><span style="color: #B392F0;"> attention_arrow</span><span>()</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> OpenHypergraph</span><span>&lt;</span><span style="color: #B392F0;">NdArrayType</span><span>,</span><span style="color: #B392F0;"> Operation</span><span>&gt; {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> dim</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 8</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> name</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;attention&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    var</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">build</span><span>(</span><span style="color: #F97583;">|</span><span>state</span><span style="color: #F97583;">|</span><span> {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">        let</span><span> x</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> Var</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">new</span><span>(</span></span>
+<span class="giallo-l"><span>            state</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">clone</span><span>(),</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">            NdArrayType</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">new</span><span>(</span><span style="color: #B392F0;">Shape</span><span>(</span><span style="color: #B392F0;">vec!</span><span>[</span><span style="color: #79B8FF;">1</span><span>,</span><span style="color: #79B8FF;"> 1</span><span>,</span><span style="color: #79B8FF;"> 8</span><span>]),</span><span style="color: #B392F0;"> Dtype</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">F32</span><span>),</span></span>
+<span class="giallo-l"><span>        );</span></span>
+<span class="giallo-l"><span style="color: #F97583;">        let</span><span> y</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> attention</span><span>(</span><span style="color: #F97583;">&amp;</span><span>state, dim, name, x</span><span style="color: #F97583;">.</span><span style="color: #B392F0;">clone</span><span>());</span></span>
+<span class="giallo-l"><span>        (</span><span style="color: #B392F0;">vec!</span><span>[x],</span><span style="color: #B392F0;"> vec!</span><span>[y])</span></span>
+<span class="giallo-l"><span>    })</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    .</span><span style="color: #B392F0;">unwrap</span><span>()</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">use</span><span style="color: #B392F0;"> graphviz_rust</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">cmd</span><span style="color: #F97583;">::</span><span>{</span><span style="color: #B392F0;">CommandArg</span><span>,</span><span style="color: #B392F0;"> Format</span><span>};</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">// Render an OpenHypergraph to an SVG using `open-hypergraphs-dot`</span></span>
+<span class="giallo-l"><span style="color: #F97583;">fn</span><span style="color: #B392F0;"> save_svg</span><span>(arrow</span><span style="color: #F97583;">: &amp;</span><span style="color: #B392F0;">OpenHypergraph</span><span>&lt;</span><span style="color: #B392F0;">NdArrayType</span><span>,</span><span style="color: #B392F0;"> Operation</span><span>&gt;, filename</span><span style="color: #F97583;">: &amp;</span><span style="color: #B392F0;">str</span><span>)</span><span style="color: #F97583;"> -&gt;</span><span style="color: #B392F0;"> std</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">io</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Result</span><span>&lt;()&gt; {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> dot_graph</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> open_hypergraphs_dot</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">generate_dot</span><span>(arrow);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span><span> png_bytes</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> graphviz_rust</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">exec</span><span>(</span></span>
+<span class="giallo-l"><span>        dot_graph,</span></span>
+<span class="giallo-l"><span style="color: #F97583;">        &amp;mut</span><span style="color: #B392F0;"> graphviz_rust</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">printer</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">PrinterContext</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">default</span><span>(),</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">        vec!</span><span>[</span><span style="color: #B392F0;">CommandArg</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Format</span><span>(</span><span style="color: #B392F0;">Format</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">Svg</span><span>)],</span></span>
+<span class="giallo-l"><span>    )</span><span style="color: #F97583;">?</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    std</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">fs</span><span style="color: #F97583;">::</span><span style="color: #B392F0;">write</span><span>(filename, png_bytes)</span><span style="color: #F97583;">?</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #B392F0;">    Ok</span><span>(())</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>This produces the following diagram:</p>
+<p><img src="https://blog.hellas.ai/blog/visualising-llms/./attention.svg" alt="Attention diagram" /></p>
+<p>See <a rel="external" href="https://github.com/statusfailed/visualising-llms-diagrams">here</a> for a github repo with both examples.</p>
+<h2 id="bonus-qwen3-0-6b">Bonus: Qwen3-0.6B</h2>
+<p>To conclude, you can download the whole
+<a rel="external" href="https://huggingface.co/Qwen/Qwen3-0.6B">Qwen3-0.6B</a> architecture as a diagram
+<a href="https://blog.hellas.ai/blog/visualising-llms/./qwen.svg">here</a>.
+I haven't included it on this page because it's 7MB!</p>
+<p>The qwen code is more complex, spread across multiple functions in <a rel="external" href="https://github.com/hellas-ai/catgrad">catgrad</a>,
+so to reproduce this diagram, see the code <a rel="external" href="https://github.com/statusfailed/catgrad-rs/tree/model-svg-demo">on this branch</a>,
+and run:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>cargo run --release --example llm -- -m Qwen/Qwen3-0.6B -p &quot;Catgrad is &quot; -s 10 --model-svg qwen.svg</span></span></code></pre>
+<p>Finally, I want to emphasize that open hypergraphs are a <em>general</em>
+datastructure for syntax, not just for neural networks and catgrad.
+Any kind of "circuit-like" term is a natural fit: from actual circuits to the
+kind of boxes-and-wires visual languages used in game engines.</p>
+<p>If you have an idea for how you could use open hypergraphs and you want some help with the library,
+hop in <a rel="external" href="https://discord.gg/qHqZyuAa3u">our discord</a> and let us know!</p>
+<div class="footnote-definition" id="details"><sup class="footnote-definition-label">1</sup>
+<p>For further reading about open hypergraphs for (differentiable) syntax,
+you should know that the diagrams produced here are called
+<a rel="external" href="https://en.wikipedia.org/wiki/String_diagram">string diagrams</a>,
+a formal graphical syntax for
+<a rel="external" href="https://en.wikipedia.org/wiki/Symmetric_monoidal_category">Symmetric Monoidal Categories</a> (SMCs).
+"Open Hypergraphs" (aka cospans of hypergraphs) <em>formally</em> correspond to arrows
+of SMCs, and our <a rel="external" href="https://arxiv.org/pdf/2305.01041">autodiff algorithm</a>
+is built on this correspondence this to implement <a rel="external" href="https://arxiv.org/pdf/1910.07065">Reverse
+Derivatives</a> for AoT autodiff.</p>
+</div>
+
+  </div>
+
+  
+  
+  <nav class="flex justify-between max-w-3xl border-t border-hellas-cool-grey/20 pt-8 mt-12 font-sans">
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;three-solutions-to-nondeterminism-in-ai&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+        ← Three Solutions to Nondeterminism in AI
+      </a>
+    
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;hellas-gate&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline text-right">
+        Announcing Hellas Gate →
+      </a>
+    
+  </nav>
+  
+
+  <!-- Post Footer -->
+  
+  
+  
+  <div class="border-t border-hellas-cool-grey/20 pt-8 mt-8 max-w-3xl">
+    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="inline-flex items-center text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+      </svg>
+      Back
+    </a>
+  </div>
+</article>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-hellas-black text-hellas-white py-12 border-t border-hellas-cool-grey/20">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 mb-4">
+          <p class="text-hellas-cool-grey mb-4 font-sans">Powering limitless intelligence</p>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Links</h3>
+          <ul class="space-y-2 font-sans">
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="hover:text-hellas-yellow transition duration-200">Home</a></li>
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="hover:text-hellas-yellow transition duration-200">Blog</a></li>
+            <li><a href="https://hellas.ai" class="hover:text-hellas-yellow transition duration-200">Main Site</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="https://twitter.com/hellasdotai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-twitter-white.svg" alt="Twitter" class="h-6 w-6">
+            </a>
+            <a href="https://discord.gg/qHqZyuAa3u" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+
+              <img src="https://blog.hellas.ai/socials/socials-discord-white.svg" alt="Discord" class="h-6 w-6">
+            </a>
+            <a href="https://t.me/hellasai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-telegram-white.svg" alt="Telegram" class="h-6 w-6">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-hellas-cool-grey/20 mt-8 pt-8 text-hellas-cool-grey text-sm font-sans">
+        <p>© 2026 Hellas.ai — All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

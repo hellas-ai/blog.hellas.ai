@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" class="dark:bg-hellas-black bg-hellas-white">
+
+<head>
+  
+  
+  <!-- HTML Meta Tags -->
+  <title>AD&amp;#x2F;FA57: Apple&amp;#x27;s RDMA-over-Thunderbolt</title>
+  <meta name="description" content="">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <link rel="stylesheet" type="text/css" href="https://blog.hellas.ai/style.css">
+  <link rel="alternate" type="application/atom+xml" title="Hellas Blog Atom Feed" href="https://blog.hellas.ai/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Hellas Blog RSS Feed" href="https://blog.hellas.ai/rss.xml">
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AD&amp;#x2F;FA57: Apple&amp;#x27;s RDMA-over-Thunderbolt">
+  <meta property="og:description" content="">
+  <meta property="og:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="hellas.ai">
+  <meta property="twitter:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta name="twitter:title" content="AD&amp;#x2F;FA57: Apple&amp;#x27;s RDMA-over-Thunderbolt">
+  <meta name="twitter:description" content="">
+  <meta name="twitter:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- e.g. for safari tab bar -->
+  <meta name="theme-color" content="#1C1C1C" />
+
+  <!-- MathJax for LaTeX support -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Mobile menu toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+
+</head>
+
+<body class="dark:bg-hellas-black bg-hellas-white dark:text-hellas-white text-hellas-black flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30">
+    <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="flex items-center">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_Black.svg" alt="Hellas" class="h-8 dark:hidden">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 hidden dark:block">
+      </a>
+      <nav class="hidden md:flex space-x-8 font-sans">
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Home</a>
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Blog</a>
+        <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200">Main Site</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobile-menu-button" type="button" class="text-hellas-cool-grey">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+      <!-- Mobile menu, hidden by default -->
+      <div id="mobile-menu" class="hidden fixed top-[70px] right-0 left-0 bg-hellas-white dark:bg-hellas-black border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30 md:hidden">
+        <nav class="container mx-auto px-4 py-4 flex flex-col space-y-4 font-sans">
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Home</a>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Blog</a>
+          <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Main Site</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    
+
+
+
+<article class="py-12">
+  <!-- Post Header -->
+  <header class="mb-8">
+    <h1 class="font-paplane text-7xl mb-4 text-hellas-black dark:text-hellas-white"><span class="text-hellas-cool-grey">Bonus Round I:</span>
+      AD&#x2F;FA57: Apple&#x27;s RDMA-over-Thunderbolt
+    </h1>
+    <div class="flex items-center text-hellas-cool-grey">
+      
+      
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <div class="prose prose-lg dark:prose-invert max-w-3xl mb-12 text-hellas-black dark:text-hellas-white font-sans">
+    <p>I had initially assumed that the MacOS RDMA implementation described in <a rel="external" href="https://developer.apple.com/documentation/technotes/tn3205-low-latency-communication-with-rdma-over-thunderbolt">TN3205</a> required some special hardware support in the Thunderbolt controller to achieve 'true' RDMA (hopefully I explained elsewhere that our implementation is "Soft DMA"- even if we're woken on interrupts and only copy DMA descriptors with the CPU, it's orders of magnitude higher latency than an ASIC could achieve). Feeling emboldened from our ~48 Gb/s / ~7 µs headline from our aggregated Linux↔Linux rails, I went looking for what sort of latency Apple was claiming for their implementation and came across <a rel="external" href="https://www.adwaitx.com/apple-tn3205-rdma-over-thunderbolt-low-latency-mac/">a writeup that pegs it at sub-50 µs</a> — hold on a second, our single-QP <code>ib_write_lat</code> already comes in around 7 µs on the same generation of controller, ~7× better. Could it be that there's no special magic in the Apple Thunderbolt controller (I recall seeing Designware somewhere — that's a common IP vendor and similar blocks likely end up in non-Apple USB4 controllers) and Apple's implementation is just running the same kind of software path we are, only less aggressively tuned? I'm curious..</p>
+<p><img src="../strixstrixmac.jpeg" alt="two Strix Halo mini-PCs and a MacBook connected over Thunderbolt" /></p>
+<p>There's a special dance you have to do on MacOS to enable the RDMA protocol — boot into macOS Recovery, open Terminal, run <code>rdma_ctl enable</code>, and reboot (<a rel="external" href="https://developer.apple.com/documentation/technotes/tn3205-low-latency-communication-with-rdma-over-thunderbolt">per TN3205's "Enabling RDMA over Thunderbolt" section</a>). Given the frequency of kernel lockups during testing, I can only assume enabling this functionality gives any adversary at the other end of the thunderbolt cable (or in the middle!) unfettered access to the most secure rings of your OS and owns you immediately. If I didn't mention already, this also applies to our Linux module.</p>
+<p>After enabling this setting and rebooting I connected my M4 Max 128 GB MacBook (I know.. I use it for <code>mlx-lm</code> and <code>GMeet</code>) via 2 of its 3 TB5 Ports to each strix machine and observed the XDomain advertisement:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>$ ssh strix-1 &#39;sudo journalctl -k -b -o short --no-pager | grep -E &quot;Apple Inc|apple data path|apple ib_device&quot;&#39;</span></span>
+<span class="giallo-l"><span>May 26 03:28:49 strix-1 kernel: thunderbolt 0-2: Apple Inc. Mac16,5</span></span>
+<span class="giallo-l"><span>May 26 03:28:49 strix-1 kernel: thunderbolt_ibverbs: peer 3 created backend=apple</span></span>
+<span class="giallo-l"><span>May 26 03:28:49 strix-1 kernel: thunderbolt_ibverbs: deferring Apple data path service id=1 route=0x2 until TBnet neighbor is proven</span></span>
+<span class="giallo-l"><span>May 26 03:30:04 strix-1 kernel: thunderbolt_ibverbs: enabled Apple data path service route=0x2 tx_path=9 rx_path=9 tx_hop=2 rx_hop=2</span></span>
+<span class="giallo-l"><span>May 26 03:30:04 strix-1 kernel: thunderbolt_ibverbs: registered apple ib_device usb4_rdma4 rail=peer3/0 domain=0 guid=0300544259524253</span></span></code></pre>
+<p><code>Mac16,5</code> is the M4 Max MacBook Pro 16"; our <code>thunderbolt_ibverbs</code> module sees its XDomain advertisement land as <code>peer 3 backend=apple</code>, waits for the matching TBnet identity beacon, then enables the Apple data-path service on hop 2 and registers a fifth <code>usb4_rdma*</code> IB device alongside the four peer-to-peer Strix rails.</p>
+<p>aside: I also tested this on my venerable MacBook Air M1 and despite performing the same dance, no AD/FA57 advertisement. I think this is probably related to Apple's claim that this implementation requires TB5, but at this point I don't really understand why.</p>
+<p>Interesting — it advertises an XDomain service called AD/FA57 (the one described in the TN document) and the LOGIN dance seems to be already handled for us by thunderbolt-net. At this point we should remember that the USB4NET protocol, which <code>thunderbolt-net</code> implements, is in fact the same protocol Apple has used to implement its TB networking since the Thunderbolt 1/2 era on Intel Macs — it's now an open protocol that anyone can implement. Perhaps we can expect AD/FA57 to be similarly welcoming?</p>
+<p>Well- no.</p>
+<p>I spent a few cycles on this, frustrated by the following things:</p>
+<ul>
+<li>Bringing up and configuring the Thunderbolt interfaces requires root privileges and thus a sudo password. I think I lasted maybe 2 rounds of 'please run these commands for me with sudo' before surrendering my Mac to password-less sudo.</li>
+<li>Kernel locks up A LOT, and after the machine reboots it requires the password to be physically entered before unlocking the root FS — I don't think it can be done remotely. I wasn't quite ready to disable FileVault since I use this machine for GMeet, so over the past few weeks I've got pretty quick at hearing its startup chimes and logging in again.</li>
+<li>Something is different in our controller regarding E2E flow control. I went down a lot of rabbit holes with this; my current understanding is something like: on the Apple TB controller, you can open many Tx/Rx pairs and enable E2E flow control on each individual pair and the controller will share the underlying physical capacity between them. But when we try to do this on our Strix Halo controller, it bugs out — only one E2E RX ring can be active per direction; whichever ring carries active traffic finds its TX wedged because the controller doesn't return credits for the second E2E ring.</li>
+</ul>
+<p>On the MacOS side, the RDMA interface seems to go into some sort of 'low power' state, where instead of it's usual fast-path (polling?) receive path where we see very good (~5us) latency for basic UC verbs, at some point you fall into this timer where events get coalesced every 5s and so even after battering out a compatible frame protocol, the higher-level collectives like JACCL end up hanging and requiring a tear-down of the device (if not a kernel panic..).</p>
+<p>To try to get more angles on this, I tried to think of other devices I had with USB4, for differential diagnosis.</p>
+<p>My <a rel="external" href="https://www.init7.net/en/internet/fiber7/">Init7 25 GbE residential fibre</a> needs a headless Linux router to terminate, running nixos of course! The board I'm using is based on the previous generation of AMD APU — 8845HS.</p>
+<blockquote>
+<p>ChangWang CWWK AMD-8845HS 8-bay NAS/USB4/40G rate 8K display 4 network 2.5G/9 SATA/PCIe x16 ITX motherboard</p>
+</blockquote>
+<p><img src="../whole-rig.jpeg" alt="the 8845HS router box on my home rack, USB4 cable visible" /></p>
+<p>When I connected <em>this</em> device to my MacBook, suddenly I started having a lot more luck — the 8845HS's USB4 controller (Phoenix2 NHI) succeeds where Strix Halo's doesn't. With some minimal changes to <code>perftest</code>, I was able to run a suite of tests via the mac↔router link.</p>
+<p>aside: the Strix Halo NHI has a structural one-E2E-RX-ring limit — loading <code>thunderbolt_net</code> + <code>thunderbolt_ibverbs</code> together leaves the second E2E ring's TX-side credit returns dropped on the floor, and whichever ring carries the active traffic wedges its TX direction (zero MSI-X, descriptors never consumed). Falcon Ridge's <code>QUIRK_E2E</code> workaround doesn't transpose to AMD silicon. So Strix Halo ↔ M4 Max RDMA works, but only with <code>thunderbolt_net</code> unloaded so <code>thunderbolt_ibverbs</code> is the sole E2E ring; I used the 8845HS box for the bench numbers here because that constraint doesn't bite there.</p>
+<p>Despite all those gaps, the soft-DMA approach gets us far enough to do real verbs work across the cable — at least when the Linux side is the router box.</p>
+<h2 id="what-works">What works</h2>
+<p>As of 2026-05-28, on the <code>router</code> ↔ MacBook Pro pair, single-QP UC SEND lands <strong>bit-perfect</strong> in both directions — the receiver's MR pages compare byte-for-byte against the sender's deterministic pattern via <code>uc_oneway --check</code> (the TCP side channel only carries a one-byte handshake, so bytes have to land via DMA into the registered region):</p>
+<table><thead><tr><th>direction</th><th>wire rate (4 KiB / qps 1)</th><th>round-trip @ 4 KiB</th></tr></thead><tbody>
+<tr><td>mbp → router</td><td>6.5 Gb/s</td><td>~10 µs</td></tr>
+<tr><td>router → mbp</td><td>1.8 Gb/s</td><td>~10 µs</td></tr>
+</tbody></table>
+<p>The direction asymmetry isn't fundamental — our Linux TX path currently caps itself at <code>apple_tx_max_inflight_wr=1, apple_tx_max_inflight_frames=2</code>, a conservative leftover from an earlier Apple-side overflow fix. Lifting that ceiling should recover most of the missing throughput on the slow direction.</p>
+<h3 id="raw-verb-throughput">Raw verb throughput</h3>
+<p>A caveat before the numbers: every bandwidth figure here (and perftest's) is computed as <code>messages × size / (last CQE time − first WR post time)</code>. On Apple's UC path the CQE fires when the descriptor leaves the SQ ring, well before the bytes are delivered to the peer. With deep inflight that gap opens up and the headline number runs ahead of actual wire throughput — the table above (qps 1) is close to wire-rate because each WR is essentially waited on; the deep-inflight numbers below are not. On a single 2-lane TB cable the wire ceiling is 40 Gb/s aggregate, so anything ≥40 Gb/s is by definition the CQE-fire artifact.</p>
+<p>Sweeping inflight depth on top of the single-QP case, the Mac→Linux direction's CQE-fire rate reaches <strong>~28 Gb/s on 16 KiB messages</strong> once you let a few sends queue up; Linux→Mac plateaus around 5-6 Gb/s no matter how deep we go (same TX-window cap as above):</p>
+<p><img src="../bench/collectives/apple-rdma-2026-05-25-router-mbp-rebase/uc_send_bw.svg" alt="Mac ↔ Linux single-QP UC SEND throughput, by direction and inflight depth" /></p>
+<h3 id="ping-pong-latency">Ping-pong latency</h3>
+<p>Median round-trip lands at ~10 µs at small payloads in both directions, climbing to ~60 µs at 16 KiB. p99 stays close to the median on Mac→Linux, but Linux→Mac shows a long tail in the tens of milliseconds — consistent with Apple's receive path occasionally falling into its coalesced low-power state and waking late:</p>
+<p><img src="../bench/collectives/apple-rdma-2026-05-25-router-mbp-rebase/uc_lat.svg" alt="Mac ↔ Linux single-QP UC ping-pong latency, by direction (median and p99)" /></p>
+<h3 id="collective-jaccl-all-reduce">Collective: JACCL all-reduce</h3>
+<p>JACCL <code>all-reduce</code> runs end-to-end across the same path in both rank orderings, 4 KiB → 4 MiB, with bus bandwidth tracking close to the underlying UC SEND ceiling for the larger payloads:</p>
+<p><img src="../bench/collectives/apple-rdma-2026-05-25-router-mbp-rebase/jaccl_allreduce_bw.svg" alt="JACCL all-reduce bus bandwidth, by payload size and rank-0 layout" /></p>
+<h3 id="real-workload-distributed-llm-inference">Real workload: distributed LLM inference</h3>
+<p>MLX-LM distributed inference of Qwen2-0.5B-Instruct-4bit across Mac and Linux ranks holds a steady ~9 output tok/s through prompt 256 / generated 128 in both layouts, falling off at the 512/256 point — a "real workload survives the path" sanity check rather than a throughput headline:</p>
+<p><img src="../bench/collectives/apple-rdma-2026-05-25-router-mbp-rebase/mlx_lm_inference.svg" alt="MLX-LM distributed inference output tok/s, by prompt size and rank-0 layout" /></p>
+<h2 id="what-still-doesn-t">What still doesn't</h2>
+<ul>
+<li><strong>Anything other than UC SEND.</strong> Apple's <code>rdma_en*</code> exposes UC only — RC, UD, and READ all fail at <code>modify_qp</code> with <code>-ENOTSUPP</code>. UC WRITE looks like it works — <code>perftest ib_write_bw</code> mbp→strix reports tens of Gb/s — but Apple's wire format for UC WRITE is raw user bytes with no BTH/GRH/LRH, no <code>rkey</code>, no <code>raddr</code>. So while frames <em>arrive</em> and get consumed by our RX path, there's nothing on the wire to dispatch into the WR's target MR; the bytes stream into a single per-QP receive buffer instead of the address the sender named. <code>uc_write_verify</code> confirms the receiver MR is unchanged. Linux→Mac WRITE rejects at the TX side (<code>tbv_post_apple_send</code> returns <code>-EOPNOTSUPP</code> for anything but <code>IB_WR_SEND</code>).</li>
+</ul>
+<p><em>This <code>apple_rdma</code> work is a clean-room implementation based on public observation of Apple's Thunderbolt traffic and the publicly-documented Apple <a rel="external" href="https://developer.apple.com/documentation/technotes/tn3205-low-latency-communication-with-rdma-over-thunderbolt">TN3205</a> technote.  No Apple source code was used.</em></p>
+
+  </div>
+
+  
+  
+  <nav class="flex justify-between max-w-3xl border-t border-hellas-cool-grey/20 pt-8 mt-12 font-sans">
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;5-closing&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+        ← Closing
+      </a>
+    
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;7-triforce&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline text-right">
+        Left to the reader: Triforce →
+      </a>
+    
+  </nav>
+  
+
+  <!-- Post Footer -->
+  
+  
+  
+  <div class="border-t border-hellas-cool-grey/20 pt-8 mt-8 max-w-3xl">
+    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;" class="inline-flex items-center text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+      </svg>
+      Back
+    </a>
+  </div>
+</article>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-hellas-black text-hellas-white py-12 border-t border-hellas-cool-grey/20">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 mb-4">
+          <p class="text-hellas-cool-grey mb-4 font-sans">Powering limitless intelligence</p>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Links</h3>
+          <ul class="space-y-2 font-sans">
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="hover:text-hellas-yellow transition duration-200">Home</a></li>
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="hover:text-hellas-yellow transition duration-200">Blog</a></li>
+            <li><a href="https://hellas.ai" class="hover:text-hellas-yellow transition duration-200">Main Site</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="https://twitter.com/hellasdotai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-twitter-white.svg" alt="Twitter" class="h-6 w-6">
+            </a>
+            <a href="https://discord.gg/qHqZyuAa3u" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+
+              <img src="https://blog.hellas.ai/socials/socials-discord-white.svg" alt="Discord" class="h-6 w-6">
+            </a>
+            <a href="https://t.me/hellasai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-telegram-white.svg" alt="Telegram" class="h-6 w-6">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-hellas-cool-grey/20 mt-8 pt-8 text-hellas-cool-grey text-sm font-sans">
+        <p>© 2026 Hellas.ai — All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

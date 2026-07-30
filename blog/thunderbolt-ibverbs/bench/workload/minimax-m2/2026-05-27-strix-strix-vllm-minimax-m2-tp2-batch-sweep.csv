@@ -1,0 +1,9 @@
+run_id,model,transport,workload,iommu,max_num_seqs,max_num_batched_tokens,num_requests,elapsed_s,requests_per_s,tokens_per_s
+20260527T160218Z,ayysasha/MiniMax-M2.7-AWQ-G32-STRIX-2H,tbnet,random64x128,off,1,4096,16,206.45,0.0775,14.88
+20260527T161042Z,ayysasha/MiniMax-M2.7-AWQ-G32-STRIX-2H,tbnet,random64x128,off,2,8192,16,142.11,0.1126,21.62
+20260527T161720Z,ayysasha/MiniMax-M2.7-AWQ-G32-STRIX-2H,tbnet,random64x128,off,4,16384,16,96.36,0.1661,31.90
+20260527T162226Z,ayysasha/MiniMax-M2.7-AWQ-G32-STRIX-2H,tbnet,random64x128,off,8,20480,32,131.97,0.2425,46.57
+20260527T163912Z,ayysasha/MiniMax-M2.7-AWQ-G32-STRIX-2H,rdma-4hca,random64x128,off,1,4096,16,158.79,0.1008,19.35
+20260527T164504Z,ayysasha/MiniMax-M2.7-AWQ-G32-STRIX-2H,rdma-4hca,random64x128,off,2,8192,16,119.07,0.1344,25.82
+20260527T165028Z,ayysasha/MiniMax-M2.7-AWQ-G32-STRIX-2H,rdma-4hca,random64x128,off,4,16384,16,86.36,0.1853,35.60
+20260527T165602Z,ayysasha/MiniMax-M2.7-AWQ-G32-STRIX-2H,rdma-4hca,random64x128,off,8,20480,32,125.13,0.2557,49.13

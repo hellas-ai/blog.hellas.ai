@@ -1,0 +1,78 @@
+<svg height="40" viewBox="-0.25 -0.25 6.5 2.5" width="104" xmlns="http://www.w3.org/2000/svg">
+<style>
+svg { color-scheme: light dark; } .spider { color: #111; } .drawable { color: #111; } .spider text, .drawable text { fill: currentColor !important; } .spider path, .spider line, .spider rect, .spider circle, .spider ellipse, .spider polyline, .spider polygon, .drawable path, .drawable line, .drawable rect, .drawable circle, .drawable ellipse, .drawable polyline, .drawable polygon { stroke: currentColor !important; } @media (prefers-color-scheme: dark) { .spider, .drawable { color: #f5f5f5; } }
+</style>
+<g>
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 2)"/>
+</g>
+<g transform="translate(0, 2)"/>
+</g>
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 0)">
+<g class="drawable gate-f">
+  <path d="M 0 1 L 0.7 1" fill="none" stroke="black" stroke-width="0.05"/>
+  <rect x="0.7" y="0.2" width="1.6" height="1.6" rx="0.16" ry="0.16" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 2.3 1 L 3 1" fill="none" stroke="black" stroke-width="0.05"/>
+  <text x="1.5" y="1.16" text-anchor="middle" font-size="0.42">f</text>
+</g>
+
+</g>
+</g>
+<g transform="translate(0, 2)"/>
+</g>
+<g transform="translate(0, 2)"/>
+</g>
+</g>
+<g transform="translate(3, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 2)"/>
+</g>
+<g transform="translate(0, 2)"/>
+</g>
+</g>
+<g transform="translate(3, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 0)">
+<g class="drawable gate-g">
+  <path d="M 0 1 L 0.7 1" fill="none" stroke="black" stroke-width="0.05"/>
+  <rect x="0.7" y="0.2" width="1.6" height="1.6" rx="0.16" ry="0.16" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 2.3 1 L 3 1" fill="none" stroke="black" stroke-width="0.05"/>
+  <text x="1.5" y="1.16" text-anchor="middle" font-size="0.42">g</text>
+</g>
+
+</g>
+</g>
+<g transform="translate(0, 2)"/>
+</g>
+<g transform="translate(0, 2)"/>
+</g>
+</g>
+<g transform="translate(6, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 2)"/>
+</g>
+<g transform="translate(0, 2)"/>
+</g>
+</g>
+<style>
+
+.tp-cli-label { fill: #111; }
+@media (prefers-color-scheme: dark) {
+  .tp-cli-label { fill: #f5f5f5; }
+}
+
+</style>
+</svg>

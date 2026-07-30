@@ -1,0 +1,24 @@
+copying 0 paths...
+copying 0 paths...
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== allsum linux0-mac1 via 192.168.23.1:30020 ==
+-- mac output (linux0-mac1 rank 1) --
+rank 1/2 backend=jaccl MLX_RANK=1 device=Device(cpu, 0) dtype=float32
+rank 1 warmup OK
+rank 1 size=4096 OK
+-- linux output (linux0-mac1 rank 0) --
+rank 0/2 backend=jaccl MLX_RANK=0 device=Device(cpu, 0) dtype=float32
+rank 0 warmup OK
+rank 0 size=4096 OK
+tbnet_identity_arp_errors: 0
+data_rx_no_recv: 0
+data_rx_copy_error: 0
+data_rx_reorder_dropped: 0
+data_cq_overflow: 0
+PASS: Apple/macOS MLX distributed JACCL smoke completed

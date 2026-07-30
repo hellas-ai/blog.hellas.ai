@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" class="dark:bg-hellas-black bg-hellas-white">
+
+<head>
+  
+  
+  <!-- HTML Meta Tags -->
+  <title>Scaling</title>
+  <meta name="description" content="">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <link rel="stylesheet" type="text/css" href="https://blog.hellas.ai/style.css">
+  <link rel="alternate" type="application/atom+xml" title="Hellas Blog Atom Feed" href="https://blog.hellas.ai/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Hellas Blog RSS Feed" href="https://blog.hellas.ai/rss.xml">
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Scaling">
+  <meta property="og:description" content="">
+  <meta property="og:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="hellas.ai">
+  <meta property="twitter:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta name="twitter:title" content="Scaling">
+  <meta name="twitter:description" content="">
+  <meta name="twitter:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- e.g. for safari tab bar -->
+  <meta name="theme-color" content="#1C1C1C" />
+
+  <!-- MathJax for LaTeX support -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Mobile menu toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+
+</head>
+
+<body class="dark:bg-hellas-black bg-hellas-white dark:text-hellas-white text-hellas-black flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30">
+    <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="flex items-center">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_Black.svg" alt="Hellas" class="h-8 dark:hidden">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 hidden dark:block">
+      </a>
+      <nav class="hidden md:flex space-x-8 font-sans">
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Home</a>
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Blog</a>
+        <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200">Main Site</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobile-menu-button" type="button" class="text-hellas-cool-grey">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+      <!-- Mobile menu, hidden by default -->
+      <div id="mobile-menu" class="hidden fixed top-[70px] right-0 left-0 bg-hellas-white dark:bg-hellas-black border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30 md:hidden">
+        <nav class="container mx-auto px-4 py-4 flex flex-col space-y-4 font-sans">
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Home</a>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Blog</a>
+          <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Main Site</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    
+
+
+
+<article class="py-12">
+  <!-- Post Header -->
+  <header class="mb-8">
+    <h1 class="font-paplane text-7xl mb-4 text-hellas-black dark:text-hellas-white"><span class="text-hellas-cool-grey">II.</span>
+      
+      Scaling
+    </h1>
+    <div class="flex items-center text-hellas-cool-grey">
+      
+      
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <div class="prose prose-lg dark:prose-invert max-w-3xl mb-12 text-hellas-black dark:text-hellas-white font-sans">
+    <p>Models larger than 128GB are getting into the 'almost useful' category- if we found a way to combine multiple of these devices together like we did our 3090s, we could run large commercial-grade models- in the range of 100b-500b parameters like DeepSeek, GLM, MiniMax, Qwen, etc, which are too big to fit on a single device. I can just add up the total bandwidth of all my memory channels to see how fast I'll be able to generate tokens?</p>
+<p>Well.. no. Broadly speaking, LLM inference is a sequential process- we must know the token output of the previous step in order to start generating the next one. There are various different approaches to splitting inference across multiple devices, but the one that's most interesting to our 'split a large model across several devices' use case is tensor parallelism: a single model layer's computation is split across devices, so each device computes a shard of the same operation and the partial results are combined before the model can continue. Since each device is working in parallel, we might hope two machines go twice as fast, four machines go four times as fast, and so on?</p>
+<p>Well.. no. Exchanging these partial results across the network quickly becomes the bottleneck. To see why, we need to decompose our initial statement, asking for "fast memory"-
+"fast" can mean two things:</p>
+<ul>
+<li><em>Low latency</em> — how long do i have to wait to fetch a single item? Unit: time, usually seconds or microseconds.</li>
+<li><em>High Bandwidth</em> — how many items per second can I fetch in total? Unit: items per second, usually bytes/s or tokens/s.</li>
+</ul>
+<p>This is different from pipeline parallelism, where different layers live on different devices and activations move from stage to stage. For tensor parallelism, we need both bandwidth and latency: if a core is spending too much time waiting for data, we won't get good performance; if a core is stuck because it can't send data fast enough, or receive confirmation that it was received, we won't get good performance. So let's go back and look at our options for networking:</p>
+<table><thead><tr><th>Platform</th><th>Network</th><th>Bandwidth</th><th>Latency</th></tr></thead><tbody>
+<tr><td>DGX Spark</td><td>ConnectX-7 NIC</td><td>2 × 200 Gb/s</td><td>~1 µs</td></tr>
+<tr><td>MacBook / Studio / Mini</td><td>Thunderbolt 4/5</td><td>4 × 80 Gb/s</td><td>"memory access latency from ~300 µs over TCP to &lt;50 µs" (per Apple's TN3205)</td></tr>
+<tr><td>Strix Halo</td><td>2.5 GbE</td><td>2.5 Gb/s</td><td>~1 ms</td></tr>
+</tbody></table>
+<p>(Some Strix Halo boards do ship a 10 GbE port instead, but I believe it costs you PCIe lanes elsewhere on the board.)</p>
+<p>Uh-oh- our champion seems to be falling pretty short on the networking front! Let's check out the competition:</p>
+<h2 id="networking-nvidia-gb-10">Networking: NVidia GB-10</h2>
+<p>The DGX Spark (NVidia's GB-10 reference design) contains a high-end ConnectX-7 NIC with 2x 200 Gb/s (*) QSFP cages. This is the "Gold Standard" of low-latency, high-bandwidth networking- the same hardware used in million-dollar data center deployments. Outside of the GB10 system, this nic costs ~$1000- a lot of budget to spend if you don't need it, and if you do, better plan on buying some expensive enterprise-grade network switches to connect it. Since it uses the same software stack as in their data center deployments, there's an existing ecosystem of tools and libraries.</p>
+<p><img src="../dgx-spark-rack.png" alt="DGX Spark units cabled together with QSFP 200 GbE" />
+<em>Still from ServeTheHome's <a rel="external" href="https://www.youtube.com/watch?v=uYepcMoqvKQ">I built an 8x NVIDIA GB10 cluster for massive Local AI</a>.</em></p>
+<p>For scale: ServeTheHome's full 8-node GB10 cluster — pictured above — lands around <strong>~$45,000</strong>, of which <strong>~$32k is the eight Sparks themselves</strong> ($3,999 × 8). The networking is surprisingly cheap thanks to MikroTik's $1,295 4-port 400 GbE switch (CRS804 DDQ, broken out to 16× 200 G); a Cisco 10 GbE management switch and a QNAP U.2 NVMe NAS round out most of the rest. A more modest 2-node build still runs ~$10k. (Full BOM in the <a rel="external" href="https://www.servethehome.com/big-cluster-little-power-the-8x-nvidia-gb10-cluster-marvell-cisco-ubiquiti-qnap-arm/">STH article</a>.)</p>
+<p>Demand for low-latency/high-bandwidth networking has broadly converged around the set of verbs defined by the InfiniBand protocol, and a mechanism called 'kernel bypass' that allows applications to bypass the kernel and directly access the hardware in question, without having to call into kernel code.</p>
+<p><em>Although the NIC itself is capable of these speeds, it's connected to the SoC via PCIe 5.0 x8, capping it at 256Gbps across both channels, less in practice</em></p>
+<h2 id="networking-apple">Networking: Apple</h2>
+<p>Apple's consumer-focused hardware takes a different approach and instead rely on Thunderbolt for high-speed networking. Thunderbolt 5 standard allows up to 80Gbps full duplex per cable, and higher-end Mac devices have up to 6 Thunderbolt 5 ports, in theory allowing for up to 480Gbps aggregate bandwidth. MacOS has supported IP-over-Thunderbolt for some time, and TN3205 was shipped with macOS 26.2 support for RDMA over Thunderbolt via their own JACCL library, with the explicit goal of allowing users to run distributed inference via their MLX library.</p>
+<p><img src="../mac-cluster.png" alt="Four Mac Studios stacked in a custom rack, wired together with Thunderbolt 5 cables" />
+<em>Still from Alex Ziskind's <a rel="external" href="https://www.youtube.com/watch?v=d8yS-2OyJhw">Mac Studio CLUSTER vs M3 Ultra</a> (Apr 2025).</em></p>
+<p>The pictured cluster is <strong>4× Mac Studio M3 Ultra with 512 GB unified memory each</strong> — about <strong>$9,500/unit × 4 = ~$38,000</strong>, plus a handful of Thunderbolt 5 cables (~$100 each) and a hand-built aluminium rack. Total ≈ <strong>$40k</strong> for 2 TB of unified memory across the cluster — comparable money to the 8× DGX Spark build above, with 2× the aggregate memory but capped to macOS-only software (MLX, JACCL, etc.). A more modest 2-node M4 Max cluster (128 GB each, no Thunderbolt switch) is ~$8k.</p>
+<h2 id="networking-strix-halo">Networking: Strix Halo</h2>
+<p>AMD's Strix Halo platform generally feature a single 2.5GbE Ethernet port, a couple of 40G USB4 ports and a handful of USB3 ports.</p>
+<h3 id="oculink">OcuLink</h3>
+<p>The "FEVM FAE9" boxes I bought also have an "OcuLink port", which is none other than a short cable which connects the 42-pin OcuLink socket on the rear of the case to one of the internal M.2 slots.</p>
+<p><img src="../oculink.jpeg" alt="OcuLink port wired to an internal M.2 slot inside the FEVM FAE9" /></p>
+<p>You can use this to connect faster network card- <a rel="external" href="https://github.com/kyuz0/amd-strix-halo-vllm-toolboxes/blob/main/rdma_cluster/setup_guide.md">e.g 100GbE ConnectX-4 NICs</a>- though you'll need adaptors and extenders so it fails the grandma test.</p>
+<h3 id="usb4">USB4</h3>
+<p>So we're left with the USB4 ports. USB4 is the open standard Thunderbolt 4 is built on- same 40Gbps per cable, tunneling, etc- we should be able to use these like Apple does?  I bought two of these machines was with this in mind- naively assuming 2x 40Gbps per cable = 80Gbps aggregate bandwidth, PCIe-level latency.  The reality was.. disappointing.</p>
+<h3 id="out-of-the-box-with-linux">Out-of-the-box with linux</h3>
+<p>The first thing I did after installing <a rel="external" href="https://github.com/elitak/nixos-infect"><code>nixos-infect</code></a>'ing both machines was to connect the USB4 ports together:</p>
+<p><img src="../strix-strix.jpeg" alt="two Strix Halo mini-PCs (strix-1, strix-2) connected by USB4" /></p>
+<h4 id="thunderbolt">thunderbolt</h4>
+<p>The Linux kernel module <code>thunderbolt</code> loads automatically, and brings up the links:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    $</span><span style="color: #9ECBFF;"> sudo dmesg</span><span style="color: #79B8FF;"> -w</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> grep</span><span style="color: #9ECBFF;"> thunderbolt</span></span>
+<span class="giallo-l"><span>    [39137.389121]</span><span style="color: #B392F0;"> thunderbolt</span><span style="color: #9ECBFF;"> 1-0:2.1: new retimer found, vendor=</span><span style="color: #79B8FF;">0x1da0</span><span style="color: #9ECBFF;"> device=</span><span style="color: #79B8FF;">0x8830</span></span>
+<span class="giallo-l"><span>    [39137.900851]</span><span style="color: #B392F0;"> thunderbolt</span><span style="color: #9ECBFF;"> 1-0:2.2: new retimer found, vendor=</span><span style="color: #79B8FF;">0x1da0</span><span style="color: #9ECBFF;"> device=</span><span style="color: #79B8FF;">0x8830</span></span>
+<span class="giallo-l"><span>    [39143.759914]</span><span style="color: #B392F0;"> thunderbolt</span><span style="color: #9ECBFF;"> 1-2: new host found, vendor=</span><span style="color: #79B8FF;">0x1d6b</span><span style="color: #9ECBFF;"> device=</span><span style="color: #79B8FF;">0x4</span></span>
+<span class="giallo-l"><span>    [39143.759925]</span><span style="color: #B392F0;"> thunderbolt</span><span style="color: #9ECBFF;"> 1-2: Linux strix-2</span></span></code></pre>
+<p>As with all Linux drivers, it exposes functionality, configuration, and telemetry via sysfs entries:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    ❯</span><span style="color: #9ECBFF;"> for d in /sys/bus/thunderbolt/devices/?-?</span><span>;</span><span style="color: #F97583;"> do</span><span> [</span><span style="color: #F97583;"> -f</span><span> $d/tx_speed ]</span><span style="color: #F97583;"> || continue</span><span>; </span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">        echo</span><span style="color: #9ECBFF;"> &quot;$(</span><span style="color: #B392F0;">basename</span><span> $d</span><span style="color: #9ECBFF;">) $(</span><span style="color: #F97583;">&lt;</span><span>$d</span><span style="color: #9ECBFF;">/device_name) tx=$(</span><span style="color: #F97583;">&lt;</span><span>$d</span><span style="color: #9ECBFF;">/tx_speed)x$(</span><span style="color: #F97583;">&lt;</span><span>$d</span><span style="color: #9ECBFF;">/tx_lanes) rx=$(</span><span style="color: #F97583;">&lt;</span><span>$d</span><span style="color: #9ECBFF;">/rx_speed)x$(</span><span style="color: #F97583;">&lt;</span><span>$d</span><span style="color: #9ECBFF;">/rx_lanes)&quot;</span><span>; </span></span>
+<span class="giallo-l"><span style="color: #F97583;">      done</span><span>  </span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    0-2</span><span style="color: #9ECBFF;"> strix-2 tx=</span><span style="color: #79B8FF;">20.0</span><span style="color: #9ECBFF;"> Gb/sx2 rx=</span><span style="color: #79B8FF;">20.0</span><span style="color: #9ECBFF;"> Gb/sx2</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    1-2</span><span style="color: #9ECBFF;"> strix-2 tx=</span><span style="color: #79B8FF;">20.0</span><span style="color: #9ECBFF;"> Gb/sx2 rx=</span><span style="color: #79B8FF;">10.0</span><span style="color: #9ECBFF;"> Gb/sx2</span></span></code></pre>
+<p>Hm- it sees both cables, but one of them has only trained at 10.0 Gb/s. This happens constantly and I should have put a 'check links are trained at 40g' gate in my testing much earlier than I did- but for reasons we'll discover later- doesn't actually matter that much. For now, lets just unplug and re-plug the cable- what also took me much longer to realise than it should- <em>both</em> ends of the cable need to be re-plugged to trigger re-training- leaving one end plugged in will result in the link coming up at 10.0 Gb/s. After replugging both ends, we're up and running with two cables, each with two tx/rx lanes at 20 Gb/s each.</p>
+<h4 id="thunderbolt-net">thunderbolt-net</h4>
+<p>Now we can load the <code>thunderbolt-net</code> kernel module- another linux kernel module which provides <code>thunderbolt0</code>- standard network interface tunnelling traffic over the wire- as would a regular Ethernet or WiFi interface (<code>eth0</code>, <code>wlan0</code>, etc.)</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    $</span><span style="color: #9ECBFF;"> sudo modprobe thunderbolt-net</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    $</span><span style="color: #9ECBFF;"> sudo ip link set thunderbolt0 mtu</span><span style="color: #79B8FF;"> 65520</span><span style="color: #9ECBFF;"> up</span><span> &amp;&amp;</span><span style="color: #B392F0;"> sudo</span><span style="color: #9ECBFF;"> ip addr replace 10.0.5.2/24 dev thunderbolt0</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ❯</span><span style="color: #9ECBFF;"> sudo dmesg</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> grep</span><span style="color: #9ECBFF;"> thunderbolt0</span></span>
+<span class="giallo-l"><span>    [  317.019918]</span><span style="color: #B392F0;"> thunderbolt-net</span><span style="color: #9ECBFF;"> 1-2.0 thunderbolt0: entered promiscuous mode</span></span></code></pre>
+<p>Great- we have a new network interface, <code>thunderbolt0</code>! Let's inspect it using <code>ethtool</code>:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    ❯</span><span style="color: #9ECBFF;"> sudo ethtool thunderbolt0</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    Settings</span><span style="color: #9ECBFF;"> for thunderbolt0:</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	Supported</span><span style="color: #9ECBFF;"> ports:</span><span> [</span><span style="color: #9ECBFF;">  ]</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	Supported</span><span style="color: #9ECBFF;"> link modes:   Not reported</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	Supported</span><span style="color: #9ECBFF;"> pause frame use: No</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	Supports</span><span style="color: #9ECBFF;"> auto-negotiation: No</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	Supported</span><span style="color: #9ECBFF;"> FEC modes: Not reported</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	Advertised</span><span style="color: #9ECBFF;"> link modes:  Not reported</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	Advertised</span><span style="color: #9ECBFF;"> pause frame use: No</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	Advertised</span><span style="color: #9ECBFF;"> auto-negotiation: No</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	Advertised</span><span style="color: #9ECBFF;"> FEC modes: Not reported</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	Speed:</span><span style="color: #9ECBFF;"> 40000Mb/s</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	Duplex:</span><span style="color: #9ECBFF;"> Full</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	Auto-negotiation:</span><span style="color: #9ECBFF;"> off</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	Port:</span><span style="color: #9ECBFF;"> Other</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	PHYAD:</span><span style="color: #79B8FF;"> 0</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">   	Transceiver:</span><span style="color: #9ECBFF;"> internal</span></span></code></pre>
+<p>So far, so good- 40Gb/s full duplex- although notice two things:</p>
+<ul>
+<li>
+<p>No FEC modes</p>
+<p><em>Forward Error Correction</em> is where the data transmitted across a physical link with 'spare' information, such that the receiver is able to correct any errors which may have occured during transmission without requiring a re-transmit.</p>
+</li>
+<li>
+<p>Pause frames are not supported</p>
+<p><em>Pause frames</em> are a mechanism to signal backpressure- if a sender is overwhelming a receiver, they can ask the sender to slow down.</p>
+</li>
+</ul>
+<p>Let's fire up <code>iperf3</code> and see how it performs:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>❯ iperf -c 10.0.5.2 -t 3</span></span>
+<span class="giallo-l"><span>Connecting to host 10.0.5.2, port 5201</span></span>
+<span class="giallo-l"><span>[  5] local 10.0.5.1 port 50810 connected to 10.0.5.2 port 5201</span></span>
+<span class="giallo-l"><span>[ ID] Interval           Transfer     Bitrate         Retr  Cwnd</span></span>
+<span class="giallo-l"><span>[  5]   0.00-1.00   sec  1.06 GBytes  9.12 Gbits/sec    0   1.06 MBytes       </span></span>
+<span class="giallo-l"><span>[  5]   1.00-2.00   sec  1.10 GBytes  9.43 Gbits/sec    0   2.75 MBytes       </span></span>
+<span class="giallo-l"><span>[  5]   2.00-3.00   sec  1.10 GBytes  9.46 Gbits/sec    0   2.87 MBytes       </span></span>
+<span class="giallo-l"><span>- - - - - - - - - - - - - - - - - - - - - - - - -</span></span>
+<span class="giallo-l"><span>[ ID] Interval           Transfer     Bitrate         Retr</span></span>
+<span class="giallo-l"><span>[  5]   0.00-3.00   sec  3.26 GBytes  9.34 Gbits/sec    0            sender</span></span>
+<span class="giallo-l"><span>[  5]   0.00-3.00   sec  3.26 GBytes  9.33 Gbits/sec                  receiver</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>iperf Done.</span></span></code></pre>
+<p>Well- it works! And certainly faster than Ethernet! But why only 9.45 Gbits/sec? After using computers for some time, you start to see "suspicous numbers". "9.45 Gbits/sec" is a suspicious number- after accounting for protocol overhead, this is likely the usable throughput on a 10 G link. Remembering that our cable carries two lanes of data, perhaps we need multiple streams to use the full bandwidth? Let's try again with 8 parallel streams:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>❯ iperf -c 10.0.5.2 -t 3 -P 4</span></span>
+<span class="giallo-l"><span>Connecting to host 10.0.5.2, port 5201</span></span>
+<span class="giallo-l"><span>...</span></span>
+<span class="giallo-l"><span>[ ID] Interval           Transfer     Bitrate         Retr</span></span>
+<span class="giallo-l"><span>[  5]   0.00-3.00   sec   850 MBytes  2.37 Gbits/sec    0            sender</span></span>
+<span class="giallo-l"><span>[  5]   0.00-3.00   sec   847 MBytes  2.37 Gbits/sec                  receiver</span></span>
+<span class="giallo-l"><span>[  7]   0.00-3.00   sec   851 MBytes  2.38 Gbits/sec    0            sender</span></span>
+<span class="giallo-l"><span>[  7]   0.00-3.00   sec   848 MBytes  2.37 Gbits/sec                  receiver</span></span>
+<span class="giallo-l"><span>[  9]   0.00-3.00   sec   851 MBytes  2.38 Gbits/sec    0            sender</span></span>
+<span class="giallo-l"><span>[  9]   0.00-3.00   sec   848 MBytes  2.37 Gbits/sec                  receiver</span></span>
+<span class="giallo-l"><span>[ 11]   0.00-3.00   sec   850 MBytes  2.37 Gbits/sec    0            sender</span></span>
+<span class="giallo-l"><span>[ 11]   0.00-3.00   sec   847 MBytes  2.37 Gbits/sec                  receiver</span></span>
+<span class="giallo-l"><span>[SUM]   0.00-3.00   sec  3.32 GBytes  9.51 Gbits/sec    0             sender</span></span>
+<span class="giallo-l"><span>[SUM]   0.00-3.00   sec  3.31 GBytes  9.47 Gbits/sec                  receiver</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>iperf Done.</span></span></code></pre>
+<p>Nope- still blocked. What about in multiple directions? Let's add the <code>--bidir</code> flag:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>❯ iperf -c 10.0.5.2 -t 3 --bidir</span></span>
+<span class="giallo-l"><span>Connecting to host 10.0.5.2, port 5201</span></span>
+<span class="giallo-l"><span>[  5] local 10.0.5.1 port 43080 connected to 10.0.5.2 port 5201</span></span>
+<span class="giallo-l"><span>[  7] local 10.0.5.1 port 43084 connected to 10.0.5.2 port 5201</span></span>
+<span class="giallo-l"><span>[ ID][Role] Interval           Transfer     Bitrate         Retr  Cwnd</span></span>
+<span class="giallo-l"><span>[  5][TX-C]   0.00-1.00   sec   528 MBytes  4.42 Gbits/sec   25   4.31 MBytes       </span></span>
+<span class="giallo-l"><span>[  7][RX-C]   0.00-1.00   sec   317 MBytes  2.65 Gbits/sec                  </span></span>
+<span class="giallo-l"><span>[  5][TX-C]   1.00-2.00   sec   483 MBytes  4.05 Gbits/sec   27   4.31 MBytes       </span></span>
+<span class="giallo-l"><span>[  7][RX-C]   1.00-2.00   sec   267 MBytes  2.24 Gbits/sec                  </span></span>
+<span class="giallo-l"><span>[  5][TX-C]   2.00-3.00   sec   481 MBytes  4.03 Gbits/sec   28   4.31 MBytes       </span></span>
+<span class="giallo-l"><span>[  7][RX-C]   2.00-3.00   sec   273 MBytes  2.29 Gbits/sec                  </span></span>
+<span class="giallo-l"><span>- - - - - - - - - - - - - - - - - - - - - - - - -</span></span>
+<span class="giallo-l"><span>[ ID][Role] Interval           Transfer     Bitrate         Retr</span></span>
+<span class="giallo-l"><span>[  5][TX-C]   0.00-3.00   sec  1.46 GBytes  4.17 Gbits/sec   80            sender</span></span>
+<span class="giallo-l"><span>[  5][TX-C]   0.00-3.00   sec  1.46 GBytes  4.17 Gbits/sec                  receiver</span></span>
+<span class="giallo-l"><span>[  7][RX-C]   0.00-3.00   sec   860 MBytes  2.40 Gbits/sec    0            sender</span></span>
+<span class="giallo-l"><span>[  7][RX-C]   0.00-3.00   sec   856 MBytes  2.39 Gbits/sec                  receiver</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>iperf Done.</span></span></code></pre>
+<p>With bidirectional streams, our throughput has completely collapsed! We're down to 4.17 Gbit/s in one direction and 2.39 Gbit/s in the other, with lots of re-transmits. This is barely better than our 2.5G ethernet!</p>
+<p>After continuing to poke around, eventually the interface stopped passing traffic. No error, no resets, just no traffic.  I repeated this experiment a few times with the same results- less than 1/4 of expected speed and eventually interface locks up.  I dutifully reported my negative findings to the <a rel="external" href="https://strixhalo.wiki/">strix-halo discord</a> and confirmed others had the same issue and kinda forgot about it until a couple of weeks ago.</p>
+
+  </div>
+
+  
+  
+  <nav class="flex justify-between max-w-3xl border-t border-hellas-cool-grey/20 pt-8 mt-12 font-sans">
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;1-background&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+        ← Background
+      </a>
+    
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;3-agentic-harness&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline text-right">
+        A New Hope: Agentic Harnesses →
+      </a>
+    
+  </nav>
+  
+
+  <!-- Post Footer -->
+  
+  
+  
+  <div class="border-t border-hellas-cool-grey/20 pt-8 mt-8 max-w-3xl">
+    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;" class="inline-flex items-center text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+      </svg>
+      Back
+    </a>
+  </div>
+</article>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-hellas-black text-hellas-white py-12 border-t border-hellas-cool-grey/20">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 mb-4">
+          <p class="text-hellas-cool-grey mb-4 font-sans">Powering limitless intelligence</p>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Links</h3>
+          <ul class="space-y-2 font-sans">
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="hover:text-hellas-yellow transition duration-200">Home</a></li>
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="hover:text-hellas-yellow transition duration-200">Blog</a></li>
+            <li><a href="https://hellas.ai" class="hover:text-hellas-yellow transition duration-200">Main Site</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="https://twitter.com/hellasdotai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-twitter-white.svg" alt="Twitter" class="h-6 w-6">
+            </a>
+            <a href="https://discord.gg/qHqZyuAa3u" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+
+              <img src="https://blog.hellas.ai/socials/socials-discord-white.svg" alt="Discord" class="h-6 w-6">
+            </a>
+            <a href="https://t.me/hellasai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-telegram-white.svg" alt="Telegram" class="h-6 w-6">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-hellas-cool-grey/20 mt-8 pt-8 text-hellas-cool-grey text-sm font-sans">
+        <p>© 2026 Hellas.ai — All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

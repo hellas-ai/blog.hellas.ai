@@ -1,0 +1,403 @@
+copying 0 paths...
+copying 0 paths...
+== linux module load cycle 1/1 ==
+peer 1 backend=apple rails=1
+  rail=0x0 route=0x2 local=0 remote=0 path=64087 link_speed=20Gb/s link_width=0x2 active=1 data_ready=1 state=tunnel_enabled negotiated=0 ready_sent=0 remote_ready=0 attempts=0 last_error=0 local_out=9 local_tx=2 local_rx=2 remote_rail=0x0 remote_out=-1 remote_tx=-1 remote_rx=-1
+    data_tx_enqueued=0 data_tx_posted=0 data_tx_completed=0 data_tx_credit_stalls=0 data_tx_credit_received=0 tx_credits=0/0
+    path_cfg tx_flags=0x2 rx_flags=0x6 e2e=1 wire_flags=0x3 tx_ring=1024 rx_ring=1024 sof_mask=0x2 eof_mask=0xc
+    data_rx_completed=0 data_rx_credit_sent=0 data_rx_credit_send_error=0 data_rx_repost_failed=0 rx_credit_pending=0
+hca_id:	usb4_rdma4
+	transport:			InfiniBand (0)
+	node_guid:			0300:5442:5752:4253
+	sys_image_guid:			0300:5442:5752:4253
+	vendor_id:			0x1d6b
+	vendor_part_id:			21570
+	hw_ver:				0x1
+	phys_port_cnt:			1
+	max_mr_size:			0xffffffffffffffff
+	page_size_cap:			0x40201000
+	max_qp:				1
+	max_qp_wr:			1024
+	device_cap_flags:		0x00000020
+					CHANGE_PHY_PORT
+	max_sge:			4
+	max_sge_rd:			4
+	max_cq:				256
+	max_cqe:			4096
+	max_mr:				1024
+	max_pd:				256
+	max_qp_rd_atom:			0
+	max_ee_rd_atom:			0
+	max_res_rd_atom:		0
+	max_qp_init_rd_atom:		0
+	max_ee_init_rd_atom:		0
+	atomic_cap:			ATOMIC_NONE (0)
+	max_ee:				0
+	max_rdd:			0
+	max_mw:				0
+	max_raw_ipv6_qp:		0
+	max_raw_ethy_qp:		0
+	max_mcast_grp:			0
+	max_mcast_qp_attach:		0
+	max_total_mcast_qp_attach:	0
+	max_ah:				0
+	max_fmr:			0
+	max_srq:			0
+	max_pkeys:			1
+	local_ca_ack_delay:		15
+	general_odp_caps:
+	rc_odp_caps:
+					NO SUPPORT
+	uc_odp_caps:
+					NO SUPPORT
+	ud_odp_caps:
+					NO SUPPORT
+	xrc_odp_caps:
+					NO SUPPORT
+	completion_timestamp_mask not supported
+	core clock not supported
+	device_cap_flags_ex:		0x20
+	tso_caps:
+		max_tso:			0
+	rss_caps:
+		max_rwq_indirection_tables:			0
+		max_rwq_indirection_table_size:			0
+		rx_hash_function:				0x0
+		rx_hash_fields_mask:				0x0
+	max_wq_type_rq:			0
+	packet_pacing_caps:
+		qp_rate_limit_min:	0kbps
+		qp_rate_limit_max:	0kbps
+	tag matching not supported
+	num_comp_vectors:		16
+		port:	1
+			state:			PORT_ACTIVE (4)
+			max_mtu:		4096 (5)
+			active_mtu:		4096 (5)
+			sm_lid:			0
+			port_lid:		0
+			port_lmc:		0x00
+			link_layer:		Ethernet
+			max_msg_sz:		0x1000000
+			port_cap_flags:		0x00000000
+			port_cap_flags2:	0x0000
+			max_vl_num:		1 (1)
+			bad_pkey_cntr:		0x0
+			qkey_viol_cntr:		0x0
+			sm_sl:			0
+			pkey_tbl_len:		1
+			gid_tbl_len:		8
+			subnet_timeout:		0
+			init_type_reply:	0
+			active_width:		4X (2)
+			active_speed:		10.0 Gbps (8)
+			phys_state:		LINK_UP (5)
+			GID[  0]:		fe80::5835:18ff:fedb:8d52, RoCE v2
+			GID[  1]:		::ffff:10.0.3.44, RoCE v2
+
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+			state:			PORT_ACTIVE (4)
+			GID[  0]:		fe80::3426:afff:fe6d:6208
+			GID[  1]:		::ffff:10.0.3.3
+== mac0-linux1 barrier ==
+-- mac output (rank 0) --
+rank 0 entering barrier
+rank 0 exited barrier
+rank 0: post-barrier all_sum OK (3)
+-- linux output (rank 1) --
+[jaccl] Connection attempt 0 waiting 1000 ms
+rank 1 entering barrier
+rank 1 exited barrier
+rank 1: post-barrier all_sum OK (3)
+== mac0-linux1 allreduce ==
+-- mac output (rank 0) --
+# JACCL All-Reduce Benchmark
+# Ranks:   2
+# Dtype:   float32
+# Warmup:  0 iters
+# Timed:   1 iters
+# Sizes:   4 KB .. 4 MB (x2)
+# Barrier between sizes: no
+#
+#    size            count        type     time (us)       algo BW        bus BW     check
+#   (bytes)        (elems)                                  (GB/s)        (GB/s)          
+4096                  1024     float32       11116.5          0.00          0.00        OK
+8192                  2048     float32        3732.2          0.00          0.00        OK
+16384                 4096     float32        3003.2          0.01          0.01        OK
+libc++abi: terminating due to uncaught exception of type std::runtime_error: [jaccl] Recv failed with errno=2
+-- linux output (rank 1) --
+[jaccl] Connection attempt 0 waiting 1000 ms
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+-- linux thunderbolt_ibverbs summary --
+profile: mac_compat
+native_enabled: 0
+apple_enabled: 1
+rc_supported: 0
+uc_supported: 1
+native_control: off
+native_same_peer_multicable: off
+native_legacy_ambiguous_limited: 0
+tbnet_identity: stock_proxy
+tbnet_identity_state: 0x7
+tbnet_identity_tbnet: thunderbolt0
+tbnet_identity_gid: ardma0
+tbnet_identity_proxy_ipv4: 10.0.3.44
+tbnet_identity_minimal_e2e: 0
+tbnet_identity_minimal_apple_only: 1
+tbnet_identity_minimal_neighbor_seen: 0
+tbnet_identity_rx_handler: 1
+tbnet_identity_minimal_started: 0
+tbnet_identity_minimal_login_rx: 0
+tbnet_identity_minimal_login_tx: 0
+tbnet_identity_minimal_logout_rx: 0
+tbnet_identity_minimal_logout_tx: 0
+tbnet_identity_minimal_status_rx: 0
+tbnet_identity_minimal_status_tx: 0
+tbnet_identity_minimal_packet_rx: 0
+tbnet_identity_minimal_packet_tx_posted: 0
+tbnet_identity_minimal_packet_tx: 0
+tbnet_identity_minimal_packet_tx_errors: 0
+tbnet_identity_minimal_path_errors: 0
+tbnet_identity_arp_requests: 1
+tbnet_identity_arp_replies: 1
+tbnet_identity_arp_ignored: 1
+tbnet_identity_arp_errors: 0
+tbnet_policy: allow
+native_service_count: 0
+apple_service_registered: 1
+services_registered: 1
+allocate_rings: 1
+start_rings: 1
+negotiate_native: 0
+enable_tunnels: 1
+apple_tunnels_wait_tbnet: 0
+apple_tunnels_pending: 0
+native_data: 1
+apple_data: 1
+native_fragment_striping: 0
+register_verbs: 1
+verbs_registered: 1
+verbs_ucontexts: 0
+verbs_pds: 0
+verbs_cqs: 0
+verbs_qps: 0
+verbs_mrs: 0
+verbs_recv_wqes: 0
+data_wr_send: 9
+data_wr_op_send: 9
+data_wr_op_send_imm: 0
+data_wr_op_write: 0
+data_wr_op_write_imm: 0
+data_wr_op_unsupported: 0
+data_wr_live: 0
+data_wr_no_path: 0
+data_wr_no_recv_credit: 0
+data_wr_copied: 9
+data_wr_zcopy: 0
+data_wr_zcopy_fallback: 0
+data_wr_zcopy_fallback_striping: 0
+data_wr_zcopy_fallback_unsafe_sge: 0
+data_wr_copy_error: 0
+data_wr_path_send: 24
+data_wr_path_send_error: 0
+data_wr_timeout: 0
+apple_sq_queued: 9
+apple_sq_dequeued: 9
+apple_sq_full: 0
+apple_sq_flushed: 0
+data_tx_accepted: 9
+data_tx_posted: 24
+data_tx_completed: 24
+data_tx_canceled: 0
+data_tx_errors: 0
+data_tx_credit_stalls: 0
+data_tx_credit_received: 0
+data_rx_completed: 21
+data_rx_credit_sent: 0
+data_rx_credit_send_error: 0
+data_rx_repost_failed: 0
+data_rx_bad_frame: 0
+data_rx_bad_header: 0
+data_rx_send: 8
+data_rx_op_send: 8
+data_rx_op_send_imm: 0
+data_rx_op_write: 0
+data_rx_op_write_imm: 0
+data_rx_ack: 0
+data_tx_read_ack_ok: 0
+data_tx_read_ack_retry: 0
+data_tx_read_ack_error: 0
+data_rx_read_ack_ok: 0
+data_rx_read_ack_retry: 0
+data_rx_read_ack_error: 0
+data_read_resp_retransmit: 0
+data_read_resp_drop: 0
+data_rx_read_resp_duplicate: 0
+data_rx_read_resp_gap: 0
+data_rx_read_resp_remote_error: 0
+data_rx_read_resp_bad_header: 0
+data_rx_read_resp_copy_error: 0
+data_rx_read_resp_short: 0
+data_rx_read_req_no_access: 0
+data_rx_read_req_no_mr: 0
+data_rx_read_req_mr_access: 0
+data_rx_read_req_too_large: 0
+data_rx_read_req_bad_iova: 0
+data_rx_read_req_alloc_error: 0
+data_rx_read_req_resp_busy: 0
+data_rx_read_req_resp_error: 0
+data_rx_no_qp: 0
+data_rx_bad_peer: 0
+data_rx_unconnected_qp: 0
+data_rx_qp_error: 0
+data_rx_no_recv: 0
+data_rx_copy_error: 0
+data_rx_active_timeout: 0
+data_rx_reorder_buffered: 0
+data_rx_reorder_delivered: 0
+data_rx_reorder_dropped: 0
+data_rx_reorder_timeout: 0
+data_rx_reorder_window: 0
+data_rx_pending_discarded: 0
+apple_rx_sof: 21
+apple_rx_eof3: 8
+apple_rx_eof_other: 13
+apple_rx_sof_while_active: 12
+apple_rx_no_sof_when_idle: 0
+apple_rx_eof_without_active: 0
+apple_rx_len_overrun: 0
+data_cq_overflow: 0
+-- linux thunderbolt_ibverbs peers --
+peer 1 backend=apple rails=1
+  rail=0x0 route=0x2 local=0 remote=0 path=64087 link_speed=20Gb/s link_width=0x2 active=1 data_ready=1 state=tunnel_enabled negotiated=0 ready_sent=0 remote_ready=0 attempts=0 last_error=0 local_out=9 local_tx=2 local_rx=2 remote_rail=0x0 remote_out=-1 remote_tx=-1 remote_rx=-1
+    data_tx_enqueued=24 data_tx_posted=24 data_tx_completed=24 data_tx_credit_stalls=0 data_tx_credit_received=0 tx_credits=0/0
+    path_cfg tx_flags=0x2 rx_flags=0x6 e2e=1 wire_flags=0x3 tx_ring=1024 rx_ring=1024 sof_mask=0x2 eof_mask=0xc
+    data_rx_completed=21 data_rx_credit_sent=0 data_rx_credit_send_error=0 data_rx_repost_failed=0 rx_credit_pending=0
+-- linux dmesg tail --
+[272059.729381] thunderbolt_ibverbs: unregistered per-rail ib_device peer=1 rail=0
+[272059.730459] thunderbolt_ibverbs: peer 1 destroyed backend=apple
+[272059.730532] thunderbolt_ibverbs: unloaded
+[272059.813375] thunderbolt_ibverbs: armed TBnet ARP proxy on thunderbolt0 for 10.0.3.44 via ardma0
+[272059.813399] thunderbolt_ibverbs: TBnet identity uses stock ThunderboltIP with RDMA GID proxying tbnet=thunderbolt0 gid=ardma0
+[272059.813406] thunderbolt_ibverbs: backend apple-fa57 rc=0 uc=1 tbnet_identity=1
+[272059.813407] thunderbolt_ibverbs: core ready profile=mac_compat rc=0 uc=1
+[272059.813448] thunderbolt_ibverbs: peer 1 created backend=apple
+[272059.815084] thunderbolt_ibverbs: allocated rings service id=1 native_lane=0 tx_hop=2 rx_hop=2 out_hop=9
+[272059.815344] thunderbolt_ibverbs: started rings service id=1 native_lane=0 tx_hop=2 rx_hop=2
+[272059.815426] thunderbolt_ibverbs: enabled Apple data path service route=0x2 tx_path=9 rx_path=9 tx_hop=2 rx_hop=2
+[272059.815427] thunderbolt_ibverbs: bound apple service id=1 key=\xff\xff\xff\xff\xff\xffAD native_lane=0 route=0x2 link_speed=20Gb/s width=0x2 rail=0x57c2d9aa path_id=64087
+[272059.815444] thunderbolt_ibverbs: Thunderbolt service binding enabled
+[272059.815782] thunderbolt_ibverbs: registered apple ib_device usb4_rdma4 rail=peer1/0 domain=0 guid=0300544257524253
+[272059.815785] thunderbolt_ibverbs: loaded compat=auto profile=mac_compat resolved_profile=mac_compat tbnet=allow tbnet_identity=stock_proxy tbnet_identity_minimal_e2e=0 tbnet_identity_minimal_apple_only=1 lanes=1 native_control=off native_data=1 apple_data=1 native_fragment_striping=0
+[272084.097074] thunderbolt_ibverbs: unregistered per-rail ib_device peer=1 rail=0
+[272084.100311] thunderbolt_ibverbs: peer 1 destroyed backend=apple
+[272084.100379] thunderbolt_ibverbs: unloaded
+[272084.180568] thunderbolt_ibverbs: armed TBnet ARP proxy on thunderbolt0 for 10.0.3.44 via ardma0
+[272084.180581] thunderbolt_ibverbs: TBnet identity uses stock ThunderboltIP with RDMA GID proxying tbnet=thunderbolt0 gid=ardma0
+[272084.180586] thunderbolt_ibverbs: backend apple-fa57 rc=0 uc=1 tbnet_identity=1
+[272084.180587] thunderbolt_ibverbs: core ready profile=mac_compat rc=0 uc=1
+[272084.180609] thunderbolt_ibverbs: peer 1 created backend=apple
+[272084.182088] thunderbolt_ibverbs: allocated rings service id=1 native_lane=0 tx_hop=2 rx_hop=2 out_hop=9
+[272084.182362] thunderbolt_ibverbs: started rings service id=1 native_lane=0 tx_hop=2 rx_hop=2
+[272084.182440] thunderbolt_ibverbs: enabled Apple data path service route=0x2 tx_path=9 rx_path=9 tx_hop=2 rx_hop=2
+[272084.182441] thunderbolt_ibverbs: bound apple service id=1 key=\xff\xff\xff\xff\xff\xffAD native_lane=0 route=0x2 link_speed=20Gb/s width=0x2 rail=0x57c2d9aa path_id=64087
+[272084.182465] thunderbolt_ibverbs: Thunderbolt service binding enabled
+[272084.182756] thunderbolt_ibverbs: registered apple ib_device usb4_rdma4 rail=peer1/0 domain=0 guid=0300544257524253
+[272084.182758] thunderbolt_ibverbs: loaded compat=auto profile=mac_compat resolved_profile=mac_compat tbnet=allow tbnet_identity=stock_proxy tbnet_identity_minimal_e2e=0 tbnet_identity_minimal_apple_only=1 lanes=1 native_control=off native_data=1 apple_data=1 native_fragment_striping=0
+[272096.076748] thunderbolt_ibverbs: unregistered per-rail ib_device peer=1 rail=0
+[272096.077610] thunderbolt_ibverbs: peer 1 destroyed backend=apple
+[272096.077674] thunderbolt_ibverbs: unloaded
+[272096.163576] thunderbolt_ibverbs: armed TBnet ARP proxy on thunderbolt0 for 10.0.3.44 via ardma0
+[272096.163592] thunderbolt_ibverbs: TBnet identity uses stock ThunderboltIP with RDMA GID proxying tbnet=thunderbolt0 gid=ardma0
+[272096.163598] thunderbolt_ibverbs: backend apple-fa57 rc=0 uc=1 tbnet_identity=1
+[272096.163600] thunderbolt_ibverbs: core ready profile=mac_compat rc=0 uc=1
+[272096.163627] thunderbolt_ibverbs: peer 1 created backend=apple
+[272096.165076] thunderbolt_ibverbs: allocated rings service id=1 native_lane=0 tx_hop=2 rx_hop=2 out_hop=9
+[272096.165300] thunderbolt_ibverbs: started rings service id=1 native_lane=0 tx_hop=2 rx_hop=2
+[272096.165379] thunderbolt_ibverbs: enabled Apple data path service route=0x2 tx_path=9 rx_path=9 tx_hop=2 rx_hop=2
+[272096.165381] thunderbolt_ibverbs: bound apple service id=1 key=\xff\xff\xff\xff\xff\xffAD native_lane=0 route=0x2 link_speed=20Gb/s width=0x2 rail=0x57c2d9aa path_id=64087
+[272096.165407] thunderbolt_ibverbs: Thunderbolt service binding enabled
+[272096.165712] thunderbolt_ibverbs: registered apple ib_device usb4_rdma4 rail=peer1/0 domain=0 guid=0300544257524253
+[272096.165714] thunderbolt_ibverbs: loaded compat=auto profile=mac_compat resolved_profile=mac_compat tbnet=allow tbnet_identity=stock_proxy tbnet_identity_minimal_e2e=0 tbnet_identity_minimal_apple_only=1 lanes=1 native_control=off native_data=1 apple_data=1 native_fragment_striping=0
+[272165.588623] thunderbolt_ibverbs: unregistered per-rail ib_device peer=1 rail=0
+[272165.589766] thunderbolt_ibverbs: peer 1 destroyed backend=apple
+[272165.589842] thunderbolt_ibverbs: unloaded
+[272165.675027] thunderbolt_ibverbs: armed TBnet ARP proxy on thunderbolt0 for 10.0.3.44 via ardma0
+[272165.675039] thunderbolt_ibverbs: TBnet identity uses stock ThunderboltIP with RDMA GID proxying tbnet=thunderbolt0 gid=ardma0
+[272165.675043] thunderbolt_ibverbs: backend apple-fa57 rc=0 uc=1 tbnet_identity=1
+[272165.675044] thunderbolt_ibverbs: core ready profile=mac_compat rc=0 uc=1
+[272165.675065] thunderbolt_ibverbs: peer 1 created backend=apple
+[272165.676376] thunderbolt_ibverbs: allocated rings service id=1 native_lane=0 tx_hop=2 rx_hop=2 out_hop=9
+[272165.676601] thunderbolt_ibverbs: started rings service id=1 native_lane=0 tx_hop=2 rx_hop=2
+[272165.676685] thunderbolt_ibverbs: enabled Apple data path service route=0x2 tx_path=9 rx_path=9 tx_hop=2 rx_hop=2
+[272165.676686] thunderbolt_ibverbs: bound apple service id=1 key=\xff\xff\xff\xff\xff\xffAD native_lane=0 route=0x2 link_speed=20Gb/s width=0x2 rail=0x57c2d9aa path_id=64087
+[272165.676707] thunderbolt_ibverbs: Thunderbolt service binding enabled
+[272165.677004] thunderbolt_ibverbs: registered apple ib_device usb4_rdma4 rail=peer1/0 domain=0 guid=0300544257524253
+[272165.677006] thunderbolt_ibverbs: loaded compat=auto profile=mac_compat resolved_profile=mac_compat tbnet=allow tbnet_identity=stock_proxy tbnet_identity_minimal_e2e=0 tbnet_identity_minimal_apple_only=1 lanes=1 native_control=off native_data=1 apple_data=1 native_fragment_striping=0
+[272177.640519] thunderbolt_ibverbs: unregistered per-rail ib_device peer=1 rail=0
+[272177.641667] thunderbolt_ibverbs: peer 1 destroyed backend=apple
+[272177.641748] thunderbolt_ibverbs: unloaded
+[272177.724642] thunderbolt_ibverbs: armed TBnet ARP proxy on thunderbolt0 for 10.0.3.44 via ardma0
+[272177.724656] thunderbolt_ibverbs: TBnet identity uses stock ThunderboltIP with RDMA GID proxying tbnet=thunderbolt0 gid=ardma0
+[272177.724661] thunderbolt_ibverbs: backend apple-fa57 rc=0 uc=1 tbnet_identity=1
+[272177.724662] thunderbolt_ibverbs: core ready profile=mac_compat rc=0 uc=1
+[272177.724690] thunderbolt_ibverbs: peer 1 created backend=apple
+[272177.726123] thunderbolt_ibverbs: allocated rings service id=1 native_lane=0 tx_hop=2 rx_hop=2 out_hop=9
+[272177.726357] thunderbolt_ibverbs: started rings service id=1 native_lane=0 tx_hop=2 rx_hop=2
+[272177.726443] thunderbolt_ibverbs: enabled Apple data path service route=0x2 tx_path=9 rx_path=9 tx_hop=2 rx_hop=2
+[272177.726445] thunderbolt_ibverbs: bound apple service id=1 key=\xff\xff\xff\xff\xff\xffAD native_lane=0 route=0x2 link_speed=20Gb/s width=0x2 rail=0x57c2d9aa path_id=64087
+[272177.726474] thunderbolt_ibverbs: Thunderbolt service binding enabled
+[272177.726809] thunderbolt_ibverbs: registered apple ib_device usb4_rdma4 rail=peer1/0 domain=0 guid=0300544257524253
+[272177.726812] thunderbolt_ibverbs: loaded compat=auto profile=mac_compat resolved_profile=mac_compat tbnet=allow tbnet_identity=stock_proxy tbnet_identity_minimal_e2e=0 tbnet_identity_minimal_apple_only=1 lanes=1 native_control=off native_data=1 apple_data=1 native_fragment_striping=0
+[272203.804726] thunderbolt_ibverbs: unregistered per-rail ib_device peer=1 rail=0
+[272203.805990] thunderbolt_ibverbs: peer 1 destroyed backend=apple
+[272203.806061] thunderbolt_ibverbs: unloaded
+[272203.881128] thunderbolt_ibverbs: armed TBnet ARP proxy on thunderbolt0 for 10.0.3.44 via ardma0
+[272203.881141] thunderbolt_ibverbs: TBnet identity uses stock ThunderboltIP with RDMA GID proxying tbnet=thunderbolt0 gid=ardma0
+[272203.881147] thunderbolt_ibverbs: backend apple-fa57 rc=0 uc=1 tbnet_identity=1
+[272203.881149] thunderbolt_ibverbs: core ready profile=mac_compat rc=0 uc=1
+[272203.881172] thunderbolt_ibverbs: peer 1 created backend=apple
+[272203.882659] thunderbolt_ibverbs: allocated rings service id=1 native_lane=0 tx_hop=2 rx_hop=2 out_hop=9
+[272203.882888] thunderbolt_ibverbs: started rings service id=1 native_lane=0 tx_hop=2 rx_hop=2
+[272203.882971] thunderbolt_ibverbs: enabled Apple data path service route=0x2 tx_path=9 rx_path=9 tx_hop=2 rx_hop=2
+[272203.882973] thunderbolt_ibverbs: bound apple service id=1 key=\xff\xff\xff\xff\xff\xffAD native_lane=0 route=0x2 link_speed=20Gb/s width=0x2 rail=0x57c2d9aa path_id=64087
+[272203.882994] thunderbolt_ibverbs: Thunderbolt service binding enabled
+[272203.883326] thunderbolt_ibverbs: registered apple ib_device usb4_rdma4 rail=peer1/0 domain=0 guid=0300544257524253
+[272203.883328] thunderbolt_ibverbs: loaded compat=auto profile=mac_compat resolved_profile=mac_compat tbnet=allow tbnet_identity=stock_proxy tbnet_identity_minimal_e2e=0 tbnet_identity_minimal_apple_only=1 lanes=1 native_control=off native_data=1 apple_data=1 native_fragment_striping=0
+[272219.390562] thunderbolt_ibverbs: unregistered per-rail ib_device peer=1 rail=0
+[272219.391658] thunderbolt_ibverbs: peer 1 destroyed backend=apple
+[272219.391717] thunderbolt_ibverbs: unloaded
+[272219.472663] thunderbolt_ibverbs: armed TBnet ARP proxy on thunderbolt0 for 10.0.3.44 via ardma0
+[272219.472676] thunderbolt_ibverbs: TBnet identity uses stock ThunderboltIP with RDMA GID proxying tbnet=thunderbolt0 gid=ardma0
+[272219.472682] thunderbolt_ibverbs: backend apple-fa57 rc=0 uc=1 tbnet_identity=1
+[272219.472684] thunderbolt_ibverbs: core ready profile=mac_compat rc=0 uc=1
+[272219.472708] thunderbolt_ibverbs: peer 1 created backend=apple
+[272219.474165] thunderbolt_ibverbs: allocated rings service id=1 native_lane=0 tx_hop=2 rx_hop=2 out_hop=9
+[272219.474392] thunderbolt_ibverbs: started rings service id=1 native_lane=0 tx_hop=2 rx_hop=2
+[272219.474480] thunderbolt_ibverbs: enabled Apple data path service route=0x2 tx_path=9 rx_path=9 tx_hop=2 rx_hop=2
+[272219.474481] thunderbolt_ibverbs: bound apple service id=1 key=\xff\xff\xff\xff\xff\xffAD native_lane=0 route=0x2 link_speed=20Gb/s width=0x2 rail=0x57c2d9aa path_id=64087
+[272219.474506] thunderbolt_ibverbs: Thunderbolt service binding enabled
+[272219.474830] thunderbolt_ibverbs: registered apple ib_device usb4_rdma4 rail=peer1/0 domain=0 guid=0300544257524253
+[272219.474833] thunderbolt_ibverbs: loaded compat=auto profile=mac_compat resolved_profile=mac_compat tbnet=allow tbnet_identity=stock_proxy tbnet_identity_minimal_e2e=0 tbnet_identity_minimal_apple_only=1 lanes=1 native_control=off native_data=1 apple_data=1 native_fragment_striping=0
+[275088.827287] thunderbolt_ibverbs: unregistered per-rail ib_device peer=1 rail=0
+[275088.828543] thunderbolt_ibverbs: peer 1 destroyed backend=apple
+[275088.828606] thunderbolt_ibverbs: unloaded
+[275088.914951] thunderbolt_ibverbs: armed TBnet ARP proxy on thunderbolt0 for 10.0.3.44 via ardma0
+[275088.914965] thunderbolt_ibverbs: TBnet identity uses stock ThunderboltIP with RDMA GID proxying tbnet=thunderbolt0 gid=ardma0
+[275088.914971] thunderbolt_ibverbs: backend apple-fa57 rc=0 uc=1 tbnet_identity=1
+[275088.914972] thunderbolt_ibverbs: core ready profile=mac_compat rc=0 uc=1
+[275088.914997] thunderbolt_ibverbs: peer 1 created backend=apple
+[275088.916483] thunderbolt_ibverbs: allocated rings service id=1 native_lane=0 tx_hop=2 rx_hop=2 out_hop=9
+[275088.916718] thunderbolt_ibverbs: started rings service id=1 native_lane=0 tx_hop=2 rx_hop=2
+[275088.916802] thunderbolt_ibverbs: enabled Apple data path service route=0x2 tx_path=9 rx_path=9 tx_hop=2 rx_hop=2
+[275088.916803] thunderbolt_ibverbs: bound apple service id=1 key=\xff\xff\xff\xff\xff\xffAD native_lane=0 route=0x2 link_speed=20Gb/s width=0x2 rail=0x57c2d9aa path_id=64087
+[275088.916823] thunderbolt_ibverbs: Thunderbolt service binding enabled
+[275088.917314] thunderbolt_ibverbs: registered apple ib_device usb4_rdma4 rail=peer1/0 domain=0 guid=0300544257524253
+[275088.917319] thunderbolt_ibverbs: loaded compat=auto profile=mac_compat resolved_profile=mac_compat tbnet=allow tbnet_identity=stock_proxy tbnet_identity_minimal_e2e=0 tbnet_identity_minimal_apple_only=1 lanes=1 native_control=off native_data=1 apple_data=1 native_fragment_striping=0
+mac0-linux1 allreduce failed: mac_rc=124 linux_rc=124

@@ -1,0 +1,65 @@
+copying 0 paths...
+copying 0 paths...
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== allsum mac0-linux1 via 192.168.23.73:31220 ==
+-- mac output (mac0-linux1 rank 0) --
+rank 0/2 backend=jaccl MLX_RANK=0 device=Device(gpu, 0) dtype=float16
+rank 0 warmup OK
+rank 0 size=4096 OK time_us=2248.4 payload_gbps=0.015 iters=20
+rank 0 after size=4096 barrier OK
+rank 0 size=65536 OK time_us=2451.1 payload_gbps=0.214 iters=20
+rank 0 after size=65536 barrier OK
+rank 0 size=1048576 OK time_us=6998.3 payload_gbps=1.199 iters=20
+rank 0 after size=1048576 barrier OK
+rank 0 size=4194304 OK time_us=24148.8 payload_gbps=1.389 iters=20
+-- linux output (mac0-linux1 rank 1) --
+[jaccl] Connection attempt 0 waiting 1000 ms
+rank 1/2 backend=jaccl MLX_RANK=1 device=Device(gpu, 0) dtype=float16
+rank 1 warmup OK
+rank 1 size=4096 OK time_us=2248.1 payload_gbps=0.015 iters=20
+rank 1 after size=4096 barrier OK
+rank 1 size=65536 OK time_us=2450.4 payload_gbps=0.214 iters=20
+rank 1 after size=65536 barrier OK
+rank 1 size=1048576 OK time_us=7038.5 payload_gbps=1.192 iters=20
+rank 1 after size=1048576 barrier OK
+rank 1 size=4194304 OK time_us=24227.3 payload_gbps=1.385 iters=20
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== allsum linux0-mac1 via 192.168.23.1:31221 ==
+-- mac output (linux0-mac1 rank 1) --
+rank 1/2 backend=jaccl MLX_RANK=1 device=Device(gpu, 0) dtype=float16
+rank 1 warmup OK
+rank 1 size=4096 OK time_us=2098.1 payload_gbps=0.016 iters=20
+rank 1 after size=4096 barrier OK
+rank 1 size=65536 OK time_us=2500.2 payload_gbps=0.210 iters=20
+rank 1 after size=65536 barrier OK
+rank 1 size=1048576 OK time_us=6638.8 payload_gbps=1.264 iters=20
+rank 1 after size=1048576 barrier OK
+rank 1 size=4194304 OK time_us=28091.0 payload_gbps=1.194 iters=20
+-- linux output (linux0-mac1 rank 0) --
+rank 0/2 backend=jaccl MLX_RANK=0 device=Device(gpu, 0) dtype=float16
+rank 0 warmup OK
+rank 0 size=4096 OK time_us=2097.1 payload_gbps=0.016 iters=20
+rank 0 after size=4096 barrier OK
+rank 0 size=65536 OK time_us=2583.7 payload_gbps=0.203 iters=20
+rank 0 after size=65536 barrier OK
+rank 0 size=1048576 OK time_us=6694.7 payload_gbps=1.253 iters=20
+rank 0 after size=1048576 barrier OK
+rank 0 size=4194304 OK time_us=28175.6 payload_gbps=1.191 iters=20
+tbnet_identity_arp_errors: 0
+data_rx_no_recv: 0
+data_rx_copy_error: 0
+data_rx_reorder_dropped: 0
+data_cq_overflow: 0
+PASS: Apple/macOS MLX distributed JACCL smoke completed

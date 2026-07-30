@@ -1,0 +1,163 @@
+copying 0 paths...
+copying 0 paths...
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== lm mac0-linux1 via 192.168.23.73:30020 ==
+-- mac output (mac0-linux1 rank 0) --
+rank 0/2 backend=jaccl MLX_RANK=0 device=Device(cpu, 0) model=/tmp/tibverbs-tiny-qwen2-mlx-lm
+rank 0 sharded_load OK
+rank 0 forward start prompt_tokens=2
+-- linux output (mac0-linux1 rank 1) --
+[jaccl] Connection attempt 0 waiting 1000 ms
+rank 1/2 backend=jaccl MLX_RANK=1 device=Device(cpu, 0) model=/tmp/tibverbs-tiny-qwen2-mlx-lm
+rank 1 sharded_load OK
+rank 1 forward start prompt_tokens=2
+Traceback (most recent call last):
+  File "/tmp/tibverbs_mlx_distributed_probe.py", line 296, in <module>
+    status = main()
+  File "/tmp/tibverbs_mlx_distributed_probe.py", line 172, in main
+    mx.eval(logits)
+    ~~~~~~~^^^^^^^^
+RuntimeError: [Compile::eval_cpu] Failed to compile function Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous: Failed to execute command with return code 1: "/nix/store/qd70v8g0561vm8m33kmnp79z00cgyi5n-gcc-wrapper-15.2.0/bin/c++ -std=c++17 -O3 -Wall -fPIC -shared "/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp" -o "/tmp/mlx/0.31.2/cpu/libCf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.so" 2>&1", the output is: /tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:39038: warning: ignoring ‘#pragma clang diagnostic’ [-Wunknown-pragmas]
+39038 | #pragma clang diagnostic push
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:39039: warning: ignoring ‘#pragma clang diagnostic’ [-Wunknown-pragmas]
+39039 | #pragma clang diagnostic ignored "-Wc99-extensions"
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:40249: warning: ignoring ‘#pragma clang diagnostic’ [-Wunknown-pragmas]
+40249 | #pragma clang diagnostic pop
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:2664:22: error: ‘__make_integer_seq’ does not name a type [-Wtemplate-body]
+ 2664 |       using __type = __make_integer_seq<_IdxTuple, size_t, _Num>;
+      |                      ^~~~~~~~~~~~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:2674:9: error: ‘__make_integer_seq’ does not name a type
+ 2674 |       = __make_integer_seq<integer_sequence, _Tp, _Num>;
+      |         ^~~~~~~~~~~~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:2678:33: error: ‘make_integer_sequence’ does not name a type; did you mean ‘integer_sequence’?
+ 2678 |     using make_index_sequence = make_integer_sequence<size_t, _Num>;
+      |                                 ^~~~~~~~~~~~~~~~~~~~~
+      |                                 integer_sequence
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:2680:32: error: ‘make_index_sequence’ does not name a type; did you mean ‘index_sequence’?
+ 2680 |     using index_sequence_for = make_index_sequence<sizeof...(_Types)>;
+      |                                ^~~~~~~~~~~~~~~~~~~
+      |                                index_sequence
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:7260:20: error: redeclaration of C++ built-in type ‘_Float128’ [-fpermissive]
+ 7260 | typedef __float128 _Float128;
+      |                    ^~~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:7261:15: error: redeclaration of C++ built-in type ‘_Float32’ [-fpermissive]
+ 7261 | typedef float _Float32;
+      |               ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:7262:16: error: redeclaration of C++ built-in type ‘_Float64’ [-fpermissive]
+ 7262 | typedef double _Float64;
+      |                ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:7263:16: error: redeclaration of C++ built-in type ‘_Float32x’ [-fpermissive]
+ 7263 | typedef double _Float32x;
+      |                ^~~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:7264:21: error: redeclaration of C++ built-in type ‘_Float64x’ [-fpermissive]
+ 7264 | typedef long double _Float64x;
+      |                     ^~~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp: In function ‘constexpr decltype(auto) std::apply(_Fn&&, _Tuple&&)’:
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:24892:4: error: ‘make_index_sequence’ does not name a type; did you mean ‘index_sequence’? [-Wtemplate-body]
+24892 |  = make_index_sequence<tuple_size_v<remove_reference_t<_Tuple>>>;
+      |    ^~~~~~~~~~~~~~~~~~~
+      |    index_sequence
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:24895:11: error: ‘_Indices’ was not declared in this scope [-Wtemplate-body]
+24895 |           _Indices{});
+      |           ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp: In function ‘constexpr _Tp std::make_from_tuple(_Tuple&&)’:
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:24913:7: error: ‘make_index_sequence’ was not declared in this scope; did you mean ‘index_sequence’? [-Wtemplate-body]
+24913 |       make_index_sequence<__n>{});
+      |       ^~~~~~~~~~~~~~~~~~~
+      |       index_sequence
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:24913:31: error: expected primary-expression before ‘{’ token [-Wtemplate-body]
+24913 |       make_index_sequence<__n>{});
+      |                               ^
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp: In member function ‘void std::pmr::polymorphic_allocator<_Tp>::construct(std::pair<_U1, _U2>*, std::piecewise_construct_t, std::tuple<_Args2 ...>, std::tuple<_Args2 ...>)’:
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:25023:4: error: ‘index_sequence_for’ was not declared in this scope; did you mean ‘index_sequence’? [-Wtemplate-body]
+25023 |    index_sequence_for<_Args1...> __x_i;
+      |    ^~~~~~~~~~~~~~~~~~
+      |    index_sequence
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:25023:29: error: expected primary-expression before ‘...’ token [-Wtemplate-body]
+25023 |    index_sequence_for<_Args1...> __x_i;
+      |                             ^~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:25024:29: error: expected primary-expression before ‘...’ token [-Wtemplate-body]
+25024 |    index_sequence_for<_Args2...> __y_i;
+      |                             ^~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:25026:35: error: ‘__x_i’ was not declared in this scope; did you mean ‘__x’? [-Wtemplate-body]
+25026 |           _S_construct_p(__x_tag, __x_i, __x),
+      |                                   ^~~~~
+      |                                   __x
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:25027:35: error: ‘__y_i’ was not declared in this scope [-Wtemplate-body]
+25027 |           _S_construct_p(__y_tag, __y_i, __y));
+      |                                   ^~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp: At global scope:
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:28436:5: warning: literal operator suffixes not preceded by ‘_’ are reserved for future standardization [-Wliteral-suffix]
+28436 |     operator""sv(const char* __str, size_t __len) noexcept
+      |     ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:28439:5: warning: literal operator suffixes not preceded by ‘_’ are reserved for future standardization [-Wliteral-suffix]
+28439 |     operator""sv(const wchar_t* __str, size_t __len) noexcept
+      |     ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:28442:5: warning: literal operator suffixes not preceded by ‘_’ are reserved for future standardization [-Wliteral-suffix]
+28442 |     operator""sv(const char16_t* __str, size_t __len) noexcept
+      |     ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:28445:5: warning: literal operator suffixes not preceded by ‘_’ are reserved for future standardization [-Wliteral-suffix]
+28445 |     operator""sv(const char32_t* __str, size_t __len) noexcept
+      |     ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:31085:5: warning: literal operator suffixes not preceded by ‘_’ are reserved for future standardization [-Wliteral-suffix]
+31085 |     operator""s(const char* __str, size_t __len)
+      |     ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:31089:5: warning: literal operator suffixes not preceded by ‘_’ are reserved for future standardization [-Wliteral-suffix]
+31089 |     operator""s(const wchar_t* __str, size_t __len)
+      |     ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:31093:5: warning: literal operator suffixes not preceded by ‘_’ are reserved for future standardization [-Wliteral-suffix]
+31093 |     operator""s(const char16_t* __str, size_t __len)
+      |     ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:31097:5: warning: literal operator suffixes not preceded by ‘_’ are reserved for future standardization [-Wliteral-suffix]
+31097 |     operator""s(const char32_t* __str, size_t __len)
+      |     ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:40228:3: warning: literal operator suffixes not preceded by ‘_’ are reserved for future standardization [-Wliteral-suffix]
+40228 |   operator""if(long double __num)
+      |   ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:40231:3: warning: literal operator suffixes not preceded by ‘_’ are reserved for future standardization [-Wliteral-suffix]
+40231 |   operator""if(unsigned long long __num)
+      |   ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:40234:3: warning: literal operator suffixes not preceded by ‘_’ are reserved for future standardization [-Wliteral-suffix]
+40234 |   operator""i(long double __num)
+      |   ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:40237:3: warning: literal operator suffixes not preceded by ‘_’ are reserved for future standardization [-Wliteral-suffix]
+40237 |   operator""i(unsigned long long __num)
+      |   ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:40240:3: warning: literal operator suffixes not preceded by ‘_’ are reserved for future standardization [-Wliteral-suffix]
+40240 |   operator""il(long double __num)
+      |   ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:40243:3: warning: literal operator suffixes not preceded by ‘_’ are reserved for future standardization [-Wliteral-suffix]
+40243 |   operator""il(unsigned long long __num)
+      |   ^~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp: In instantiation of ‘mlx::core::simd::Simd<float, N> mlx::core::detail::FromFP8::operator()(mlx::core::simd::Simd<unsigned char, N>) [with int N = 1]’:
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:47036:19:   required from here
+47036 |     return (*this)(Simd<uint8_t, 1>(x)).value;
+      |            ~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:47024:25: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
+47024 |       auto converted = *(Simd<float16_t, N>*)(&v);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:47024:25: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp: In instantiation of ‘mlx::core::simd::Simd<T, N> mlx::core::simd::exp(Simd<T, N>) [with T = float; int N = 1]’:
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:46954:38:   required from ‘mlx::core::simd::Simd<T, N> mlx::core::detail::Sigmoid::operator()(mlx::core::simd::Simd<T, N>) [with int N = 1; T = float]’
+46954 |     auto y = 1.0f / (1.0f + simd::exp(simd::abs(x)));
+      |                             ~~~~~~~~~^~~~~~~~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:46957:59:   required from ‘T mlx::core::detail::Sigmoid::operator()(T) [with T = float]’
+46957 |   template <typename T> T operator()(T x) { return (*this)(Simd<T, 1>(x)).value; }
+      |                                                    ~~~~~~~^~~~~~~~~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:47110:26:   required from here
+47110 |   float tmp_D = Sigmoid()(tmp_A);
+      |                 ~~~~~~~~~^~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:46792:51: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
+46792 |     auto result = select(isnan(x_init), x_init, (*(Simd<float, N>*)&epart) * x);
+      |                                                   ^~~~~~~~~~~~~~~~~~~~~~~
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:46792:51: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
+/tmp/mlx/0.31.2/cpu/Cf4ISigmoidADf4IBroadcastACEf4IBroadcastCAFf4IMultiplyDEGf4IBroadcastFBHf4IBroadcastBFIf4OMultiplyGH_VV__6142509188972423790_contiguous.cpp:46672:65: note: initializing argument 1 of ‘mlx::core::simd::Simd<decltype ((a.value * b.value)), 1> mlx::core::simd::operator*(Simd<T, 1>, Simd<T2, 1>) [with T1 = float; T2 = float; decltype ((a.value * b.value)) = float]’
+46672 | template <typename T1, typename T2> auto operator *(Simd<T1, 1> a, Simd<T2, 1> b) ->Simd<decltype(a.value * b.value), 1> { return a.value * b.value; } template <typename T1, typename T2> auto operator *(T1 a, Simd<T2, 1> b)->Simd<decltype(a * b.value), 1> { return a * b.value; } template <typename T1, typename T2> auto operator *(Simd<T1, 1> a, T2 b)->Simd<decltype(a.value * b), 1> { return a.value * b; }
+      |                                                     ~~~~~~~~~~~~^
+MLX probe failed (mac0-linux1): mac_rc=124 linux_rc=1

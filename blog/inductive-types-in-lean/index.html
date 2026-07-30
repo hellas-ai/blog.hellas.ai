@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" class="dark:bg-hellas-black bg-hellas-white">
+
+<head>
+  
+  
+  <!-- HTML Meta Tags -->
+  <title>Inductive Types in Lean</title>
+  <meta name="description" content="A quick intro on how inductive types in Lean work">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <link rel="stylesheet" type="text/css" href="https://blog.hellas.ai/style.css">
+  <link rel="alternate" type="application/atom+xml" title="Hellas Blog Atom Feed" href="https://blog.hellas.ai/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Hellas Blog RSS Feed" href="https://blog.hellas.ai/rss.xml">
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Inductive Types in Lean">
+  <meta property="og:description" content="A quick intro on how inductive types in Lean work">
+  <meta property="og:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="hellas.ai">
+  <meta property="twitter:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta name="twitter:title" content="Inductive Types in Lean">
+  <meta name="twitter:description" content="A quick intro on how inductive types in Lean work">
+  <meta name="twitter:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- e.g. for safari tab bar -->
+  <meta name="theme-color" content="#1C1C1C" />
+
+  <!-- MathJax for LaTeX support -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Mobile menu toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+
+</head>
+
+<body class="dark:bg-hellas-black bg-hellas-white dark:text-hellas-white text-hellas-black flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30">
+    <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="flex items-center">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_Black.svg" alt="Hellas" class="h-8 dark:hidden">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 hidden dark:block">
+      </a>
+      <nav class="hidden md:flex space-x-8 font-sans">
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Home</a>
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Blog</a>
+        <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200">Main Site</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobile-menu-button" type="button" class="text-hellas-cool-grey">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+      <!-- Mobile menu, hidden by default -->
+      <div id="mobile-menu" class="hidden fixed top-[70px] right-0 left-0 bg-hellas-white dark:bg-hellas-black border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30 md:hidden">
+        <nav class="container mx-auto px-4 py-4 flex flex-col space-y-4 font-sans">
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Home</a>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Blog</a>
+          <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Main Site</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    
+
+
+
+<article class="py-12">
+  <!-- Post Header -->
+  <header class="mb-8">
+    <h1 class="font-paplane text-7xl mb-4 text-hellas-black dark:text-hellas-white">
+      Inductive Types in Lean
+    </h1>
+    <div class="flex items-center text-hellas-cool-grey">
+      <time datetime="2026-04-02">April  2, 2026</time>
+      
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <div class="prose prose-lg dark:prose-invert max-w-3xl mb-12 text-hellas-black dark:text-hellas-white font-sans">
+    <p>Inductive types in Lean allow for conservative extensions of the core theory
+(the calculus of inductive constructions) by adding new freely generated types.
+Here "conservative" is a term of art: it means that our additions do not
+"increase the power" of the underlying theory by adding new axioms; instead,
+they extend the language in a way designed to preserve consistency.</p>
+<p>But how does this work internally?
+What exactly is added to the logical theory when we write <code>inductive ...</code>?
+This post answers that question using natural numbers as the running example.
+Suppose we declare a <code>Nat</code> type as follows:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="lean"><span class="giallo-l"><span style="color: #F97583;">namespace</span><span> MyNat</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">  inductive</span><span style="color: #B392F0;"> Nat</span><span> : </span><span style="color: #F97583;">Type</span></span>
+<span class="giallo-l"><span>  | zero : Nat</span></span>
+<span class="giallo-l"><span>  | succ : Nat → Nat</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">end</span><span> MyNat</span></span></code></pre>
+<p>When we do this, Lean adds constructors, or "introduction rules":</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="lean"><span class="giallo-l"><span>Nat.zero : Nat</span></span>
+<span class="giallo-l"><span>Nat.succ : Nat → Nat</span></span></code></pre>
+<p>These let us <em>construct</em> (or 'introduce') <code>Nat</code> values.
+For example, the value for <code>1</code> is introduced as <code>Nat.succ Nat.zero : Nat</code>.</p>
+<p>But we also need to <em>deconstruct</em> or ('eliminate') a <code>Nat</code> value.
+Lean adds a "recursor" <code>Nat.rec</code> for this, whose type can be printed using
+<code>#check Nat.rec</code>:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>MyNat.Nat.rec.{u}</span></span>
+<span class="giallo-l"><span>    {motive : Nat → Sort u}</span></span>
+<span class="giallo-l"><span>    (zero : motive Nat.zero)</span></span>
+<span class="giallo-l"><span>    (succ : (a : Nat) → motive a → motive a.succ)</span></span>
+<span class="giallo-l"><span>    (t : Nat) : motive t</span></span></code></pre>
+<p>Spelling this out, we have:</p>
+<ol>
+<li>A dependent function <code>motive</code> assigning to each <code>Nat</code> value <code>n</code> some type denoted <code>motive n</code>.</li>
+<li>A base case - a <em>value</em> <code>zero</code> of type <code>motive Nat.zero</code></li>
+<li>An inductive case - a <em>function</em> <code>succ</code> mapping a <em>value</em> of type <code>motive a</code> to a value <code>motive (Nat.succ a)</code></li>
+</ol>
+<p>With these three arguments applied, we're left with a function of type
+<code>(t : Nat) → motive t</code>.
+This is a <em>dependent function type</em> mapping each nat value to a result whose
+type <em>depends on the value</em>.</p>
+<p>A motivating proof-shaped use is <code>∀ n, n = n</code>.
+In Lean, proving this means constructing a term of that type.
+<code>Nat.rec</code> is exactly the induction/recursion principle that lets us build such
+terms by giving:</p>
+<ol>
+<li>a value at <code>zero</code>, and</li>
+<li>a way to extend a value at <code>a</code> to one at <code>succ a</code>.</li>
+</ol>
+<p>Together, the constructors (introduction rules) and recursor (elimination rule)
+form the core logical/computational content of an inductive declaration.
+However, Lean also automatically derives a couple useful utilities.</p>
+<h2 id="helpers-caseson-and-noconfusion">Helpers: <code>casesOn</code> and <code>noConfusion</code></h2>
+<p>In addition to <code>rec</code>, lean adds a special case: <code>Nat.casesOn</code>, which lets us do
+a 'shallow match' of cases, without recursing.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="lean"><span class="giallo-l"><span>-- casesOn</span></span>
+<span class="giallo-l"><span style="color: #F97583;">#check</span><span> Nat.casesOn</span></span>
+<span class="giallo-l"><span>-- MyNat.Nat.casesOn.{u} {motive : Nat → </span><span style="color: #F97583;">Sort</span><span> u} (t : Nat) (zero : motive Nat.zero) (succ : (a : Nat) → motive a.succ) :</span></span>
+<span class="giallo-l"><span>  motive t</span></span></code></pre>
+<p>As a quick aside, note that if you try to add a case to Nat with the same name
+as one of these automatically added functions, you will get an error! E.g., adding</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="lean"><span class="giallo-l"><span style="color: #F97583;">inductive</span><span style="color: #B392F0;"> Nat</span><span> : </span><span style="color: #F97583;">Type</span></span>
+<span class="giallo-l"><span>| zero : Nat</span></span>
+<span class="giallo-l"><span>| casesOn : Nat -- will cause an error</span></span>
+<span class="giallo-l"><span>| succ : Nat → Nat</span></span></code></pre>
+<p>... will cause an error like this:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>error: (kernel) constant has already been declared &#39;MyNat.Nat.casesOn&#39;</span></span></code></pre>
+<p>A more important helper is <code>Nat.noConfusion</code>.
+This is a theorem that says if <code>t = t'</code>, then:</p>
+<ol>
+<li>Matching constructors imply equal arguments</li>
+<li>Different constructors are impossible</li>
+</ol>
+<p>In table form:</p>
+<table><thead><tr><th><code>t</code></th><th><code>t'</code></th><th>???</th></tr></thead><tbody>
+<tr><td><code>zero</code></td><td><code>zero</code></td><td>Trivial - no args to compare</td></tr>
+<tr><td><code>zero</code></td><td><code>succ a</code></td><td>Impossible - different constructors</td></tr>
+<tr><td><code>succ a</code></td><td><code>zero</code></td><td>Impossible - different constructors</td></tr>
+<tr><td><code>succ a</code></td><td><code>succ a₁</code></td><td><code>a = a₁</code></td></tr>
+</tbody></table>
+<p>Note that <code>noConfusion</code> is purely a helper: we <em>could</em> write it by hand, but it's both tedious
+<em>and</em> mechanically derivable, so Lean gives it to us automatically.
+How does this work? Let's examine <code>Nat.noConfusion</code> by <code>#check</code>ing it first.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>-- #check Nat.noConfusion</span></span>
+<span class="giallo-l"><span>MyNat.Nat.noConfusion.{u} {P : Sort u} {t t&#39; : Nat} (eq : t = t&#39;) : Nat.noConfusionType P t t&#39;</span></span></code></pre>
+<p>This isn't particularly helpful until we examine the <em>definition</em> of <code>noConfusionType</code>.
+Informally, it unpacks as the following case analysis:</p>
+<table><thead><tr><th><code>t</code></th><th><code>t'</code></th><th><code>Nat.noConfusionType P t t'</code></th></tr></thead><tbody>
+<tr><td><code>zero</code></td><td><code>zero</code></td><td><code>P → P</code></td></tr>
+<tr><td><code>zero</code></td><td><code>succ a</code></td><td><code>P</code></td></tr>
+<tr><td><code>succ a</code></td><td><code>zero</code></td><td><code>P</code></td></tr>
+<tr><td><code>succ a</code></td><td><code>succ a₁</code></td><td><code>(a = a₁ → P) → P</code></td></tr>
+</tbody></table>
+<p>More precisely, when we <code>#print Nat.noConfusionType</code>, we get this nested case
+analysis which first unpacks <code>t</code>, then <code>t'</code> within each branch.
+I've indented the <code>#print</code> for easier reading:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="lean"><span class="giallo-l"><span style="color: #F97583;">@[reducible] protected def</span><span style="color: #B392F0;"> MyNat.Nat.noConfusionType.</span><span>{u} : </span><span style="color: #F97583;">Sort</span><span> u → Nat → Nat → </span><span style="color: #F97583;">Sort</span><span> u :=</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    fun</span><span> P t t&#39; =&gt;</span></span>
+<span class="giallo-l"><span>        Nat.casesOn t</span></span>
+<span class="giallo-l"><span>            (Nat.casesOn t&#39;</span></span>
+<span class="giallo-l"><span>                (P → P)</span></span>
+<span class="giallo-l"><span style="color: #F97583;">                fun</span><span> a =&gt; P</span></span>
+<span class="giallo-l"><span>            )</span></span>
+<span class="giallo-l"><span>            (</span><span style="color: #F97583;">fun</span><span> a =&gt; Nat.casesOn t&#39;</span></span>
+<span class="giallo-l"><span>                        P</span></span>
+<span class="giallo-l"><span>                        (</span><span style="color: #F97583;">fun</span><span> a_1 =&gt; (a = a_1 → P) → P)</span></span>
+<span class="giallo-l"><span>            )</span></span></code></pre>
+<p>Lean will also add an injectivity helper <code>Nat.succ.inj</code> as a useful special
+case proof that <code>Succ(a) = Succ(a') ⇒ a = a'</code> - and this generalises to cases
+of other inductive types across each constructor.</p>
+
+  </div>
+
+  
+  
+  <nav class="flex justify-between max-w-3xl border-t border-hellas-cool-grey/20 pt-8 mt-12 font-sans">
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;deterministic-transcendentals&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+        ← Deterministic transcendental functions
+      </a>
+    
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;ai-vs-outsourcing&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline text-right">
+        Will AI do to Software Engineering what Offshoring did to Manufacturing? →
+      </a>
+    
+  </nav>
+  
+
+  <!-- Post Footer -->
+  
+  
+  
+  <div class="border-t border-hellas-cool-grey/20 pt-8 mt-8 max-w-3xl">
+    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="inline-flex items-center text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+      </svg>
+      Back
+    </a>
+  </div>
+</article>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-hellas-black text-hellas-white py-12 border-t border-hellas-cool-grey/20">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 mb-4">
+          <p class="text-hellas-cool-grey mb-4 font-sans">Powering limitless intelligence</p>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Links</h3>
+          <ul class="space-y-2 font-sans">
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="hover:text-hellas-yellow transition duration-200">Home</a></li>
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="hover:text-hellas-yellow transition duration-200">Blog</a></li>
+            <li><a href="https://hellas.ai" class="hover:text-hellas-yellow transition duration-200">Main Site</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="https://twitter.com/hellasdotai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-twitter-white.svg" alt="Twitter" class="h-6 w-6">
+            </a>
+            <a href="https://discord.gg/qHqZyuAa3u" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+
+              <img src="https://blog.hellas.ai/socials/socials-discord-white.svg" alt="Discord" class="h-6 w-6">
+            </a>
+            <a href="https://t.me/hellasai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-telegram-white.svg" alt="Telegram" class="h-6 w-6">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-hellas-cool-grey/20 mt-8 pt-8 text-hellas-cool-grey text-sm font-sans">
+        <p>© 2026 Hellas.ai — All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

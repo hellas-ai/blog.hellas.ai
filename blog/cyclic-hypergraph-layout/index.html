@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" class="dark:bg-hellas-black bg-hellas-white">
+
+<head>
+  
+  
+  <!-- HTML Meta Tags -->
+  <title>Layered Cyclic Diagram Layout</title>
+  <meta name="description" content="Layered drawing of open hypergraphs using Frobenius decompositions to make cyclic open hypergraphs acyclic">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <link rel="stylesheet" type="text/css" href="https://blog.hellas.ai/style.css">
+  <link rel="alternate" type="application/atom+xml" title="Hellas Blog Atom Feed" href="https://blog.hellas.ai/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Hellas Blog RSS Feed" href="https://blog.hellas.ai/rss.xml">
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Layered Cyclic Diagram Layout">
+  <meta property="og:description" content="Layered drawing of open hypergraphs using Frobenius decompositions to make cyclic open hypergraphs acyclic">
+  <meta property="og:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="hellas.ai">
+  <meta property="twitter:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta name="twitter:title" content="Layered Cyclic Diagram Layout">
+  <meta name="twitter:description" content="Layered drawing of open hypergraphs using Frobenius decompositions to make cyclic open hypergraphs acyclic">
+  <meta name="twitter:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- e.g. for safari tab bar -->
+  <meta name="theme-color" content="#1C1C1C" />
+
+  <!-- MathJax for LaTeX support -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Mobile menu toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+
+</head>
+
+<body class="dark:bg-hellas-black bg-hellas-white dark:text-hellas-white text-hellas-black flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30">
+    <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="flex items-center">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_Black.svg" alt="Hellas" class="h-8 dark:hidden">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 hidden dark:block">
+      </a>
+      <nav class="hidden md:flex space-x-8 font-sans">
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Home</a>
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Blog</a>
+        <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200">Main Site</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobile-menu-button" type="button" class="text-hellas-cool-grey">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+      <!-- Mobile menu, hidden by default -->
+      <div id="mobile-menu" class="hidden fixed top-[70px] right-0 left-0 bg-hellas-white dark:bg-hellas-black border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30 md:hidden">
+        <nav class="container mx-auto px-4 py-4 flex flex-col space-y-4 font-sans">
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Home</a>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Blog</a>
+          <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Main Site</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    
+
+
+
+<article class="py-12">
+  <!-- Post Header -->
+  <header class="mb-8">
+    <h1 class="font-paplane text-7xl mb-4 text-hellas-black dark:text-hellas-white">
+      Layered Cyclic Diagram Layout
+    </h1>
+    <div class="flex items-center text-hellas-cool-grey">
+      <time datetime="2026-07-28">July 28, 2026</time>
+      
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <div class="prose prose-lg dark:prose-invert max-w-3xl mb-12 text-hellas-black dark:text-hellas-white font-sans">
+    <p>tl;dr: <strong>we lift a layered drawing algorithm from acyclic hypergraphs to cyclic
+ones.</strong>
+The result is <a rel="external" href="https://github.com/hellas-ai/typed-pictures">typed-pictures</a>, a library and CLI for laying
+out open hypergraphs. You can install it with</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>cargo install typed-pictures-cli</span></span></code></pre>
+<p>Using the CLI, you can generate an SVG from a
+<a rel="external" href="https://github.com/hellas-ai/hexpr">hexpr</a>--our textual syntax for open
+hypergraphs. For example, this expression describes a one-bit half-adder whose
+outputs are the sum and carry bits:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>typed-pictures circuit/circuit.hex \</span></span>
+<span class="giallo-l"><span>  --padding 0.25 \</span></span>
+<span class="giallo-l"><span>  --no-wire-labels \</span></span>
+<span class="giallo-l"><span>  --generators circuit/circuit-generators.json \</span></span>
+<span class="giallo-l"><span>  &#39;([x y . x y x y] {xor and})&#39;</span></span></code></pre>
+<p>This produces the image below:</p>
+<div class="flex justify-center">
+  <img class="w-1/3" src="1-bit-adder.svg" alt="A one-bit half-adder with XOR and AND gates">
+</div>
+<p>Everything needed to reproduce it is included with this post:
+<a href="https://blog.hellas.ai/blog/cyclic-hypergraph-layout/circuit/circuit.hex">the circuit definitions</a>, the
+<a href="https://blog.hellas.ai/blog/cyclic-hypergraph-layout/circuit/circuit-generators.json">generator manifest</a>, and custom SVGs for
+gates such as <a href="https://blog.hellas.ai/blog/cyclic-hypergraph-layout/circuit/xor.svg">XOR</a> and <a href="https://blog.hellas.ai/blog/cyclic-hypergraph-layout/circuit/and.svg">AND</a>.
+I generated the gate drawings with Codex; <code>typed-pictures</code> handles their layout
+and wiring. The <a href="https://blog.hellas.ai/blog/cyclic-hypergraph-layout/generate_diagrams.sh">generation script</a> rebuilds every
+diagram in the post.</p>
+<h1 id="drawing-open-hypergraphs">Drawing Open Hypergraphs</h1>
+<p><a rel="external" href="https://docs.rs/open-hypergraphs/latest/open_hypergraphs/">Open hypergraphs</a>
+provide a datastructure for "circuit-like syntax".
+If you can think of your syntax as "boxes with ports connected by wires", open
+hypergraphs are for you!
+Electronic circuits are a natural example.
+Here is a <code>NOR</code> gate, generated from its open hypergraph
+representation:</p>
+<div class="flex justify-center">
+  <img class="w-2/3" src="nor.svg" alt="NOR circuit">
+</div>
+<p>In the underlying hypergraph, <strong>wires are nodes</strong> and <strong>boxes are hyperedges</strong>.
+This reverses the usual graph-drawing convention of treating boxes as nodes,
+but lets each box retain an ordered list of input and output ports.</p>
+<p>Now, to <em>generate</em> these diagrams, we need some software.
+Previously, I used <a rel="external" href="https://graphviz.org/doc/info/lang.html">dot</a>, but it isn't
+designed for hypergraphs and requires a lot of hackery.
+I wanted something that:</p>
+<ol>
+<li>Natively supports boxes with <strong>multiple ordered inputs and outputs</strong></li>
+<li><strong>Can be called as a library</strong>, rather than as an external tool</li>
+<li>Supports <strong>custom box drawings</strong> (like the gates in our diagram above)</li>
+</ol>
+<p>The third point is especially useful: you can draw the individual boxes
+however you like--even ask Codex to generate them--then let <code>typed-pictures</code>
+handle the layout and wiring.</p>
+<p>So how does it work?</p>
+<p>The <code>NOR</code> diagram can be drawn using
+<a rel="external" href="https://en.wikipedia.org/wiki/Layered_graph_drawing">layered graph drawing</a>:
+reachability induces a partial order on the operations, and incomparable
+operations can be grouped into the same layer.
+Here, the first layer is <code>{xor, and, 1}</code>, followed by <code>{xor, id}</code>, and finally
+<code>{xor}</code>.</p>
+<p>This direct layering step does not apply when the input hypergraph contains a
+cycle, as in this latch circuit:</p>
+<div class="flex justify-center">
+  <img class="w-2/3" src="latch.svg" alt="latch circuit">
+</div>
+<p>So how do we deal with cycles?
+It turns out that we can replace any <em>cyclic</em> open hypergraph with an
+equivalent <em>acyclic</em> one using the
+<a rel="external" href="https://arxiv.org/pdf/2305.01041#page=25">Frobenius decomposition</a>.</p>
+<h1 id="intuition">Intuition</h1>
+<p>Here's a sketch before going into detail.
+Say we have a NOT gate with its output connected to its input:</p>
+<div class="flex justify-center">
+  <img class="w-2/3" src="cycle-not.svg" alt="cyclic NOT circuit">
+</div>
+<p>This is represented as a hypergraph with:</p>
+<ul>
+<li>One edge (labeled <code>not</code>)</li>
+<li>One node (the single wire)</li>
+</ul>
+<p>Reachability no longer defines a partial order: the NOT gate can reach itself.
+Instead, we first replace each node (wire) with a <em>pair</em> of edges (boxes):</p>
+<ol>
+<li>A left spider, representing all its occurrences as an <em>input</em></li>
+<li>A right spider, representing all its occurrences as an <em>output</em></li>
+</ol>
+<p>Here's what that looks like for our "cyclic NOT" diagram:</p>
+<div class="flex justify-center">
+  <img class="w-2/3" src="cycle-not-cupcap.svg" alt="cyclic NOT circuit with cup and cap">
+</div>
+<p>Now there are no directed cycles:
+A node (a wire) can only reach another node via an edge (a box),
+but we've replaced all the cyclic paths with ones that "terminate" at a <code>cup</code>.</p>
+<p>This may seem arbitrary, but it has a nice theoretical interpretation: we're
+computing a Frobenius decomposition.
+Fusing the explicit spiders recovers the original hypergraph, and such a
+decomposition always exists.</p>
+<p>Let's see how this works!</p>
+<h1 id="open-hypergraphs">Open Hypergraphs</h1>
+<p>Let's first talk datastructures.
+An open hypergraph is a <strong>hypergraph</strong> with a designated global interface
+(that's the "open" part).
+The hypergraph has nodes and edges, where each edge connects an ordered list of
+source nodes to an ordered list of target nodes.
+Intuitively, edges are operations (boxes), while nodes are <em>wires</em>.</p>
+<p>Recall the cyclic NOT diagram from before:</p>
+<div class="flex justify-center">
+  <img class="w-2/3" src="cycle-not.svg" alt="cyclic NOT circuit">
+</div>
+<p>The corresponding open hypergraph contains the following data, shown here as
+Python-like pseudocode:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span>nodes</span><span style="color: #F97583;"> =</span><span> [</span></span>
+<span class="giallo-l"><span>    (),</span><span style="color: #6A737D;">  # Node 0: the circuit&#39;s single wire</span></span>
+<span class="giallo-l"><span>]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>edges</span><span style="color: #F97583;"> =</span><span> [</span></span>
+<span class="giallo-l"><span>    {</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">        &quot;label&quot;</span><span>:</span><span style="color: #9ECBFF;"> &quot;not&quot;</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">        &quot;sources&quot;</span><span>: [</span><span style="color: #79B8FF;">0</span><span>],</span><span style="color: #6A737D;">  # The NOT gate reads from node 0...</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">        &quot;targets&quot;</span><span>: [</span><span style="color: #79B8FF;">0</span><span>],</span><span style="color: #6A737D;">  # ...and writes back to it, forming the cycle</span></span>
+<span class="giallo-l"><span>    },</span></span>
+<span class="giallo-l"><span>]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;"># The circuit has no dangling input or output wires.</span></span>
+<span class="giallo-l"><span>global_sources</span><span style="color: #F97583;"> =</span><span> []</span></span>
+<span class="giallo-l"><span>global_targets</span><span style="color: #F97583;"> =</span><span> []</span></span></code></pre>
+<p>Nodes can appear any number of times in operation sources and targets, and in
+the global source and target. Mathematically, this kind of open hypergraph
+corresponds to a <strong>morphism of the free symmetric monoidal category presented
+by</strong> \(\Sigma + \mathbf{Frob}\).</p>
+<p>For more precision, see the Addendum below.
+For now, the important part is \(+ \mathbf{Frob}\): it is as if we had added
+four special operations to our hypergraph:</p>
+<div class="flex justify-center">
+  <img class="w-2/3" src="frobenius-generators.svg" alt="The four Frobenius generators: unit, split, merge, and counit">
+</div>
+<p>I say "as if", because these operations (and some associated <em>equations</em>) are
+not represented as explicit edges, but instead are <strong>implicit in the
+connectivity</strong> of the hypergraph.</p>
+<p><strong>That's the key trick</strong>: instead of keeping the Frobenius operations implicit,
+we make them <strong>explicit operations</strong>.</p>
+<p>Making every wire's Frobenius structure explicit in this way gives us a
+<strong>monogamous acyclic</strong> open hypergraph. This restriction was introduced in
+<a rel="external" href="https://arxiv.org/abs/1602.06771">Rewriting modulo symmetric monoidal structure</a>,
+and open hypergraphs of this kind represent morphisms in theories <em>without</em>
+implicit Frobenius operations.
+For example, a combinational circuit is acyclic, but it is monogamous only when
+operations such as fan-out and discard are made explicit.</p>
+<p>Monogamous acyclic open hypergraphs represent diagrams that are:</p>
+<ol>
+<li><strong>Acyclic:</strong> there are no directed cycles.</li>
+<li><strong>Monogamous:</strong> every node appears...
+<ul>
+<li>exactly once as a source (or global target), and</li>
+<li>exactly once as a target (or global source).</li>
+</ul>
+</li>
+</ol>
+<p>The monogamy condition more intuitively says that we can think of the
+wires in our diagrams as always connecting exactly two "ports".</p>
+<p>The <code>NOR</code> diagram is acyclic but not monogamous: each input wire fans out to
+both <code>xor</code> and <code>and</code>. The cyclic NOT diagram is neither.</p>
+<p>Mathematically, a monogamous acyclic open hypergraph corresponds to a
+<strong>morphism of the free symmetric monoidal category presented by</strong>
+\(\Sigma\)--notice the lack of \(\mathbf{Frob}\) here.</p>
+<p>Now, the cool part is this: given an unrestricted hypergraph, a full
+<strong>Frobenius decomposition</strong> gives us an equivalent monogamous acyclic one.</p>
+<h1 id="frobenius-decompositions">Frobenius Decompositions</h1>
+<p>We've already seen the intuition for how this works above;
+now we'll be a little more precise.
+For a <strong>very</strong> precise treatment, see
+<a rel="external" href="https://arxiv.org/pdf/2305.01041#page=25">Data-Parallel Algorithms for String Diagrams</a>.</p>
+<p>First, we extend our set of operations with an explicit <code>Spider</code> operation.
+This is really a family of operations--one for each pair of input and output
+arities--where each spider stands for a connected diagram built from the four
+Frobenius generators above.</p>
+<p>Then, for each node (wire) \(x\) in the original hypergraph, we introduce two
+spiders:</p>
+<ol>
+<li>A left spider \(s_x^-\), whose inputs correspond to occurrences of \(x\)
+on the global source boundary, and whose outputs correspond to occurrences
+of \(x\) as an operation input.</li>
+<li>A right spider \(s_x^+\), whose inputs correspond to occurrences of \(x\)
+as an operation output, and whose outputs correspond to occurrences of
+\(x\) on the global target boundary.</li>
+</ol>
+<p>There is one extra port on each spider, used to connect \(s_x^-\) directly to
+\(s_x^+\). More precisely, if \(x\) occurs \(p\) times on the global
+source boundary, \(m\) times as an operation input, \(n\) times as an
+operation output, and \(q\) times on the global target boundary, then:</p>
+<p>\[
+s_x^- : p \longrightarrow 1 + m
+\qquad\text{and}\qquad
+s_x^+ : 1 + n \longrightarrow q.
+\]</p>
+<p>Every other occurrence is moved onto its own fresh wire, carrying the same
+label as \(x\). This makes the result monogamous: each fresh wire connects
+exactly one spider port to one operation port or global boundary. It also makes
+the result acyclic. All original operations lie between the left and right
+spiders, so every directed path moves from left spiders, through at most one
+original operation, to right spiders.</p>
+<p>Finally, the construction is reversible modulo the Frobenius equations.
+Fusing each explicit spider and identifying its incident wires recovers the
+original node \(x\), and doing this for every node recovers the original open
+hypergraph.</p>
+<p>Now let's look at a small acyclic example: the composition of <code>f</code> followed by
+<code>g</code>.</p>
+<div class="flex justify-center">
+  <img class="w-1/2" src="compose-f-g.svg" alt="The acyclic composition of f followed by g">
+</div>
+<p>Here's its Frobenius decomposition, computed as described above:</p>
+<div class="flex justify-center">
+  <img class="w-2/3" src="compose-f-g-frobenius.svg" alt="The full Frobenius decomposition of the composition of f and g">
+</div>
+<p>Unfortunately, this is incredibly ugly.
+Notice that by decomposing in this way, we <em>always</em> get a three-layer diagram:
+source spiders, operations, and target spiders.
+Even this small acyclic example becomes difficult to read.</p>
+<p>What can we do about this?</p>
+<h1 id="cycle-breaking">Cycle Breaking</h1>
+<p>To fix this, we replace wires with explicit left and right spiders <em>only where
+necessary</em>.
+Which wires need to be replaced?
+Precisely those which cause cycles!</p>
+<p>Finding this set is the process of <em>cycle breaking</em>, closely related to the
+cycle-removal stage of layered graph drawing algorithms such as
+<a rel="external" href="https://graphviz.org/doc/info/lang.html">dot</a>.
+Finding a minimum set of wires that intersects every directed cycle is
+NP-hard, so we use a fast greedy heuristic. The one used in
+<a rel="external" href="https://github.com/hellas-ai/typed-pictures">typed-pictures</a> works as follows:</p>
+<ol>
+<li>Turn the hypergraph into a directed bipartite graph with one vertex for each
+wire and one for each operation. An operation input becomes an arc
+<code>wire → operation</code>, and an operation output becomes an arc
+<code>operation → wire</code>.</li>
+<li>Repeatedly remove every source and sink--that is, every vertex with no
+incoming or no outgoing arcs. Such a vertex cannot be part of a directed
+cycle, so removing it does not require us to spiderize anything. We call
+this step <em>peeling</em> the acyclic fringe.</li>
+<li>If vertices remain after peeling, the residual graph contains a cycle.
+Choose the remaining wire with the largest
+<code>indegree × outdegree</code> score, record it as a cycle breaker, and remove it.
+This score favours wires whose removal is likely to break several cycles at
+once.</li>
+<li>Peel again, and repeat until no vertices remain.</li>
+</ol>
+<p>The selected wires are not necessarily the smallest possible set, but they are
+guaranteed to intersect every directed cycle: anything not selected was
+eventually removed as part of an acyclic fringe. Spiderizing exactly these
+wires therefore makes the diagram acyclic while leaving the rest of its wiring
+unchanged.</p>
+<p>For comparison, here is the latch after a full Frobenius decomposition, with
+every wire replaced by explicit spiders:</p>
+<div class="flex justify-center">
+  <img class="w-2/3" src="latch-frobenius.svg" alt="The latch circuit after a full Frobenius decomposition">
+</div>
+<p>For this latch, cycle breaking needs only one wire.
+Spiderizing that wire yields an acyclic diagram, shown here:</p>
+<div class="flex justify-center">
+  <img class="w-2/3" src="latch.svg" alt="The latch circuit after spiderizing only a cycle-breaking wire">
+</div>
+<p>Both diagrams represent the same open hypergraph modulo the Frobenius
+equations, but cycle-broken diagrams are typically easier to read.</p>
+<h1 id="summing-up">Summing up</h1>
+<p>To sum up: Frobenius decompositions let us lift an algorithm for rendering
+<strong>acyclic open hypergraphs</strong> into one that works on <strong>any open hypergraph</strong>.</p>
+<p>In practice, we only add spiders where we need them to break cycles.
+That means simple diagrams stay simple, while cyclic ones still get an
+equivalent acyclic representation using the usual Frobenius structure.</p>
+<h1 id="addendum-sigma-terms-open-hypergraphs-and-monogamous-acyclicity">Addendum: \(\Sigma\)-terms, Open Hypergraphs, and Monogamous Acyclicity</h1>
+<p>For the categorically minded, here is the categorical picture.
+Let \(\Sigma = (\Sigma_0, \Sigma_1)\) be a monoidal signature consisting
+of generating objects and typed operations. Write
+\(\mathrm{Free}_\Sigma\) for its category of terms, built using composition
+and tensor product and taken modulo the symmetric monoidal laws. If the
+signature also carries equations \(\Sigma_2\), quotient every category
+below by the congruence they generate.</p>
+<p>Let \(\mathrm{Hyp}_\Sigma\) be the category of \(\Sigma\)-labelled open
+hypergraphs, and let \(\mathrm{MAHyp}_\Sigma\) be its monogamous acyclic
+subcategory. The standard correspondences, together with the optional
+factorisation on the right, fit into this commuting diagram:</p>
+<div class="flex justify-center">
+  <img class="w-full" src="correspondence-diagram.svg" alt="A commuting diagram relating Sigma terms, terms with Frobenius structure, monogamous acyclic open hypergraphs, and arbitrary open hypergraphs, with an optional factorisation through explicit Frobenius generators">
+</div>
+<p>In symbols,
+\(\mathrm{Free}_\Sigma \cong \mathrm{MAHyp}_\Sigma\), and
+\(\mathrm{Free}_{\Sigma+\mathbf{Frob}} \cong \mathrm{Hyp}_\Sigma\).
+On the right, the Frobenius equations identify each connected region of
+Frobenius wiring with a single hypergraph node.</p>
+<p>The right-hand equivalence may be factored through
+\(\mathrm{MAHyp}_{\Sigma+\mathbf{Frob}}/{\equiv_{\mathbf{Frob}}}\):
+monogamous acyclic hypergraphs with explicit Frobenius generators, taken
+modulo the Frobenius equations.</p>
+<p>The specific full decomposition in this post is guaranteed to be monogamous
+and acyclic; an arbitrary way of making spiders explicit need not have this
+property. Expanding its spiders gives a
+\((\Sigma+\mathbf{Frob})\)-term, while fusing them recovers the original open
+hypergraph. Such a representative is not unique, but all valid choices agree
+modulo the Frobenius equations.</p>
+<p>The cycle-breaking optimisation is deliberately weaker: it makes only the
+spiders needed to remove directed cycles explicit. The result is guaranteed
+to be acyclic, but it need not be monogamous because unselected wires may
+still branch or merge implicitly.</p>
+
+  </div>
+
+  
+  
+  <nav class="flex justify-between max-w-3xl border-t border-hellas-cool-grey/20 pt-8 mt-12 font-sans">
+    <span></span>
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;deterministic-transcendentals&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline text-right">
+        Deterministic transcendental functions →
+      </a>
+    
+  </nav>
+  
+
+  <!-- Post Footer -->
+  
+  
+  
+  <div class="border-t border-hellas-cool-grey/20 pt-8 mt-8 max-w-3xl">
+    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="inline-flex items-center text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+      </svg>
+      Back
+    </a>
+  </div>
+</article>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-hellas-black text-hellas-white py-12 border-t border-hellas-cool-grey/20">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 mb-4">
+          <p class="text-hellas-cool-grey mb-4 font-sans">Powering limitless intelligence</p>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Links</h3>
+          <ul class="space-y-2 font-sans">
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="hover:text-hellas-yellow transition duration-200">Home</a></li>
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="hover:text-hellas-yellow transition duration-200">Blog</a></li>
+            <li><a href="https://hellas.ai" class="hover:text-hellas-yellow transition duration-200">Main Site</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="https://twitter.com/hellasdotai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-twitter-white.svg" alt="Twitter" class="h-6 w-6">
+            </a>
+            <a href="https://discord.gg/qHqZyuAa3u" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+
+              <img src="https://blog.hellas.ai/socials/socials-discord-white.svg" alt="Discord" class="h-6 w-6">
+            </a>
+            <a href="https://t.me/hellasai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-telegram-white.svg" alt="Telegram" class="h-6 w-6">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-hellas-cool-grey/20 mt-8 pt-8 text-hellas-cool-grey text-sm font-sans">
+        <p>© 2026 Hellas.ai — All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

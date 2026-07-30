@@ -1,0 +1,49 @@
+copying 0 paths...
+copying 0 paths...
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== allsum mac0-linux1 via 192.168.23.73:31222 ==
+-- mac output (mac0-linux1 rank 0) --
+rank 0/2 backend=jaccl MLX_RANK=0 device=Device(gpu, 0) dtype=float16
+rank 0 warmup OK
+rank 0 size=8388608 OK time_us=54591.8 payload_gbps=1.229 iters=10
+rank 0 after size=8388608 barrier OK
+rank 0 size=16777216 OK time_us=105300.0 payload_gbps=1.275 iters=10
+-- linux output (mac0-linux1 rank 1) --
+[jaccl] Connection attempt 0 waiting 1000 ms
+rank 1/2 backend=jaccl MLX_RANK=1 device=Device(gpu, 0) dtype=float16
+rank 1 warmup OK
+rank 1 size=8388608 OK time_us=54425.4 payload_gbps=1.233 iters=10
+rank 1 after size=8388608 barrier OK
+rank 1 size=16777216 OK time_us=105297.1 payload_gbps=1.275 iters=10
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== allsum linux0-mac1 via 192.168.23.1:31223 ==
+-- mac output (linux0-mac1 rank 1) --
+rank 1/2 backend=jaccl MLX_RANK=1 device=Device(gpu, 0) dtype=float16
+rank 1 warmup OK
+rank 1 size=8388608 OK time_us=47703.6 payload_gbps=1.407 iters=10
+rank 1 after size=8388608 barrier OK
+rank 1 size=16777216 OK time_us=112405.8 payload_gbps=1.194 iters=10
+-- linux output (linux0-mac1 rank 0) --
+rank 0/2 backend=jaccl MLX_RANK=0 device=Device(gpu, 0) dtype=float16
+rank 0 warmup OK
+rank 0 size=8388608 OK time_us=47429.6 payload_gbps=1.415 iters=10
+rank 0 after size=8388608 barrier OK
+rank 0 size=16777216 OK time_us=112341.0 payload_gbps=1.195 iters=10
+tbnet_identity_arp_errors: 0
+data_rx_no_recv: 0
+data_rx_copy_error: 0
+data_rx_reorder_dropped: 0
+data_cq_overflow: 0
+PASS: Apple/macOS MLX distributed JACCL smoke completed

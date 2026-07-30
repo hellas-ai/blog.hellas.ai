@@ -1,0 +1,100 @@
+{
+  "one": {
+    "width": 2,
+    "height": 2,
+    "source_ports": [],
+    "target_ports": [1],
+    "path": "one.svg"
+  },
+  "xor": {
+    "width": 4,
+    "height": 4,
+    "source_ports": [1, 3],
+    "target_ports": [2],
+    "path": "xor.svg"
+  },
+  "and": {
+    "width": 4,
+    "height": 4,
+    "source_ports": [1, 3],
+    "target_ports": [2],
+    "path": "and.svg"
+  },
+  "f": {
+    "width": 3,
+    "height": 2,
+    "source_ports": [1],
+    "target_ports": [1],
+    "path": "f.svg"
+  },
+  "g": {
+    "width": 3,
+    "height": 2,
+    "source_ports": [1],
+    "target_ports": [1],
+    "path": "g.svg"
+  },
+  "not": {
+    "width": 3,
+    "height": 2,
+    "source_ports": [1],
+    "target_ports": [1],
+    "path": "not.svg"
+  },
+  "nor": {
+    "width": 5,
+    "height": 4,
+    "source_ports": [1, 3],
+    "target_ports": [2],
+    "path": "nor-generator-fragment.svg"
+  },
+  "latch": {
+    "width": 5,
+    "height": 4,
+    "source_ports": [1, 3],
+    "target_ports": [1, 3],
+    "path": "latch-generator-fragment.svg"
+  },
+  "spider-0-1": {
+    "width": 3,
+    "height": 2,
+    "source_ports": [],
+    "target_ports": [1],
+    "path": "spider-0-1.svg"
+  },
+  "spider-0-2": {
+    "width": 3,
+    "height": 4,
+    "source_ports": [],
+    "target_ports": [1, 3],
+    "path": "spider-0-2.svg"
+  },
+  "spider-1-0": {
+    "width": 3,
+    "height": 2,
+    "source_ports": [1],
+    "target_ports": [],
+    "path": "spider-1-0.svg"
+  },
+  "spider-1-2": {
+    "width": 3,
+    "height": 4,
+    "source_ports": [2],
+    "target_ports": [1, 3],
+    "path": "spider-1-2.svg"
+  },
+  "spider-2-0": {
+    "width": 3,
+    "height": 4,
+    "source_ports": [1, 3],
+    "target_ports": [],
+    "path": "spider-2-0.svg"
+  },
+  "spider-2-1": {
+    "width": 3,
+    "height": 4,
+    "source_ports": [1, 3],
+    "target_ports": [2],
+    "path": "spider-2-1.svg"
+  }
+}

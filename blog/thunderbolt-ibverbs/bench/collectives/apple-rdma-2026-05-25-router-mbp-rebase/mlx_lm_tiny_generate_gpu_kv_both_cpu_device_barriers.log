@@ -1,0 +1,107 @@
+copying 0 paths...
+copying 0 paths...
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== lm mac0-linux1 via 192.168.23.73:30020 ==
+-- mac output (mac0-linux1 rank 0) --
+rank 0/2 backend=jaccl MLX_RANK=0 device=Device(gpu, 0) model=/tmp/tibverbs-tiny-qwen2-mlx-lm
+rank 0 sharded_load OK
+rank 0 sync generation start prompt_tokens=2 generation_tokens=2 cache=kv
+rank 0 sync generation token_index=0 token=86
+rank 0 step 0 synchronize start
+rank 0 step 0 synchronize OK
+rank 0 step 0 distributed barrier start
+rank 0 step 0 distributed barrier OK
+rank 0 sync generation token_index=1 token=86
+rank 0 step 1 synchronize start
+rank 0 step 1 synchronize OK
+rank 0 step 1 distributed barrier start
+rank 0 step 1 distributed barrier OK
+rank 0 generated token agreement OK
+rank 0 sync generation OK generated=2 generation_tps=8.578 last_token=86 peak_memory_gb=0.000
+rank 0 synchronize start
+rank 0 synchronize OK
+rank 0 sleeping 1000 ms after generation
+rank 0 generated=2 generation_tps=8.578 last_token=86 peak_memory_gb=0.000
+-- linux output (mac0-linux1 rank 1) --
+[jaccl] Connection attempt 0 waiting 1000 ms
+rank 1/2 backend=jaccl MLX_RANK=1 device=Device(gpu, 0) model=/tmp/tibverbs-tiny-qwen2-mlx-lm
+rank 1 sharded_load OK
+rank 1 sync generation start prompt_tokens=2 generation_tokens=2 cache=kv
+Warning: rocBLAS does not support GPU architecture 'gfx1103'. Matrix multiplication operations will not be available. Supported architectures: gfx908, gfx90a, gfx942, gfx950, gfx1030, gfx1100, gfx1101, gfx1102, gfx1150, gfx1151, gfx1200, gfx1201.
+rank 1 sync generation token_index=0 token=86
+rank 1 step 0 synchronize start
+rank 1 step 0 synchronize OK
+rank 1 step 0 distributed barrier start
+rank 1 step 0 distributed barrier OK
+rank 1 sync generation token_index=1 token=86
+rank 1 step 1 synchronize start
+rank 1 step 1 synchronize OK
+rank 1 step 1 distributed barrier start
+rank 1 step 1 distributed barrier OK
+rank 1 generated token agreement OK
+rank 1 sync generation OK generated=2 generation_tps=8.520 last_token=86 peak_memory_gb=0.000
+rank 1 synchronize start
+rank 1 synchronize OK
+rank 1 sleeping 1000 ms after generation
+rank 1 generated=2 generation_tps=8.520 last_token=86 peak_memory_gb=0.000
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== lm linux0-mac1 via 192.168.23.1:30021 ==
+-- mac output (linux0-mac1 rank 1) --
+rank 1/2 backend=jaccl MLX_RANK=1 device=Device(gpu, 0) model=/tmp/tibverbs-tiny-qwen2-mlx-lm
+rank 1 sharded_load OK
+rank 1 sync generation start prompt_tokens=2 generation_tokens=2 cache=kv
+rank 1 sync generation token_index=0 token=86
+rank 1 step 0 synchronize start
+rank 1 step 0 synchronize OK
+rank 1 step 0 distributed barrier start
+rank 1 step 0 distributed barrier OK
+rank 1 sync generation token_index=1 token=86
+rank 1 step 1 synchronize start
+rank 1 step 1 synchronize OK
+rank 1 step 1 distributed barrier start
+rank 1 step 1 distributed barrier OK
+rank 1 generated token agreement OK
+rank 1 sync generation OK generated=2 generation_tps=8.575 last_token=86 peak_memory_gb=0.000
+rank 1 synchronize start
+rank 1 synchronize OK
+rank 1 sleeping 1000 ms after generation
+rank 1 generated=2 generation_tps=8.575 last_token=86 peak_memory_gb=0.000
+-- linux output (linux0-mac1 rank 0) --
+rank 0/2 backend=jaccl MLX_RANK=0 device=Device(gpu, 0) model=/tmp/tibverbs-tiny-qwen2-mlx-lm
+rank 0 sharded_load OK
+rank 0 sync generation start prompt_tokens=2 generation_tokens=2 cache=kv
+Warning: rocBLAS does not support GPU architecture 'gfx1103'. Matrix multiplication operations will not be available. Supported architectures: gfx908, gfx90a, gfx942, gfx950, gfx1030, gfx1100, gfx1101, gfx1102, gfx1150, gfx1151, gfx1200, gfx1201.
+rank 0 sync generation token_index=0 token=86
+rank 0 step 0 synchronize start
+rank 0 step 0 synchronize OK
+rank 0 step 0 distributed barrier start
+rank 0 step 0 distributed barrier OK
+rank 0 sync generation token_index=1 token=86
+rank 0 step 1 synchronize start
+rank 0 step 1 synchronize OK
+rank 0 step 1 distributed barrier start
+rank 0 step 1 distributed barrier OK
+rank 0 generated token agreement OK
+rank 0 sync generation OK generated=2 generation_tps=8.707 last_token=86 peak_memory_gb=0.000
+rank 0 synchronize start
+rank 0 synchronize OK
+rank 0 sleeping 1000 ms after generation
+rank 0 generated=2 generation_tps=8.707 last_token=86 peak_memory_gb=0.000
+tbnet_identity_arp_errors: 0
+data_rx_no_recv: 0
+data_rx_copy_error: 0
+data_rx_reorder_dropped: 0
+data_cq_overflow: 0
+PASS: Apple/macOS MLX distributed JACCL smoke completed

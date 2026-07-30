@@ -1,0 +1,54 @@
+# Circuits
+(theory syntax nat {
+  # single bit
+  (arr 1 : 0 -> 1)
+})
+
+(theory proof syntax {
+  # circuits as mod-2 semiring
+  (arr one : {} -> 1)
+  (arr xor : {1 1} -> 1)
+  (arr and : {1 1} -> 1)
+  (arr f : 1 -> 1)
+  (arr g : 1 -> 1)
+
+  (arr cap : {} -> {1 1})
+  (arr cup : {1 1} -> {})
+
+  # Explicit spiders used to display a full Frobenius decomposition.
+  (arr spider-0-1 : {} -> 1)
+  (arr spider-0-2 : {} -> {1 1})
+  (arr spider-1-0 : 1 -> {})
+  (arr spider-1-2 : 1 -> {1 1})
+  (arr spider-2-0 : {1 1} -> {})
+  (arr spider-2-1 : {1 1} -> 1)
+
+  # Definitions
+  # One-bit half-adder, returning sum followed by carry.
+  (def adder1 : {1 1} -> {1 1} = ([x y . x y x y] {xor and}))
+
+  (def not : 1 -> 1 = ({_ one} xor))
+  (def nor : {1 1} -> 1 = ({([x y . x y x y] {xor and} xor) one} xor))
+
+  # SR latch from cross-coupled NOR gates.
+  (def latch : {1 1} -> {1 1} = ([s r . r qbar s q] {nor nor} [q qbar . q qbar]))
+
+  # NOT with feedback
+  (def cycle-not : {} -> {} = ([. x x] {_ not} [x x .]))
+  (def cycle-not-cupcap : {} -> {} = (cap {_ not} cup))
+
+  # A simple acyclic example and its full Frobenius decomposition.
+  (def compose-f-g : 1 -> 1 = (f g))
+  (def compose-f-g-frobenius : 1 -> 1 =
+    (
+      # One left spider for each of the input, intermediate, and output wires.
+      {spider-1-2 spider-0-2 spider-0-1}
+
+      # Preserve each bridge while applying f and g to their operation legs.
+      {_ f _ g _}
+
+      # One right spider for each original wire.
+      {spider-1-0 spider-2-0 spider-2-1}
+    )
+  )
+})

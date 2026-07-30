@@ -1,0 +1,5 @@
+<g class="drawable gate-one">
+  <circle cx="0.85" cy="1" r="0.4" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 1.25 1 L 2 1" fill="none" stroke="black" stroke-width="0.05"/>
+  <text x="0.85" y="1.16" text-anchor="middle" font-size="0.42">1</text>
+</g>

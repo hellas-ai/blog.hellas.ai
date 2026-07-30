@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" class="dark:bg-hellas-black bg-hellas-white">
+
+<head>
+  
+  
+  <!-- HTML Meta Tags -->
+  <title>Will AI do to Software Engineering what Offshoring did to Manufacturing?</title>
+  <meta name="description" content="AI is replacing junior software engineers: will the industry end up with a skills gap?">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <link rel="stylesheet" type="text/css" href="https://blog.hellas.ai/style.css">
+  <link rel="alternate" type="application/atom+xml" title="Hellas Blog Atom Feed" href="https://blog.hellas.ai/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Hellas Blog RSS Feed" href="https://blog.hellas.ai/rss.xml">
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Will AI do to Software Engineering what Offshoring did to Manufacturing?">
+  <meta property="og:description" content="AI is replacing junior software engineers: will the industry end up with a skills gap?">
+  <meta property="og:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="hellas.ai">
+  <meta property="twitter:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta name="twitter:title" content="Will AI do to Software Engineering what Offshoring did to Manufacturing?">
+  <meta name="twitter:description" content="AI is replacing junior software engineers: will the industry end up with a skills gap?">
+  <meta name="twitter:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- e.g. for safari tab bar -->
+  <meta name="theme-color" content="#1C1C1C" />
+
+  <!-- MathJax for LaTeX support -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Mobile menu toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+
+</head>
+
+<body class="dark:bg-hellas-black bg-hellas-white dark:text-hellas-white text-hellas-black flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30">
+    <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="flex items-center">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_Black.svg" alt="Hellas" class="h-8 dark:hidden">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 hidden dark:block">
+      </a>
+      <nav class="hidden md:flex space-x-8 font-sans">
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Home</a>
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Blog</a>
+        <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200">Main Site</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobile-menu-button" type="button" class="text-hellas-cool-grey">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+      <!-- Mobile menu, hidden by default -->
+      <div id="mobile-menu" class="hidden fixed top-[70px] right-0 left-0 bg-hellas-white dark:bg-hellas-black border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30 md:hidden">
+        <nav class="container mx-auto px-4 py-4 flex flex-col space-y-4 font-sans">
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Home</a>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Blog</a>
+          <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Main Site</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    
+
+
+
+<article class="py-12">
+  <!-- Post Header -->
+  <header class="mb-8">
+    <h1 class="font-paplane text-7xl mb-4 text-hellas-black dark:text-hellas-white">
+      Will AI do to Software Engineering what Offshoring did to Manufacturing?
+    </h1>
+    <div class="flex items-center text-hellas-cool-grey">
+      <time datetime="2025-10-31">October 31, 2025</time>
+      
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <div class="prose prose-lg dark:prose-invert max-w-3xl mb-12 text-hellas-black dark:text-hellas-white font-sans">
+    <p>AI is replacing work traditionally given to junior software engineers<sup class="footnote-reference"><a href="#1">1</a></sup>.
+The thesis<sup class="footnote-reference"><a href="#2">2</a></sup> <sup class="footnote-reference"><a href="#3">3</a></sup> is that repetitive, boilerplate work can now be automated,
+freeing senior engineers to apply the <em>tacit</em> skills of programming which AI is not yet able to automate.</p>
+<p>But this tacit knowledge is developed through years of practice:
+the design and management of large codebases, managing complexity, knowing when
+to incur tech debt, when to pay it off, and so on.</p>
+<p>So if there are no longer incentives to train junior software engineers,
+what will happen to the industry?
+We can make a prediction by observing how the same pattern unfolded in another
+industry: manufacturing.</p>
+<p>US manufacturing employment peaked in 1979<sup class="footnote-reference"><a href="#4">4</a></sup>, after which offshoring began to
+erode the labor force.
+Consequently, there was less demand for trainees, resulting in a
+"labor population pyramid" skewed toward older (senior) workers.
+Now, as those seniors retire, they take their tacit knowledge with them, and it
+becomes harder and harder to train new juniors<sup class="footnote-reference"><a href="#5">5</a></sup>.
+Ultimately, offshoring caused a vicious cycle which led to a skills gap around
+30 years later<sup class="footnote-reference"><a href="#6">6</a></sup>.</p>
+<p>Note that the opposite of this effect happens as well, to quote <a rel="external" href="https://hbr.org/2009/07/restoring-american-competitiveness">Pisano and
+Shih</a>:</p>
+<blockquote>
+<p>Once an industrial commons has taken root in a region, a powerful virtuous
+cycle feeds its growth. Experts flock there because that’s where the jobs and
+knowledge networks are. Firms do the same to tap the talent pool, stay
+abreast of advances, and be near suppliers and potential partners.</p>
+</blockquote>
+<p>Now let's translate this to software engineering to make a prediction.
+We have the same initial conditions, except instead of offshoring replacing
+juniors, it's AI.
+If the same pattern unfolds, then in ~30 years time we'd expect to see much of
+the tacit knowledge of programming disappear from the workforce, and a similar
+skills gap.</p>
+<p>Will this actually happen? This time there are some differences:</p>
+<ol>
+<li>AI may progress enough to replace seniors too (exacerbating the problem?)</li>
+<li>Software skills become outdated faster (we'll be training more juniors anyway)</li>
+<li>Software has a low barrier to entry for learning, and AI can help you learn</li>
+<li>Junior work is not offshored (if the AI is US-based), so is the "industrial commons" really eroded?</li>
+<li>The "industrial commons" of open source software is distributed and
+accessible from anywhere</li>
+</ol>
+<p>I'd bet against the erosion of software engineering purely based on (3) and
+(5): it's easy enough to train oneself without significant monetary investment,
+and the "industrial commons" of software exists at least partly in open source
+projects where new developers can learn from seniors by contributing their
+labor for free.</p>
+<p>However, I <em>would</em> predict that new software engineers will have to front more
+of the cost of learning that could previously be done on the job, and that this
+will mean fewer people will select software engineering as a career for purely
+economic reasons over "love of the game".</p>
+<p>Time will tell!</p>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p><a rel="external" href="https://www.cio.com/article/4062024/demand-for-junior-developers-softens-as-ai-takes-over.html">Demand for junior developers softens as AI takes over</a></p>
+</div>
+<div class="footnote-definition" id="2"><sup class="footnote-definition-label">2</sup>
+<p><a rel="external" href="https://x.com/yacineMTB/status/1984161544570335676">https://x.com/yacineMTB/status/1984161544570335676</a></p>
+</div>
+<div class="footnote-definition" id="3"><sup class="footnote-definition-label">3</sup>
+<p><a rel="external" href="https://www.sundeepteki.org/advice/impact-of-ai-on-the-2025-software-engineering-job-market">Impact of AI on the 2025 Software Engineering Job Market</a></p>
+</div>
+<div class="footnote-definition" id="4"><sup class="footnote-definition-label">4</sup>
+<p><a rel="external" href="https://www.bls.gov/opub/btn/volume-9/forty-years-of-falling-manufacturing-employment.htm">Forty years of falling manufacturing employment</a></p>
+</div>
+<div class="footnote-definition" id="5"><sup class="footnote-definition-label">5</sup>
+<p><a rel="external" href="https://www.ptc.com/en/technologies/augmented-reality/training/manufacturing-skills-gap">The Manufacturing Skills Gap </a></p>
+</div>
+<div class="footnote-definition" id="6"><sup class="footnote-definition-label">6</sup>
+<p><a rel="external" href="https://www.nist.gov/system/files/2015_skills_gap_report.pdf">The skills gap in U.S. manufacturing</a></p>
+</div>
+
+  </div>
+
+  
+  
+  <nav class="flex justify-between max-w-3xl border-t border-hellas-cool-grey/20 pt-8 mt-12 font-sans">
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;inductive-types-in-lean&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+        ← Inductive Types in Lean
+      </a>
+    
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;three-solutions-to-nondeterminism-in-ai&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline text-right">
+        Three Solutions to Nondeterminism in AI →
+      </a>
+    
+  </nav>
+  
+
+  <!-- Post Footer -->
+  
+  
+  
+  <div class="border-t border-hellas-cool-grey/20 pt-8 mt-8 max-w-3xl">
+    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="inline-flex items-center text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+      </svg>
+      Back
+    </a>
+  </div>
+</article>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-hellas-black text-hellas-white py-12 border-t border-hellas-cool-grey/20">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 mb-4">
+          <p class="text-hellas-cool-grey mb-4 font-sans">Powering limitless intelligence</p>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Links</h3>
+          <ul class="space-y-2 font-sans">
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="hover:text-hellas-yellow transition duration-200">Home</a></li>
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="hover:text-hellas-yellow transition duration-200">Blog</a></li>
+            <li><a href="https://hellas.ai" class="hover:text-hellas-yellow transition duration-200">Main Site</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="https://twitter.com/hellasdotai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-twitter-white.svg" alt="Twitter" class="h-6 w-6">
+            </a>
+            <a href="https://discord.gg/qHqZyuAa3u" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+
+              <img src="https://blog.hellas.ai/socials/socials-discord-white.svg" alt="Discord" class="h-6 w-6">
+            </a>
+            <a href="https://t.me/hellasai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-telegram-white.svg" alt="Telegram" class="h-6 w-6">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-hellas-cool-grey/20 mt-8 pt-8 text-hellas-cool-grey text-sm font-sans">
+        <p>© 2026 Hellas.ai — All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

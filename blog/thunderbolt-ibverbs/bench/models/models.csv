@@ -1,0 +1,30 @@
+model,params_b,active_b,elo,family,license,source_elo,source_params,notes
+claude-opus-4-7,,,1492,anthropic,proprietary,https://arena.ai/leaderboard/text,n/a,closed weights
+claude-opus-4-6,,,1498,anthropic,proprietary,https://arena.ai/leaderboard/text,n/a,closed weights
+gemini-3.1-pro-preview,,,1488,google,proprietary,https://arena.ai/leaderboard/text,n/a,closed weights
+gpt-5.5,,,1478,openai,proprietary,https://arena.ai/leaderboard/text,n/a,closed weights
+grok-4.20-beta1,,,1478,xai,proprietary,https://arena.ai/leaderboard/text,n/a,closed weights
+muse-spark,,,1489,meta,proprietary,https://arena.ai/leaderboard/text,n/a,closed weights
+qwen3.7-max-preview,,,1475,alibaba,proprietary,https://arena.ai/leaderboard/text,n/a,closed weights
+ernie-5.1,,,1473,baidu,proprietary,https://arena.ai/leaderboard/text,n/a,closed weights
+mimo-v2.5-pro,,,1465,xiaomi,proprietary,https://arena.ai/leaderboard/text,n/a,closed weights
+kimi-k2.6,1000,32,1462,moonshot,open-weight,https://arena.ai/leaderboard/text,https://huggingface.co/moonshotai,MoE: ~1T total / 32B active (estimate)
+deepseek-v4-pro-thinking,671,37,1461,deepseek,open-weight,https://arena.ai/leaderboard/text,https://huggingface.co/deepseek-ai,MoE: 671B total / 37B active (V4 retains V3 shape — estimate)
+deepseek-v4-pro,671,37,1459,deepseek,open-weight,https://arena.ai/leaderboard/text,https://huggingface.co/deepseek-ai,MoE: 671B/37B active (estimate)
+glm-5.1,355,32,1472,zhipu,open-weight,https://arena.ai/leaderboard/text,https://huggingface.co/zai-org,MoE — params estimated from GLM-5 family
+glm-5,355,32,1457,zhipu,open-weight,https://arena.ai/leaderboard/text,https://huggingface.co/zai-org,MoE — params estimated
+qwen3.5-397b-a17b,397,17,1450,alibaba,open-weight,https://arena.ai/leaderboard/text,https://huggingface.co/Qwen,MoE: 397B/17B active (per model name)
+qwen3.6-27b-dense,27,27,1420,alibaba,open-weight,https://huggingface.co/Qwen (estimate),https://huggingface.co/Qwen,dense; ELO estimated (not in May-2026 top 40 fetch)
+gemma-4-31b,31,31,1451,google,open-weight,https://arena.ai/leaderboard/text,https://huggingface.co/google,dense
+gemma-4-26b-a4b,26,4,1440,google,open-weight,https://huggingface.co/google (estimate),https://huggingface.co/google/gemma-4-26B-A4B-it,MoE: 26B/4B active; ELO estimated
+llama-3.3-70b-instruct,70,70,1320,meta,open-weight,https://lmarena.ai (historical),https://huggingface.co/meta-llama,dense; ELO from historical snapshot
+qwen3-32b,32,32,1290,alibaba,open-weight,https://lmarena.ai (historical),https://huggingface.co/Qwen,dense; ELO from historical
+qwen3-14b,14,14,1260,alibaba,open-weight,https://lmarena.ai (historical),https://huggingface.co/Qwen,dense; ELO from historical
+gemma-3-12b-it,12,12,1240,google,open-weight,https://lmarena.ai (historical),https://huggingface.co/google,dense; ELO historical
+llama-3.1-8b-instruct,8,8,1170,meta,open-weight,https://lmarena.ai (historical),https://huggingface.co/meta-llama,dense; ELO historical
+mistral-7b-instruct-v0.3,7,7,1100,mistral,open-weight,https://lmarena.ai (historical),https://huggingface.co/mistralai,dense; ELO historical
+qwen3-4b-instruct,4,4,1200,alibaba,open-weight,https://lmarena.ai (historical),https://huggingface.co/Qwen,dense; ELO historical
+phi-3.5-mini-instruct,3.8,3.8,1130,microsoft,open-weight,https://lmarena.ai (historical),https://huggingface.co/microsoft,dense; ELO historical
+smollm2-1.7b-instruct,1.7,1.7,950,huggingface,open-weight,https://huggingface.co/HuggingFaceTB,https://huggingface.co/HuggingFaceTB,dense; ELO is a rough estimate
+qwen3-0.6b,0.6,0.6,900,alibaba,open-weight,(estimate),https://huggingface.co/Qwen,dense; ELO estimated
+llama-3.2-1b-instruct,1,1,920,meta,open-weight,(estimate),https://huggingface.co/meta-llama,dense; ELO estimated

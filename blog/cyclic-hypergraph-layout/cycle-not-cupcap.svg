@@ -1,0 +1,169 @@
+<svg height="72" viewBox="-0.25 -0.25 17.5 4.5" width="280" xmlns="http://www.w3.org/2000/svg">
+<style>
+svg { color-scheme: light dark; } .spider { color: #111; } .drawable { color: #111; } .spider text, .drawable text { fill: currentColor !important; } .spider path, .spider line, .spider rect, .spider circle, .spider ellipse, .spider polyline, .spider polygon, .drawable path, .drawable line, .drawable rect, .drawable circle, .drawable ellipse, .drawable polyline, .drawable polygon { stroke: currentColor !important; } @media (prefers-color-scheme: dark) { .spider, .drawable { color: #f5f5f5; } }
+</style>
+<g>
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 1)"/>
+</g>
+<g transform="translate(0, 4)"/>
+</g>
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 0)">
+<g class="drawable">
+<path d="M 3 1 L 4 1" fill="none" stroke="black" stroke-width="0.05"/>
+<path d="M 3 2 L 4 2" fill="none" stroke="black" stroke-width="0.05"/>
+<rect fill="none" height="3.6" rx="0.3" ry="0.3" stroke="black" stroke-width="0.05" width="2" x="1" y="0.2"/>
+</g>
+<svg height="2" viewBox="0 0 2 2" width="2" x="1" xmlns="http://www.w3.org/2000/svg" y="0.99999994">
+<style>
+svg { color-scheme: light dark; } .spider { color: #111; } .drawable { color: #111; } .spider text, .drawable text { fill: currentColor !important; } .spider path, .spider line, .spider rect, .spider circle, .spider ellipse, .spider polyline, .spider polygon, .drawable path, .drawable line, .drawable rect, .drawable circle, .drawable ellipse, .drawable polyline, .drawable polygon { stroke: currentColor !important; } @media (prefers-color-scheme: dark) { .spider, .drawable { color: #f5f5f5; } }
+</style>
+<g>
+<text class="tp-cli-label" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="0.48" x="0.54999995" y="1.038">
+cap
+</text>
+</g>
+</svg>
+</g>
+</g>
+<g transform="translate(0, 4)"/>
+</g>
+<g transform="translate(0, 4)"/>
+</g>
+</g>
+<g transform="translate(4, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 0 1 L 0.4 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0 2 L 0.4 2" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 1 L 3 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 3 L 3 3" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 1 C 1.5 1 1.5 1 2.6 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 2 C 1.5 2 1.5 3 2.6 3" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(0, 4)"/>
+</g>
+<g transform="translate(0, 4)"/>
+</g>
+</g>
+<g transform="translate(7, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 1)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(1, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+<g transform="translate(2, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+<g transform="translate(0, 1)">
+<g class="drawable gate-not">
+  <path d="M 0 1 L 0.65 1" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 2.25 1 L 3 1" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 0.65 0.35 L 0.65 1.65 L 2.0 1 Z" fill="none" stroke="black" stroke-width="0.05"/>
+  <circle cx="2.12" cy="1" r="0.14" fill="none" stroke="black" stroke-width="0.05"/>
+  <text x="1.25" y="1.14" text-anchor="middle" font-size="0.34">not</text>
+</g>
+
+</g>
+</g>
+</g>
+<g transform="translate(0, 4)"/>
+</g>
+<g transform="translate(0, 4)"/>
+</g>
+</g>
+<g transform="translate(10, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 0 1 L 0.4 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0 3 L 0.4 3" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 1 L 3 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 2 L 3 2" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 1 C 1.5 1 1.5 1 2.6 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 3 C 1.5 3 1.5 2 2.6 2" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(0, 4)"/>
+</g>
+<g transform="translate(0, 4)"/>
+</g>
+</g>
+<g transform="translate(13, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 0)">
+<g class="drawable">
+<path d="M 0 1 L 1 1" fill="none" stroke="black" stroke-width="0.05"/>
+<path d="M 0 2 L 1 2" fill="none" stroke="black" stroke-width="0.05"/>
+<rect fill="none" height="3.6" rx="0.3" ry="0.3" stroke="black" stroke-width="0.05" width="2" x="1" y="0.2"/>
+</g>
+<svg height="2" viewBox="0 0 2 2" width="2" x="1" xmlns="http://www.w3.org/2000/svg" y="0.99999994">
+<style>
+svg { color-scheme: light dark; } .spider { color: #111; } .drawable { color: #111; } .spider text, .drawable text { fill: currentColor !important; } .spider path, .spider line, .spider rect, .spider circle, .spider ellipse, .spider polyline, .spider polygon, .drawable path, .drawable line, .drawable rect, .drawable circle, .drawable ellipse, .drawable polyline, .drawable polygon { stroke: currentColor !important; } @media (prefers-color-scheme: dark) { .spider, .drawable { color: #f5f5f5; } }
+</style>
+<g>
+<text class="tp-cli-label" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="0.48" x="0.54999995" y="1.038">
+cup
+</text>
+</g>
+</svg>
+</g>
+</g>
+<g transform="translate(0, 4)"/>
+</g>
+<g transform="translate(0, 4)"/>
+</g>
+</g>
+<g transform="translate(17, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 1)"/>
+</g>
+<g transform="translate(0, 4)"/>
+</g>
+</g>
+<style>
+
+.tp-cli-label { fill: #111; }
+@media (prefers-color-scheme: dark) {
+  .tp-cli-label { fill: #f5f5f5; }
+}
+
+</style>
+</svg>

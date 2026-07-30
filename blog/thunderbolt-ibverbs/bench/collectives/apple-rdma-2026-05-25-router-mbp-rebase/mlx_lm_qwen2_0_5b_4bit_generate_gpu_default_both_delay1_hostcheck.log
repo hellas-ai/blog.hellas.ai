@@ -1,0 +1,49 @@
+copying 0 paths...
+copying 0 paths...
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== lm mac0-linux1 via 192.168.23.73:30020 ==
+-- mac output (mac0-linux1 rank 0) --
+rank 0/2 backend=jaccl MLX_RANK=0 device=Device(gpu, 0) model=/tmp/mlx-lm-qwen2-0.5b-instruct-4bit
+rank 0 sharded_load OK
+rank 0 sync generation start prompt_tokens=2 generation_tokens=2 cache=kv
+rank 0 sync generation token_index=0 token=11
+rank 0 step 0 synchronize start
+rank 0 step 0 synchronize OK
+rank 0 sync generation token_index=1 token=11
+rank 0 step 1 synchronize start
+rank 0 step 1 synchronize OK
+rank 0 generated_tokens_csv=11,11
+rank 0 generated token agreement skipped
+rank 0 sync generation OK generated=2 generation_tps=2.976 last_token=11 peak_memory_gb=0.257
+rank 0 synchronize start
+rank 0 synchronize OK
+rank 0 sleeping 1000 ms after generation
+rank 0 generated=2 generation_tps=2.976 last_token=11 peak_memory_gb=0.257
+-- linux output (mac0-linux1 rank 1) --
+[jaccl] Connection attempt 0 waiting 1000 ms
+rank 1/2 backend=jaccl MLX_RANK=1 device=Device(gpu, 0) model=/tmp/mlx-lm-qwen2-0.5b-instruct-4bit
+rank 1 sharded_load OK
+rank 1 sync generation start prompt_tokens=2 generation_tokens=2 cache=kv
+Warning: rocBLAS does not support GPU architecture 'gfx1103'. Matrix multiplication operations will not be available. Supported architectures: gfx908, gfx90a, gfx942, gfx950, gfx1030, gfx1100, gfx1101, gfx1102, gfx1150, gfx1151, gfx1200, gfx1201.
+rank 1 sync generation token_index=0 token=11
+rank 1 step 0 synchronize start
+rank 1 step 0 synchronize OK
+rank 1 sync generation token_index=1 token=49565
+rank 1 step 1 synchronize start
+rank 1 step 1 synchronize OK
+rank 1 generated_tokens_csv=11,49565
+rank 1 generated token agreement skipped
+rank 1 sync generation OK generated=2 generation_tps=3.452 last_token=49565 peak_memory_gb=0.193
+rank 1 synchronize start
+rank 1 synchronize OK
+rank 1 sleeping 1000 ms after generation
+rank 1 generated=2 generation_tps=3.452 last_token=49565 peak_memory_gb=0.193
+host token agreement mismatch (mac0-linux1)
+mac tokens: 11,11
+linux tokens: 11,49565

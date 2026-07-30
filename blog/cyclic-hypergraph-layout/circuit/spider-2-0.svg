@@ -1,0 +1,9 @@
+<g class="drawable spider-generator">
+  <path d="M 0 1 L 0.4 1" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 0 3 L 0.4 3" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 1.1 2 L 1.5 2" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 0.4 1 C 0.75 1 0.75 2 1.1 2" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 0.4 3 C 0.75 3 0.75 2 1.1 2" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 1.9 2 L 1.5 2" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 1.9 1.8 L 1.9 2.2" fill="none" stroke="black" stroke-width="0.05"/>
+</g>

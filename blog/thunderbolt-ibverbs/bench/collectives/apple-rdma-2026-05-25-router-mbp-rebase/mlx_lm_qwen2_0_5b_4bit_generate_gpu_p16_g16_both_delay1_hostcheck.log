@@ -1,0 +1,265 @@
+copying 0 paths...
+copying 0 paths...
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== lm mac0-linux1 via 192.168.23.73:30020 ==
+-- mac output (mac0-linux1 rank 0) --
+rank 0/2 backend=jaccl MLX_RANK=0 device=Device(gpu, 0) model=/tmp/mlx-lm-qwen2-0.5b-instruct-4bit
+rank 0 sharded_load OK
+rank 0 sync generation start prompt_tokens=16 generation_tokens=16 cache=kv
+rank 0 sync generation token_index=0 token=198
+rank 0 step 0 synchronize start
+rank 0 step 0 synchronize OK
+rank 0 sync generation token_index=1 token=220
+rank 0 step 1 synchronize start
+rank 0 step 1 synchronize OK
+rank 0 sync generation token_index=2 token=220
+rank 0 step 2 synchronize start
+rank 0 step 2 synchronize OK
+rank 0 sync generation token_index=3 token=16
+rank 0 step 3 synchronize start
+rank 0 step 3 synchronize OK
+rank 0 sync generation token_index=4 token=13
+rank 0 step 4 synchronize start
+rank 0 step 4 synchronize OK
+rank 0 sync generation token_index=5 token=220
+rank 0 step 5 synchronize start
+rank 0 step 5 synchronize OK
+rank 0 sync generation token_index=6 token=16
+rank 0 step 6 synchronize start
+rank 0 step 6 synchronize OK
+rank 0 sync generation token_index=7 token=13
+rank 0 step 7 synchronize start
+rank 0 step 7 synchronize OK
+rank 0 sync generation token_index=8 token=16
+rank 0 step 8 synchronize start
+rank 0 step 8 synchronize OK
+rank 0 sync generation token_index=9 token=220
+rank 0 step 9 synchronize start
+rank 0 step 9 synchronize OK
+rank 0 sync generation token_index=10 token=16
+rank 0 step 10 synchronize start
+rank 0 step 10 synchronize OK
+rank 0 sync generation token_index=11 token=13
+rank 0 step 11 synchronize start
+rank 0 step 11 synchronize OK
+rank 0 sync generation token_index=12 token=16
+rank 0 step 12 synchronize start
+rank 0 step 12 synchronize OK
+rank 0 sync generation token_index=13 token=13
+rank 0 step 13 synchronize start
+rank 0 step 13 synchronize OK
+rank 0 sync generation token_index=14 token=16
+rank 0 step 14 synchronize start
+rank 0 step 14 synchronize OK
+rank 0 sync generation token_index=15 token=220
+rank 0 step 15 synchronize start
+rank 0 step 15 synchronize OK
+rank 0 generated_tokens_csv=198,220,220,16,13,220,16,13,16,220,16,13,16,13,16,220
+rank 0 generated token agreement skipped
+rank 0 sync generation OK generated=16 generation_tps=5.938 last_token=220 peak_memory_gb=0.283
+rank 0 synchronize start
+rank 0 synchronize OK
+rank 0 sleeping 1000 ms after generation
+rank 0 generated=16 generation_tps=5.938 last_token=220 peak_memory_gb=0.283
+-- linux output (mac0-linux1 rank 1) --
+[jaccl] Connection attempt 0 waiting 1000 ms
+rank 1/2 backend=jaccl MLX_RANK=1 device=Device(gpu, 0) model=/tmp/mlx-lm-qwen2-0.5b-instruct-4bit
+rank 1 sharded_load OK
+rank 1 sync generation start prompt_tokens=16 generation_tokens=16 cache=kv
+Warning: rocBLAS does not support GPU architecture 'gfx1103'. Matrix multiplication operations will not be available. Supported architectures: gfx908, gfx90a, gfx942, gfx950, gfx1030, gfx1100, gfx1101, gfx1102, gfx1150, gfx1151, gfx1200, gfx1201.
+rank 1 sync generation token_index=0 token=198
+rank 1 step 0 synchronize start
+rank 1 step 0 synchronize OK
+rank 1 sync generation token_index=1 token=220
+rank 1 step 1 synchronize start
+rank 1 step 1 synchronize OK
+rank 1 sync generation token_index=2 token=220
+rank 1 step 2 synchronize start
+rank 1 step 2 synchronize OK
+rank 1 sync generation token_index=3 token=16
+rank 1 step 3 synchronize start
+rank 1 step 3 synchronize OK
+rank 1 sync generation token_index=4 token=13
+rank 1 step 4 synchronize start
+rank 1 step 4 synchronize OK
+rank 1 sync generation token_index=5 token=220
+rank 1 step 5 synchronize start
+rank 1 step 5 synchronize OK
+rank 1 sync generation token_index=6 token=16
+rank 1 step 6 synchronize start
+rank 1 step 6 synchronize OK
+rank 1 sync generation token_index=7 token=13
+rank 1 step 7 synchronize start
+rank 1 step 7 synchronize OK
+rank 1 sync generation token_index=8 token=16
+rank 1 step 8 synchronize start
+rank 1 step 8 synchronize OK
+rank 1 sync generation token_index=9 token=220
+rank 1 step 9 synchronize start
+rank 1 step 9 synchronize OK
+rank 1 sync generation token_index=10 token=16
+rank 1 step 10 synchronize start
+rank 1 step 10 synchronize OK
+rank 1 sync generation token_index=11 token=13
+rank 1 step 11 synchronize start
+rank 1 step 11 synchronize OK
+rank 1 sync generation token_index=12 token=16
+rank 1 step 12 synchronize start
+rank 1 step 12 synchronize OK
+rank 1 sync generation token_index=13 token=13
+rank 1 step 13 synchronize start
+rank 1 step 13 synchronize OK
+rank 1 sync generation token_index=14 token=16
+rank 1 step 14 synchronize start
+rank 1 step 14 synchronize OK
+rank 1 sync generation token_index=15 token=220
+rank 1 step 15 synchronize start
+rank 1 step 15 synchronize OK
+rank 1 generated_tokens_csv=198,220,220,16,13,220,16,13,16,220,16,13,16,13,16,220
+rank 1 generated token agreement skipped
+rank 1 sync generation OK generated=16 generation_tps=6.143 last_token=220 peak_memory_gb=0.197
+rank 1 synchronize start
+rank 1 synchronize OK
+rank 1 sleeping 1000 ms after generation
+rank 1 generated=16 generation_tps=6.143 last_token=220 peak_memory_gb=0.197
+host token agreement OK (mac0-linux1)
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== lm linux0-mac1 via 192.168.23.1:30021 ==
+-- mac output (linux0-mac1 rank 1) --
+rank 1/2 backend=jaccl MLX_RANK=1 device=Device(gpu, 0) model=/tmp/mlx-lm-qwen2-0.5b-instruct-4bit
+rank 1 sharded_load OK
+rank 1 sync generation start prompt_tokens=16 generation_tokens=16 cache=kv
+rank 1 sync generation token_index=0 token=198
+rank 1 step 0 synchronize start
+rank 1 step 0 synchronize OK
+rank 1 sync generation token_index=1 token=220
+rank 1 step 1 synchronize start
+rank 1 step 1 synchronize OK
+rank 1 sync generation token_index=2 token=220
+rank 1 step 2 synchronize start
+rank 1 step 2 synchronize OK
+rank 1 sync generation token_index=3 token=16
+rank 1 step 3 synchronize start
+rank 1 step 3 synchronize OK
+rank 1 sync generation token_index=4 token=15
+rank 1 step 4 synchronize start
+rank 1 step 4 synchronize OK
+rank 1 sync generation token_index=5 token=13
+rank 1 step 5 synchronize start
+rank 1 step 5 synchronize OK
+rank 1 sync generation token_index=6 token=15
+rank 1 step 6 synchronize start
+rank 1 step 6 synchronize OK
+rank 1 sync generation token_index=7 token=15
+rank 1 step 7 synchronize start
+rank 1 step 7 synchronize OK
+rank 1 sync generation token_index=8 token=15
+rank 1 step 8 synchronize start
+rank 1 step 8 synchronize OK
+rank 1 sync generation token_index=9 token=15
+rank 1 step 9 synchronize start
+rank 1 step 9 synchronize OK
+rank 1 sync generation token_index=10 token=15
+rank 1 step 10 synchronize start
+rank 1 step 10 synchronize OK
+rank 1 sync generation token_index=11 token=15
+rank 1 step 11 synchronize start
+rank 1 step 11 synchronize OK
+rank 1 sync generation token_index=12 token=15
+rank 1 step 12 synchronize start
+rank 1 step 12 synchronize OK
+rank 1 sync generation token_index=13 token=15
+rank 1 step 13 synchronize start
+rank 1 step 13 synchronize OK
+rank 1 sync generation token_index=14 token=15
+rank 1 step 14 synchronize start
+rank 1 step 14 synchronize OK
+rank 1 sync generation token_index=15 token=15
+rank 1 step 15 synchronize start
+rank 1 step 15 synchronize OK
+rank 1 generated_tokens_csv=198,220,220,16,15,13,15,15,15,15,15,15,15,15,15,15
+rank 1 generated token agreement skipped
+rank 1 sync generation OK generated=16 generation_tps=6.454 last_token=15 peak_memory_gb=0.257
+rank 1 synchronize start
+rank 1 synchronize OK
+rank 1 sleeping 1000 ms after generation
+rank 1 generated=16 generation_tps=6.454 last_token=15 peak_memory_gb=0.257
+-- linux output (linux0-mac1 rank 0) --
+rank 0/2 backend=jaccl MLX_RANK=0 device=Device(gpu, 0) model=/tmp/mlx-lm-qwen2-0.5b-instruct-4bit
+rank 0 sharded_load OK
+rank 0 sync generation start prompt_tokens=16 generation_tokens=16 cache=kv
+Warning: rocBLAS does not support GPU architecture 'gfx1103'. Matrix multiplication operations will not be available. Supported architectures: gfx908, gfx90a, gfx942, gfx950, gfx1030, gfx1100, gfx1101, gfx1102, gfx1150, gfx1151, gfx1200, gfx1201.
+rank 0 sync generation token_index=0 token=198
+rank 0 step 0 synchronize start
+rank 0 step 0 synchronize OK
+rank 0 sync generation token_index=1 token=220
+rank 0 step 1 synchronize start
+rank 0 step 1 synchronize OK
+rank 0 sync generation token_index=2 token=220
+rank 0 step 2 synchronize start
+rank 0 step 2 synchronize OK
+rank 0 sync generation token_index=3 token=16
+rank 0 step 3 synchronize start
+rank 0 step 3 synchronize OK
+rank 0 sync generation token_index=4 token=15
+rank 0 step 4 synchronize start
+rank 0 step 4 synchronize OK
+rank 0 sync generation token_index=5 token=13
+rank 0 step 5 synchronize start
+rank 0 step 5 synchronize OK
+rank 0 sync generation token_index=6 token=15
+rank 0 step 6 synchronize start
+rank 0 step 6 synchronize OK
+rank 0 sync generation token_index=7 token=15
+rank 0 step 7 synchronize start
+rank 0 step 7 synchronize OK
+rank 0 sync generation token_index=8 token=15
+rank 0 step 8 synchronize start
+rank 0 step 8 synchronize OK
+rank 0 sync generation token_index=9 token=15
+rank 0 step 9 synchronize start
+rank 0 step 9 synchronize OK
+rank 0 sync generation token_index=10 token=15
+rank 0 step 10 synchronize start
+rank 0 step 10 synchronize OK
+rank 0 sync generation token_index=11 token=15
+rank 0 step 11 synchronize start
+rank 0 step 11 synchronize OK
+rank 0 sync generation token_index=12 token=15
+rank 0 step 12 synchronize start
+rank 0 step 12 synchronize OK
+rank 0 sync generation token_index=13 token=15
+rank 0 step 13 synchronize start
+rank 0 step 13 synchronize OK
+rank 0 sync generation token_index=14 token=15
+rank 0 step 14 synchronize start
+rank 0 step 14 synchronize OK
+rank 0 sync generation token_index=15 token=15
+rank 0 step 15 synchronize start
+rank 0 step 15 synchronize OK
+rank 0 generated_tokens_csv=198,220,220,16,15,13,15,15,15,15,15,15,15,15,15,15
+rank 0 generated token agreement skipped
+rank 0 sync generation OK generated=16 generation_tps=6.694 last_token=15 peak_memory_gb=0.197
+rank 0 synchronize start
+rank 0 synchronize OK
+rank 0 sleeping 1000 ms after generation
+rank 0 generated=16 generation_tps=6.694 last_token=15 peak_memory_gb=0.197
+host token agreement OK (linux0-mac1)
+tbnet_identity_arp_errors: 0
+data_rx_no_recv: 0
+data_rx_copy_error: 0
+data_rx_reorder_dropped: 0
+data_cq_overflow: 0
+PASS: Apple/macOS MLX distributed JACCL smoke completed

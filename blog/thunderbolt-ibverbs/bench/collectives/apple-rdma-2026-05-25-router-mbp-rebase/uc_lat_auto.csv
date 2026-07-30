@@ -1,0 +1,11 @@
+topology,direction,size_bytes,count,linux_hca,mean_us,p99_us,min_us,p50_us,max_us,completed_ok,error
+router-mbp,linux-to-mac,64,1000,usb4_rdma4,2318.52,3023.60,1433.71,2000.56,35512.73,1,
+router-mbp,mac-to-linux,64,1000,usb4_rdma4,2353.93,3026.00,1750.00,2004.00,42920.00,1,
+router-mbp,linux-to-mac,256,1000,usb4_rdma4,,,,,,0,"linux_exit=255 mac_exit=1: pong recv wc error wr_id=0 status=12 opcode=128 byte_len=0"
+router-mbp,mac-to-linux,256,1000,usb4_rdma4,,,,,,0,"linux_exit=255 mac_exit=1: ping wc error wr_id=0 status=12 opcode=128 byte_len=0"
+router-mbp,linux-to-mac,1024,1000,usb4_rdma4,2250.61,3008.84,1827.04,2000.16,6649.50,1,
+router-mbp,mac-to-linux,1024,1000,usb4_rdma4,2211.61,3015.00,1137.00,2001.00,3066.00,1,
+router-mbp,linux-to-mac,4096,1000,usb4_rdma4,2220.26,3007.13,1287.06,1999.98,36231.30,1,
+router-mbp,mac-to-linux,4096,1000,usb4_rdma4,2045.65,3005.00,1318.00,1999.00,5000.00,1,
+router-mbp,linux-to-mac,16384,1000,usb4_rdma4,,,,,,0,"linux_exit=255 mac_exit=255: linux_exit=255 mac_exit=255"
+router-mbp,mac-to-linux,16384,1000,usb4_rdma4,,,,,,0,"linux_exit=1 mac_exit=255: check failed completed=0 wr_id=0 recv_slot=0 expected_seq=0 observed_seq=17978056767814954860 byte_len=8192 off=0 got=0x6c want=0x00"

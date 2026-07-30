@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" class="dark:bg-hellas-black bg-hellas-white">
+
+<head>
+  
+  
+  <!-- HTML Meta Tags -->
+  <title>Blog</title>
+  <meta name="description" content="All posts">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <link rel="stylesheet" type="text/css" href="https://blog.hellas.ai/style.css">
+  <link rel="alternate" type="application/atom+xml" title="Hellas Blog Atom Feed" href="https://blog.hellas.ai/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Hellas Blog RSS Feed" href="https://blog.hellas.ai/rss.xml">
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Blog">
+  <meta property="og:description" content="All posts">
+  <meta property="og:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="hellas.ai">
+  <meta property="twitter:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta name="twitter:title" content="Blog">
+  <meta name="twitter:description" content="All posts">
+  <meta name="twitter:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- e.g. for safari tab bar -->
+  <meta name="theme-color" content="#1C1C1C" />
+
+  <!-- MathJax for LaTeX support -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Mobile menu toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+
+</head>
+
+<body class="dark:bg-hellas-black bg-hellas-white dark:text-hellas-white text-hellas-black flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30">
+    <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="flex items-center">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_Black.svg" alt="Hellas" class="h-8 dark:hidden">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 hidden dark:block">
+      </a>
+      <nav class="hidden md:flex space-x-8 font-sans">
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Home</a>
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Blog</a>
+        <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200">Main Site</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobile-menu-button" type="button" class="text-hellas-cool-grey">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+      <!-- Mobile menu, hidden by default -->
+      <div id="mobile-menu" class="hidden fixed top-[70px] right-0 left-0 bg-hellas-white dark:bg-hellas-black border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30 md:hidden">
+        <nav class="container mx-auto px-4 py-4 flex flex-col space-y-4 font-sans">
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Home</a>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Blog</a>
+          <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Main Site</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    
+  <div class="py-12">
+    <!-- Hero section -->
+    <div class="mb-12">
+      <h1 class="font-paplane text-7xl mb-4 text-hellas-black dark:text-hellas-white">All Posts</h1>
+      <p class="text-hellas-cool-grey text-xl mb-8 max-w-3xl">
+        Browse all blog posts
+      </p>
+    </div>
+
+    <!-- All blog posts section -->
+    <section class="mb-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        
+        
+          
+          
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+
+        
+          
+          
+            
+          
+          <article class="bg-white dark:bg-hellas-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300 border border-hellas-cool-light-grey/20 dark:border-hellas-cool-grey/30">
+  <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;cyclic-hypergraph-layout&#x2F;" class="flex flex-col h-full">
+    
+    <div class="p-6 flex flex-col flex-grow">
+      <div class="mb-2">
+        <span class="inline-block px-3 py-1 text-xs font-semibold text-hellas-black bg-hellas-yellow rounded-full">
+          
+            Blog
+          
+        </span>
+        
+        <span class="text-hellas-cool-grey text-sm ml-2">July 28, 2026</span>
+      </div>
+      <h2 class="font-paplane text-xl md:text-2xl mb-2 text-hellas-black dark:text-hellas-white hover:text-hellas-yellow dark:hover:text-hellas-yellow transition">
+        Layered Cyclic Diagram Layout
+      </h2>
+      <p class="text-hellas-cool-grey text-sm mb-4 line-clamp-3">
+        Layered drawing of open hypergraphs using Frobenius decompositions to make cyclic open hypergraphs acyclic
+      </p>
+      <div class="flex items-center mt-auto">
+        <span class="text-hellas-cool-grey dark:text-hellas-yellow font-sans font-medium text-sm hover:underline">Read More</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </div>
+    </div>
+  </a>
+</article>
+        
+          
+          
+            
+          
+          <article class="bg-white dark:bg-hellas-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300 border border-hellas-cool-light-grey/20 dark:border-hellas-cool-grey/30">
+  <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;deterministic-transcendentals&#x2F;" class="flex flex-col h-full">
+    
+    <div class="p-6 flex flex-col flex-grow">
+      <div class="mb-2">
+        <span class="inline-block px-3 py-1 text-xs font-semibold text-hellas-black bg-hellas-yellow rounded-full">
+          
+            Blog
+          
+        </span>
+        
+        <span class="text-hellas-cool-grey text-sm ml-2">June  8, 2026</span>
+      </div>
+      <h2 class="font-paplane text-xl md:text-2xl mb-2 text-hellas-black dark:text-hellas-white hover:text-hellas-yellow dark:hover:text-hellas-yellow transition">
+        Deterministic transcendental functions
+      </h2>
+      <p class="text-hellas-cool-grey text-sm mb-4 line-clamp-3">
+        Overview of transcendental function implementations
+      </p>
+      <div class="flex items-center mt-auto">
+        <span class="text-hellas-cool-grey dark:text-hellas-yellow font-sans font-medium text-sm hover:underline">Read More</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </div>
+    </div>
+  </a>
+</article>
+        
+          
+          
+            
+          
+          <article class="bg-white dark:bg-hellas-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300 border border-hellas-cool-light-grey/20 dark:border-hellas-cool-grey/30">
+  <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;" class="flex flex-col h-full">
+    
+    <div class="p-6 flex flex-col flex-grow">
+      <div class="mb-2">
+        <span class="inline-block px-3 py-1 text-xs font-semibold text-hellas-black bg-hellas-yellow rounded-full">
+          
+            Blog
+          
+        </span>
+        
+        <span class="text-hellas-cool-grey text-sm ml-2">May 28, 2026</span>
+      </div>
+      <h2 class="font-paplane text-xl md:text-2xl mb-2 text-hellas-black dark:text-hellas-white hover:text-hellas-yellow dark:hover:text-hellas-yellow transition">
+        thunderbolt-ibverbs: We have InfiniBand at home
+      </h2>
+      <p class="text-hellas-cool-grey text-sm mb-4 line-clamp-3">
+        Linux kernel experiments implementing IB verbs over consumer Thunderbolt&#x2F;USB4 hardware to give cheap mini-PCs high-performance RDMA suitable for clust…
+      </p>
+      <div class="flex items-center mt-auto">
+        <span class="text-hellas-cool-grey dark:text-hellas-yellow font-sans font-medium text-sm hover:underline">Read More</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </div>
+    </div>
+  </a>
+</article>
+        
+          
+          
+            
+          
+          <article class="bg-white dark:bg-hellas-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300 border border-hellas-cool-light-grey/20 dark:border-hellas-cool-grey/30">
+  <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;inductive-types-in-lean&#x2F;" class="flex flex-col h-full">
+    
+    <div class="p-6 flex flex-col flex-grow">
+      <div class="mb-2">
+        <span class="inline-block px-3 py-1 text-xs font-semibold text-hellas-black bg-hellas-yellow rounded-full">
+          
+            Blog
+          
+        </span>
+        
+        <span class="text-hellas-cool-grey text-sm ml-2">April  2, 2026</span>
+      </div>
+      <h2 class="font-paplane text-xl md:text-2xl mb-2 text-hellas-black dark:text-hellas-white hover:text-hellas-yellow dark:hover:text-hellas-yellow transition">
+        Inductive Types in Lean
+      </h2>
+      <p class="text-hellas-cool-grey text-sm mb-4 line-clamp-3">
+        A quick intro on how inductive types in Lean work
+      </p>
+      <div class="flex items-center mt-auto">
+        <span class="text-hellas-cool-grey dark:text-hellas-yellow font-sans font-medium text-sm hover:underline">Read More</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </div>
+    </div>
+  </a>
+</article>
+        
+          
+          
+            
+          
+          <article class="bg-white dark:bg-hellas-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300 border border-hellas-cool-light-grey/20 dark:border-hellas-cool-grey/30">
+  <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;ai-vs-outsourcing&#x2F;" class="flex flex-col h-full">
+    
+    <div class="p-6 flex flex-col flex-grow">
+      <div class="mb-2">
+        <span class="inline-block px-3 py-1 text-xs font-semibold text-hellas-black bg-hellas-yellow rounded-full">
+          
+            Blog
+          
+        </span>
+        
+        <span class="text-hellas-cool-grey text-sm ml-2">October 31, 2025</span>
+      </div>
+      <h2 class="font-paplane text-xl md:text-2xl mb-2 text-hellas-black dark:text-hellas-white hover:text-hellas-yellow dark:hover:text-hellas-yellow transition">
+        Will AI do to Software Engineering what Offshoring did to Manufacturing?
+      </h2>
+      <p class="text-hellas-cool-grey text-sm mb-4 line-clamp-3">
+        AI is replacing junior software engineers: will the industry end up with a skills gap?
+      </p>
+      <div class="flex items-center mt-auto">
+        <span class="text-hellas-cool-grey dark:text-hellas-yellow font-sans font-medium text-sm hover:underline">Read More</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </div>
+    </div>
+  </a>
+</article>
+        
+          
+          
+            
+          
+          <article class="bg-white dark:bg-hellas-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300 border border-hellas-cool-light-grey/20 dark:border-hellas-cool-grey/30">
+  <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;three-solutions-to-nondeterminism-in-ai&#x2F;" class="flex flex-col h-full">
+    
+    <div class="p-6 flex flex-col flex-grow">
+      <div class="mb-2">
+        <span class="inline-block px-3 py-1 text-xs font-semibold text-hellas-black bg-hellas-yellow rounded-full">
+          
+            Blog
+          
+        </span>
+        
+        <span class="text-hellas-cool-grey text-sm ml-2">September 29, 2025</span>
+      </div>
+      <h2 class="font-paplane text-xl md:text-2xl mb-2 text-hellas-black dark:text-hellas-white hover:text-hellas-yellow dark:hover:text-hellas-yellow transition">
+        Three Solutions to Nondeterminism in AI
+      </h2>
+      <p class="text-hellas-cool-grey text-sm mb-4 line-clamp-3">
+        Three ways to deal with nondeterminism caused by floating-point nonassociativity
+      </p>
+      <div class="flex items-center mt-auto">
+        <span class="text-hellas-cool-grey dark:text-hellas-yellow font-sans font-medium text-sm hover:underline">Read More</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </div>
+    </div>
+  </a>
+</article>
+        
+          
+          
+            
+          
+          <article class="bg-white dark:bg-hellas-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300 border border-hellas-cool-light-grey/20 dark:border-hellas-cool-grey/30">
+  <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;visualising-llms&#x2F;" class="flex flex-col h-full">
+    
+    <div class="p-6 flex flex-col flex-grow">
+      <div class="mb-2">
+        <span class="inline-block px-3 py-1 text-xs font-semibold text-hellas-black bg-hellas-yellow rounded-full">
+          
+            Blog
+          
+        </span>
+        
+        <span class="text-hellas-cool-grey text-sm ml-2">June 10, 2025</span>
+      </div>
+      <h2 class="font-paplane text-xl md:text-2xl mb-2 text-hellas-black dark:text-hellas-white hover:text-hellas-yellow dark:hover:text-hellas-yellow transition">
+        Visualising LLMs with Open Hypergraphs and Catgrad
+      </h2>
+      <p class="text-hellas-cool-grey text-sm mb-4 line-clamp-3">
+        Generate LLM architecture diagrams with open hypergraphs and catgrad.
+      </p>
+      <div class="flex items-center mt-auto">
+        <span class="text-hellas-cool-grey dark:text-hellas-yellow font-sans font-medium text-sm hover:underline">Read More</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </div>
+    </div>
+  </a>
+</article>
+        
+          
+          
+            
+          
+          <article class="bg-white dark:bg-hellas-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300 border border-hellas-cool-light-grey/20 dark:border-hellas-cool-grey/30">
+  <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;hellas-gate&#x2F;" class="flex flex-col h-full">
+    
+    <div class="p-6 flex flex-col flex-grow">
+      <div class="mb-2">
+        <span class="inline-block px-3 py-1 text-xs font-semibold text-hellas-black bg-hellas-yellow rounded-full">
+          
+            Blog
+          
+        </span>
+        
+        <span class="text-hellas-cool-grey text-sm ml-2">May 19, 2025</span>
+      </div>
+      <h2 class="font-paplane text-xl md:text-2xl mb-2 text-hellas-black dark:text-hellas-white hover:text-hellas-yellow dark:hover:text-hellas-yellow transition">
+        Announcing Hellas Gate
+      </h2>
+      <p class="text-hellas-cool-grey text-sm mb-4 line-clamp-3">
+        A unified AI interface with smart routing &amp; local compute
+      </p>
+      <div class="flex items-center mt-auto">
+        <span class="text-hellas-cool-grey dark:text-hellas-yellow font-sans font-medium text-sm hover:underline">Read More</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </div>
+    </div>
+  </a>
+</article>
+        
+          
+          
+            
+          
+          <article class="bg-white dark:bg-hellas-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300 border border-hellas-cool-light-grey/20 dark:border-hellas-cool-grey/30">
+  <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;hello-world&#x2F;" class="flex flex-col h-full">
+    
+    <div class="p-6 flex flex-col flex-grow">
+      <div class="mb-2">
+        <span class="inline-block px-3 py-1 text-xs font-semibold text-hellas-black bg-hellas-yellow rounded-full">
+          
+            Blog
+          
+        </span>
+        
+        <span class="text-hellas-cool-grey text-sm ml-2">May  1, 2025</span>
+      </div>
+      <h2 class="font-paplane text-xl md:text-2xl mb-2 text-hellas-black dark:text-hellas-white hover:text-hellas-yellow dark:hover:text-hellas-yellow transition">
+        Hello, World!
+      </h2>
+      <p class="text-hellas-cool-grey text-sm mb-4 line-clamp-3">
+        The Hellas Blog is live!
+      </p>
+      <div class="flex items-center mt-auto">
+        <span class="text-hellas-cool-grey dark:text-hellas-yellow font-sans font-medium text-sm hover:underline">Read More</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </div>
+    </div>
+  </a>
+</article>
+        
+      </div>
+    </section>
+  </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-hellas-black text-hellas-white py-12 border-t border-hellas-cool-grey/20">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 mb-4">
+          <p class="text-hellas-cool-grey mb-4 font-sans">Powering limitless intelligence</p>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Links</h3>
+          <ul class="space-y-2 font-sans">
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="hover:text-hellas-yellow transition duration-200">Home</a></li>
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="hover:text-hellas-yellow transition duration-200">Blog</a></li>
+            <li><a href="https://hellas.ai" class="hover:text-hellas-yellow transition duration-200">Main Site</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="https://twitter.com/hellasdotai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-twitter-white.svg" alt="Twitter" class="h-6 w-6">
+            </a>
+            <a href="https://discord.gg/qHqZyuAa3u" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+
+              <img src="https://blog.hellas.ai/socials/socials-discord-white.svg" alt="Discord" class="h-6 w-6">
+            </a>
+            <a href="https://t.me/hellasai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-telegram-white.svg" alt="Telegram" class="h-6 w-6">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-hellas-cool-grey/20 mt-8 pt-8 text-hellas-cool-grey text-sm font-sans">
+        <p>© 2026 Hellas.ai — All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

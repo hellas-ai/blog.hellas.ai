@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en" class="dark:bg-hellas-black bg-hellas-white">
+
+<head>
+  
+  
+  <!-- HTML Meta Tags -->
+  <title>thunderbolt-ibverbs: We have InfiniBand at home</title>
+  <meta name="description" content="Linux kernel experiments implementing IB verbs over consumer Thunderbolt&#x2F;USB4 hardware to give cheap mini-PCs high-performance RDMA suitable for cluster inference.">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <link rel="stylesheet" type="text/css" href="https://blog.hellas.ai/style.css">
+  <link rel="alternate" type="application/atom+xml" title="Hellas Blog Atom Feed" href="https://blog.hellas.ai/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Hellas Blog RSS Feed" href="https://blog.hellas.ai/rss.xml">
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="thunderbolt-ibverbs: We have InfiniBand at home">
+  <meta property="og:description" content="Linux kernel experiments implementing IB verbs over consumer Thunderbolt&#x2F;USB4 hardware to give cheap mini-PCs high-performance RDMA suitable for cluster inference.">
+  <meta property="og:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="hellas.ai">
+  <meta property="twitter:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta name="twitter:title" content="thunderbolt-ibverbs: We have InfiniBand at home">
+  <meta name="twitter:description" content="Linux kernel experiments implementing IB verbs over consumer Thunderbolt&#x2F;USB4 hardware to give cheap mini-PCs high-performance RDMA suitable for cluster inference.">
+  <meta name="twitter:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- e.g. for safari tab bar -->
+  <meta name="theme-color" content="#1C1C1C" />
+
+  <!-- MathJax for LaTeX support -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Mobile menu toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+
+</head>
+
+<body class="dark:bg-hellas-black bg-hellas-white dark:text-hellas-white text-hellas-black flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30">
+    <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="flex items-center">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_Black.svg" alt="Hellas" class="h-8 dark:hidden">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 hidden dark:block">
+      </a>
+      <nav class="hidden md:flex space-x-8 font-sans">
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Home</a>
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Blog</a>
+        <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200">Main Site</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobile-menu-button" type="button" class="text-hellas-cool-grey">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+      <!-- Mobile menu, hidden by default -->
+      <div id="mobile-menu" class="hidden fixed top-[70px] right-0 left-0 bg-hellas-white dark:bg-hellas-black border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30 md:hidden">
+        <nav class="container mx-auto px-4 py-4 flex flex-col space-y-4 font-sans">
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Home</a>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Blog</a>
+          <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Main Site</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    
+<article class="py-12">
+  <header class="mb-8">
+    <h1 class="font-paplane text-7xl mb-4 text-hellas-black dark:text-hellas-white">thunderbolt-ibverbs: We have InfiniBand at home</h1>
+    
+    <div class="flex items-center text-hellas-cool-grey">
+      <time datetime="2026-05-28">May 28, 2026</time>
+    </div>
+    
+  </header>
+
+  <div class="prose prose-lg dark:prose-invert max-w-3xl mb-12 text-hellas-black dark:text-hellas-white font-sans">
+    <p>I spent the past few weeks building a linux kernel module that makes ordinary USB4/Thunderbolt ports on AMD mini PCs pretend to be InfiniBand devices. The goal is simple: let existing AI runtimes like vLLM/RCCL split inference or training across multiple boxes at home, without buying enterprise networking gear.</p>
+<p><strong>TL;DR.</strong> We built experimental RDMA-over-USB4 for 128GB Strix Halo mini PCs. It lets two consumer boxes talk fast enough to run tensor-parallel inference and FSDP workloads across both machines: ~95 Gb/s bidirectional raw RDMA, ~7 µs one-way latency, a MiniMax-M2.7 TP=2 inference run that does not fit on one box, and a Gemma 3 27B LoRA FSDP step falling from 1359 s over Ethernet to 126 s over 4-HCA USB4 RDMA.</p>
+<p><img src="https://blog.hellas.ai/blog/thunderbolt-ibverbs/./strix-strix.jpeg" alt="Two Strix Halo mini-PCs (strix-1, strix-2) connected by USB4" /></p>
+<ul>
+<li><strong>~48 Gb/s per direction (~95 Gb/s bidi total)</strong> sustained <code>ib_write_bw</code>, 4-HCA aggregate at 1 MiB / 8 QPs with IOMMU off — vs <code>~2.3 Gb/s</code> over the onboard 2.5 GbE and <code>~9 Gb/s</code> for soft-RoCE on top of <code>thunderbolt-net</code> at the per-rail level.</li>
+<li><strong>~7 µs</strong> one-way <code>ib_write_lat</code> at 64 B, single QP — vs <code>~28 µs</code> over RXE/2.5 GbE and <code>~65 µs</code> over RXE/TBnet.</li>
+</ul>
+<p><img src="https://blog.hellas.ai/blog/thunderbolt-ibverbs/./bench/perftest/write_bw_vs_size.svg" alt="ib_write_bw between strix-1 and strix-2, by transport and QPs" /></p>
+<p class="text-red-700 dark:text-red-400 font-medium"><strong>DISCLAIMER:</strong> this is research code, most of it AI-generated, and it loads experimental kernel modules on machines I was willing to crash repeatedly. I made an effort to understand enough of it to keep it on-track, but there are almost certainly false assumptions and sharp edges throughout. No warranty, no support promise, not production software.</p>
+
+  </div>
+
+  <nav class="max-w-3xl">
+    <h2 class="font-paplane text-3xl mb-4 text-hellas-black dark:text-hellas-white">Chapters</h2>
+    <ol class="space-y-1">
+      
+        
+        
+        <li>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;1-background&#x2F;" class="group flex items-baseline gap-4 py-2 px-2 -mx-2 rounded hover:bg-hellas-cool-light-grey/40 dark:hover:bg-hellas-cool-grey/20 transition">
+            <span class="font-paplane text-2xl text-hellas-cool-grey w-24 tabular-nums">01</span>
+            <span class="text-hellas-cool-grey group-hover:text-hellas-yellow transition shrink-0">→</span>
+            <span class="font-sans text-lg text-hellas-black dark:text-hellas-white group-hover:text-hellas-yellow transition">Background</span>
+          </a>
+          
+          
+            <ul class="ml-32 mb-2 space-y-0.5">
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;1-background&#x2F;#small-models-at-home" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ Small Models at Home
+                    </a>
+                  </li>
+                
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;1-background&#x2F;#medium-sized-models-at-home" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ Medium-sized Models at Home
+                    </a>
+                  </li>
+                
+              
+            </ul>
+          
+        </li>
+      
+        
+        
+        <li>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;2-scaling&#x2F;" class="group flex items-baseline gap-4 py-2 px-2 -mx-2 rounded hover:bg-hellas-cool-light-grey/40 dark:hover:bg-hellas-cool-grey/20 transition">
+            <span class="font-paplane text-2xl text-hellas-cool-grey w-24 tabular-nums">02</span>
+            <span class="text-hellas-cool-grey group-hover:text-hellas-yellow transition shrink-0">→</span>
+            <span class="font-sans text-lg text-hellas-black dark:text-hellas-white group-hover:text-hellas-yellow transition">Scaling</span>
+          </a>
+          
+          
+            <ul class="ml-32 mb-2 space-y-0.5">
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;2-scaling&#x2F;#networking-nvidia-gb-10" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ Networking: NVidia GB-10
+                    </a>
+                  </li>
+                
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;2-scaling&#x2F;#networking-apple" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ Networking: Apple
+                    </a>
+                  </li>
+                
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;2-scaling&#x2F;#networking-strix-halo" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ Networking: Strix Halo
+                    </a>
+                  </li>
+                
+              
+            </ul>
+          
+        </li>
+      
+        
+        
+        <li>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;3-agentic-harness&#x2F;" class="group flex items-baseline gap-4 py-2 px-2 -mx-2 rounded hover:bg-hellas-cool-light-grey/40 dark:hover:bg-hellas-cool-grey/20 transition">
+            <span class="font-paplane text-2xl text-hellas-cool-grey w-24 tabular-nums">03</span>
+            <span class="text-hellas-cool-grey group-hover:text-hellas-yellow transition shrink-0">→</span>
+            <span class="font-sans text-lg text-hellas-black dark:text-hellas-white group-hover:text-hellas-yellow transition">A New Hope: Agentic Harnesses</span>
+          </a>
+          
+          
+        </li>
+      
+        
+        
+        <li>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;4-thunderbolt-ibverbs&#x2F;" class="group flex items-baseline gap-4 py-2 px-2 -mx-2 rounded hover:bg-hellas-cool-light-grey/40 dark:hover:bg-hellas-cool-grey/20 transition">
+            <span class="font-paplane text-2xl text-hellas-cool-grey w-24 tabular-nums">04</span>
+            <span class="text-hellas-cool-grey group-hover:text-hellas-yellow transition shrink-0">→</span>
+            <span class="font-sans text-lg text-hellas-black dark:text-hellas-white group-hover:text-hellas-yellow transition">thunderbolt-ibverbs</span>
+          </a>
+          
+          
+            <ul class="ml-32 mb-2 space-y-0.5">
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;4-thunderbolt-ibverbs&#x2F;#investigation" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ Investigation
+                    </a>
+                  </li>
+                
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;4-thunderbolt-ibverbs&#x2F;#implementation" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ Implementation
+                    </a>
+                  </li>
+                
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;4-thunderbolt-ibverbs&#x2F;#benchmark-low-level-rdma-primitives" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ Benchmark: low-level RDMA primitives
+                    </a>
+                  </li>
+                
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;4-thunderbolt-ibverbs&#x2F;#vllm-support" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ vLLM support
+                    </a>
+                  </li>
+                
+              
+            </ul>
+          
+        </li>
+      
+        
+        
+        <li>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;5-closing&#x2F;" class="group flex items-baseline gap-4 py-2 px-2 -mx-2 rounded hover:bg-hellas-cool-light-grey/40 dark:hover:bg-hellas-cool-grey/20 transition">
+            <span class="font-paplane text-2xl text-hellas-cool-grey w-24 tabular-nums">05</span>
+            <span class="text-hellas-cool-grey group-hover:text-hellas-yellow transition shrink-0">→</span>
+            <span class="font-sans text-lg text-hellas-black dark:text-hellas-white group-hover:text-hellas-yellow transition">Closing</span>
+          </a>
+          
+          
+            <ul class="ml-32 mb-2 space-y-0.5">
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;5-closing&#x2F;#what-this-lets-you-do" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ What this lets you do
+                    </a>
+                  </li>
+                
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;5-closing&#x2F;#why-this-matters-for-hellas" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ Why this matters for Hellas
+                    </a>
+                  </li>
+                
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;5-closing&#x2F;#status" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ Status
+                    </a>
+                  </li>
+                
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;5-closing&#x2F;#try-it" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ Try it
+                    </a>
+                  </li>
+                
+              
+            </ul>
+          
+        </li>
+      
+        
+        
+        <li>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;6-ad-fa57&#x2F;" class="group flex items-baseline gap-4 py-2 px-2 -mx-2 rounded hover:bg-hellas-cool-light-grey/40 dark:hover:bg-hellas-cool-grey/20 transition">
+            <span class="font-paplane text-2xl text-hellas-cool-grey w-24 tabular-nums">Bonus 1</span>
+            <span class="text-hellas-cool-grey group-hover:text-hellas-yellow transition shrink-0">→</span>
+            <span class="font-sans text-lg text-hellas-black dark:text-hellas-white group-hover:text-hellas-yellow transition">AD&#x2F;FA57: Apple&#x27;s RDMA-over-Thunderbolt</span>
+          </a>
+          
+          
+            <ul class="ml-32 mb-2 space-y-0.5">
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;6-ad-fa57&#x2F;#what-works" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ What works
+                    </a>
+                  </li>
+                
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;6-ad-fa57&#x2F;#what-still-doesn-t" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ What still doesn&#x27;t
+                    </a>
+                  </li>
+                
+              
+            </ul>
+          
+        </li>
+      
+        
+        
+        <li>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;7-triforce&#x2F;" class="group flex items-baseline gap-4 py-2 px-2 -mx-2 rounded hover:bg-hellas-cool-light-grey/40 dark:hover:bg-hellas-cool-grey/20 transition">
+            <span class="font-paplane text-2xl text-hellas-cool-grey w-24 tabular-nums">Bonus 2</span>
+            <span class="text-hellas-cool-grey group-hover:text-hellas-yellow transition shrink-0">→</span>
+            <span class="font-sans text-lg text-hellas-black dark:text-hellas-white group-hover:text-hellas-yellow transition">Left to the reader: Triforce</span>
+          </a>
+          
+          
+            <ul class="ml-32 mb-2 space-y-0.5">
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;7-triforce&#x2F;#tri-force-cuda-metal-rocm" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ Tri-Force: CUDA &lt;-&gt; Metal &lt;-&gt; ROCm
+                    </a>
+                  </li>
+                
+              
+                
+                  <li>
+                    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;7-triforce&#x2F;#left-as-exercise-to-the-reader" class="text-hellas-cool-grey hover:text-hellas-yellow transition font-sans text-sm">
+                      ↳ Left As Exercise To The Reader
+                    </a>
+                  </li>
+                
+              
+            </ul>
+          
+        </li>
+      
+    </ol>
+  </nav>
+
+  <div class="border-t border-hellas-cool-grey/20 pt-8 mt-12 max-w-3xl">
+    <a href="https://blog.hellas.ai/blog/" class="inline-flex items-center text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+      </svg>
+      Back to Blog
+    </a>
+  </div>
+</article>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-hellas-black text-hellas-white py-12 border-t border-hellas-cool-grey/20">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 mb-4">
+          <p class="text-hellas-cool-grey mb-4 font-sans">Powering limitless intelligence</p>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Links</h3>
+          <ul class="space-y-2 font-sans">
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="hover:text-hellas-yellow transition duration-200">Home</a></li>
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="hover:text-hellas-yellow transition duration-200">Blog</a></li>
+            <li><a href="https://hellas.ai" class="hover:text-hellas-yellow transition duration-200">Main Site</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="https://twitter.com/hellasdotai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-twitter-white.svg" alt="Twitter" class="h-6 w-6">
+            </a>
+            <a href="https://discord.gg/qHqZyuAa3u" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+
+              <img src="https://blog.hellas.ai/socials/socials-discord-white.svg" alt="Discord" class="h-6 w-6">
+            </a>
+            <a href="https://t.me/hellasai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-telegram-white.svg" alt="Telegram" class="h-6 w-6">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-hellas-cool-grey/20 mt-8 pt-8 text-hellas-cool-grey text-sm font-sans">
+        <p>© 2026 Hellas.ai — All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

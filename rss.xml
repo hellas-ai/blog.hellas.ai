@@ -1,0 +1,1146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+  <channel>
+    <title>Hellas Blog</title>
+    <link>https://blog.hellas.ai</link>
+    <description>The official hellas.ai blog</description>
+    <generator>Zola</generator>
+    <language>en</language>
+    <atom:link href="https://blog.hellas.ai/rss.xml" rel="self" type="application/rss+xml"/>
+    <lastBuildDate>Tue, 28 Jul 2026 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>Layered Cyclic Diagram Layout</title>
+      <pubDate>Tue, 28 Jul 2026 00:00:00 +0000</pubDate>
+      <author>hellas.ai</author>
+      <link>https://blog.hellas.ai/blog/cyclic-hypergraph-layout/</link>
+      <guid>https://blog.hellas.ai/blog/cyclic-hypergraph-layout/</guid>
+      <description xml:base="https://blog.hellas.ai/blog/cyclic-hypergraph-layout/">&lt;p&gt;tl;dr: &lt;strong&gt;we lift a layered drawing algorithm from acyclic hypergraphs to cyclic
+ones.&lt;&#x2F;strong&gt;
+The result is &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;hellas-ai&#x2F;typed-pictures&quot;&gt;typed-pictures&lt;&#x2F;a&gt;, a library and CLI for laying
+out open hypergraphs. You can install it with&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;cargo install typed-pictures-cli&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Using the CLI, you can generate an SVG from a
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;hellas-ai&#x2F;hexpr&quot;&gt;hexpr&lt;&#x2F;a&gt;--our textual syntax for open
+hypergraphs. For example, this expression describes a one-bit half-adder whose
+outputs are the sum and carry bits:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;typed-pictures circuit&#x2F;circuit.hex \&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  --padding 0.25 \&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  --no-wire-labels \&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  --generators circuit&#x2F;circuit-generators.json \&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  &amp;#39;([x y . x y x y] {xor and})&amp;#39;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This produces the image below:&lt;&#x2F;p&gt;
+&lt;div class=&quot;flex justify-center&quot;&gt;
+  &lt;img class=&quot;w-1&#x2F;3&quot; src=&quot;1-bit-adder.svg&quot; alt=&quot;A one-bit half-adder with XOR and AND gates&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Everything needed to reproduce it is included with this post:
+&lt;a href=&quot;https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;cyclic-hypergraph-layout&#x2F;circuit&#x2F;circuit.hex&quot;&gt;the circuit definitions&lt;&#x2F;a&gt;, the
+&lt;a href=&quot;https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;cyclic-hypergraph-layout&#x2F;circuit&#x2F;circuit-generators.json&quot;&gt;generator manifest&lt;&#x2F;a&gt;, and custom SVGs for
+gates such as &lt;a href=&quot;https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;cyclic-hypergraph-layout&#x2F;circuit&#x2F;xor.svg&quot;&gt;XOR&lt;&#x2F;a&gt; and &lt;a href=&quot;https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;cyclic-hypergraph-layout&#x2F;circuit&#x2F;and.svg&quot;&gt;AND&lt;&#x2F;a&gt;.
+I generated the gate drawings with Codex; &lt;code&gt;typed-pictures&lt;&#x2F;code&gt; handles their layout
+and wiring. The &lt;a href=&quot;https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;cyclic-hypergraph-layout&#x2F;generate_diagrams.sh&quot;&gt;generation script&lt;&#x2F;a&gt; rebuilds every
+diagram in the post.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;drawing-open-hypergraphs&quot;&gt;Drawing Open Hypergraphs&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;open-hypergraphs&#x2F;latest&#x2F;open_hypergraphs&#x2F;&quot;&gt;Open hypergraphs&lt;&#x2F;a&gt;
+provide a datastructure for &quot;circuit-like syntax&quot;.
+If you can think of your syntax as &quot;boxes with ports connected by wires&quot;, open
+hypergraphs are for you!
+Electronic circuits are a natural example.
+Here is a &lt;code&gt;NOR&lt;&#x2F;code&gt; gate, generated from its open hypergraph
+representation:&lt;&#x2F;p&gt;
+&lt;div class=&quot;flex justify-center&quot;&gt;
+  &lt;img class=&quot;w-2&#x2F;3&quot; src=&quot;nor.svg&quot; alt=&quot;NOR circuit&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;In the underlying hypergraph, &lt;strong&gt;wires are nodes&lt;&#x2F;strong&gt; and &lt;strong&gt;boxes are hyperedges&lt;&#x2F;strong&gt;.
+This reverses the usual graph-drawing convention of treating boxes as nodes,
+but lets each box retain an ordered list of input and output ports.&lt;&#x2F;p&gt;
+&lt;p&gt;Now, to &lt;em&gt;generate&lt;&#x2F;em&gt; these diagrams, we need some software.
+Previously, I used &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;graphviz.org&#x2F;doc&#x2F;info&#x2F;lang.html&quot;&gt;dot&lt;&#x2F;a&gt;, but it isn&#x27;t
+designed for hypergraphs and requires a lot of hackery.
+I wanted something that:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Natively supports boxes with &lt;strong&gt;multiple ordered inputs and outputs&lt;&#x2F;strong&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Can be called as a library&lt;&#x2F;strong&gt;, rather than as an external tool&lt;&#x2F;li&gt;
+&lt;li&gt;Supports &lt;strong&gt;custom box drawings&lt;&#x2F;strong&gt; (like the gates in our diagram above)&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;The third point is especially useful: you can draw the individual boxes
+however you like--even ask Codex to generate them--then let &lt;code&gt;typed-pictures&lt;&#x2F;code&gt;
+handle the layout and wiring.&lt;&#x2F;p&gt;
+&lt;p&gt;So how does it work?&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;code&gt;NOR&lt;&#x2F;code&gt; diagram can be drawn using
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Layered_graph_drawing&quot;&gt;layered graph drawing&lt;&#x2F;a&gt;:
+reachability induces a partial order on the operations, and incomparable
+operations can be grouped into the same layer.
+Here, the first layer is &lt;code&gt;{xor, and, 1}&lt;&#x2F;code&gt;, followed by &lt;code&gt;{xor, id}&lt;&#x2F;code&gt;, and finally
+&lt;code&gt;{xor}&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;This direct layering step does not apply when the input hypergraph contains a
+cycle, as in this latch circuit:&lt;&#x2F;p&gt;
+&lt;div class=&quot;flex justify-center&quot;&gt;
+  &lt;img class=&quot;w-2&#x2F;3&quot; src=&quot;latch.svg&quot; alt=&quot;latch circuit&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;So how do we deal with cycles?
+It turns out that we can replace any &lt;em&gt;cyclic&lt;&#x2F;em&gt; open hypergraph with an
+equivalent &lt;em&gt;acyclic&lt;&#x2F;em&gt; one using the
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2305.01041#page=25&quot;&gt;Frobenius decomposition&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;intuition&quot;&gt;Intuition&lt;&#x2F;h1&gt;
+&lt;p&gt;Here&#x27;s a sketch before going into detail.
+Say we have a NOT gate with its output connected to its input:&lt;&#x2F;p&gt;
+&lt;div class=&quot;flex justify-center&quot;&gt;
+  &lt;img class=&quot;w-2&#x2F;3&quot; src=&quot;cycle-not.svg&quot; alt=&quot;cyclic NOT circuit&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;This is represented as a hypergraph with:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;One edge (labeled &lt;code&gt;not&lt;&#x2F;code&gt;)&lt;&#x2F;li&gt;
+&lt;li&gt;One node (the single wire)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Reachability no longer defines a partial order: the NOT gate can reach itself.
+Instead, we first replace each node (wire) with a &lt;em&gt;pair&lt;&#x2F;em&gt; of edges (boxes):&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;A left spider, representing all its occurrences as an &lt;em&gt;input&lt;&#x2F;em&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;A right spider, representing all its occurrences as an &lt;em&gt;output&lt;&#x2F;em&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Here&#x27;s what that looks like for our &quot;cyclic NOT&quot; diagram:&lt;&#x2F;p&gt;
+&lt;div class=&quot;flex justify-center&quot;&gt;
+  &lt;img class=&quot;w-2&#x2F;3&quot; src=&quot;cycle-not-cupcap.svg&quot; alt=&quot;cyclic NOT circuit with cup and cap&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Now there are no directed cycles:
+A node (a wire) can only reach another node via an edge (a box),
+but we&#x27;ve replaced all the cyclic paths with ones that &quot;terminate&quot; at a &lt;code&gt;cup&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;This may seem arbitrary, but it has a nice theoretical interpretation: we&#x27;re
+computing a Frobenius decomposition.
+Fusing the explicit spiders recovers the original hypergraph, and such a
+decomposition always exists.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s see how this works!&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;open-hypergraphs&quot;&gt;Open Hypergraphs&lt;&#x2F;h1&gt;
+&lt;p&gt;Let&#x27;s first talk datastructures.
+An open hypergraph is a &lt;strong&gt;hypergraph&lt;&#x2F;strong&gt; with a designated global interface
+(that&#x27;s the &quot;open&quot; part).
+The hypergraph has nodes and edges, where each edge connects an ordered list of
+source nodes to an ordered list of target nodes.
+Intuitively, edges are operations (boxes), while nodes are &lt;em&gt;wires&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Recall the cyclic NOT diagram from before:&lt;&#x2F;p&gt;
+&lt;div class=&quot;flex justify-center&quot;&gt;
+  &lt;img class=&quot;w-2&#x2F;3&quot; src=&quot;cycle-not.svg&quot; alt=&quot;cyclic NOT circuit&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;The corresponding open hypergraph contains the following data, shown here as
+Python-like pseudocode:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;python&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;nodes&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; [&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    (),&lt;&#x2F;span&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;  # Node 0: the circuit&amp;#39;s single wire&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;]&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;edges&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; [&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;        &amp;quot;label&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; &amp;quot;not&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;        &amp;quot;sources&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: [&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;],&lt;&#x2F;span&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;  # The NOT gate reads from node 0...&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;        &amp;quot;targets&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: [&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;],&lt;&#x2F;span&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;  # ...and writes back to it, forming the cycle&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    },&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;]&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;# The circuit has no dangling input or output wires.&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;global_sources&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; []&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;global_targets&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; []&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Nodes can appear any number of times in operation sources and targets, and in
+the global source and target. Mathematically, this kind of open hypergraph
+corresponds to a &lt;strong&gt;morphism of the free symmetric monoidal category presented
+by&lt;&#x2F;strong&gt; \(\Sigma + \mathbf{Frob}\).&lt;&#x2F;p&gt;
+&lt;p&gt;For more precision, see the Addendum below.
+For now, the important part is \(+ \mathbf{Frob}\): it is as if we had added
+four special operations to our hypergraph:&lt;&#x2F;p&gt;
+&lt;div class=&quot;flex justify-center&quot;&gt;
+  &lt;img class=&quot;w-2&#x2F;3&quot; src=&quot;frobenius-generators.svg&quot; alt=&quot;The four Frobenius generators: unit, split, merge, and counit&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;I say &quot;as if&quot;, because these operations (and some associated &lt;em&gt;equations&lt;&#x2F;em&gt;) are
+not represented as explicit edges, but instead are &lt;strong&gt;implicit in the
+connectivity&lt;&#x2F;strong&gt; of the hypergraph.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;That&#x27;s the key trick&lt;&#x2F;strong&gt;: instead of keeping the Frobenius operations implicit,
+we make them &lt;strong&gt;explicit operations&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Making every wire&#x27;s Frobenius structure explicit in this way gives us a
+&lt;strong&gt;monogamous acyclic&lt;&#x2F;strong&gt; open hypergraph. This restriction was introduced in
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1602.06771&quot;&gt;Rewriting modulo symmetric monoidal structure&lt;&#x2F;a&gt;,
+and open hypergraphs of this kind represent morphisms in theories &lt;em&gt;without&lt;&#x2F;em&gt;
+implicit Frobenius operations.
+For example, a combinational circuit is acyclic, but it is monogamous only when
+operations such as fan-out and discard are made explicit.&lt;&#x2F;p&gt;
+&lt;p&gt;Monogamous acyclic open hypergraphs represent diagrams that are:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Acyclic:&lt;&#x2F;strong&gt; there are no directed cycles.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Monogamous:&lt;&#x2F;strong&gt; every node appears...
+&lt;ul&gt;
+&lt;li&gt;exactly once as a source (or global target), and&lt;&#x2F;li&gt;
+&lt;li&gt;exactly once as a target (or global source).&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;The monogamy condition more intuitively says that we can think of the
+wires in our diagrams as always connecting exactly two &quot;ports&quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;code&gt;NOR&lt;&#x2F;code&gt; diagram is acyclic but not monogamous: each input wire fans out to
+both &lt;code&gt;xor&lt;&#x2F;code&gt; and &lt;code&gt;and&lt;&#x2F;code&gt;. The cyclic NOT diagram is neither.&lt;&#x2F;p&gt;
+&lt;p&gt;Mathematically, a monogamous acyclic open hypergraph corresponds to a
+&lt;strong&gt;morphism of the free symmetric monoidal category presented by&lt;&#x2F;strong&gt;
+\(\Sigma\)--notice the lack of \(\mathbf{Frob}\) here.&lt;&#x2F;p&gt;
+&lt;p&gt;Now, the cool part is this: given an unrestricted hypergraph, a full
+&lt;strong&gt;Frobenius decomposition&lt;&#x2F;strong&gt; gives us an equivalent monogamous acyclic one.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;frobenius-decompositions&quot;&gt;Frobenius Decompositions&lt;&#x2F;h1&gt;
+&lt;p&gt;We&#x27;ve already seen the intuition for how this works above;
+now we&#x27;ll be a little more precise.
+For a &lt;strong&gt;very&lt;&#x2F;strong&gt; precise treatment, see
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2305.01041#page=25&quot;&gt;Data-Parallel Algorithms for String Diagrams&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;First, we extend our set of operations with an explicit &lt;code&gt;Spider&lt;&#x2F;code&gt; operation.
+This is really a family of operations--one for each pair of input and output
+arities--where each spider stands for a connected diagram built from the four
+Frobenius generators above.&lt;&#x2F;p&gt;
+&lt;p&gt;Then, for each node (wire) \(x\) in the original hypergraph, we introduce two
+spiders:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;A left spider \(s_x^-\), whose inputs correspond to occurrences of \(x\)
+on the global source boundary, and whose outputs correspond to occurrences
+of \(x\) as an operation input.&lt;&#x2F;li&gt;
+&lt;li&gt;A right spider \(s_x^+\), whose inputs correspond to occurrences of \(x\)
+as an operation output, and whose outputs correspond to occurrences of
+\(x\) on the global target boundary.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;There is one extra port on each spider, used to connect \(s_x^-\) directly to
+\(s_x^+\). More precisely, if \(x\) occurs \(p\) times on the global
+source boundary, \(m\) times as an operation input, \(n\) times as an
+operation output, and \(q\) times on the global target boundary, then:&lt;&#x2F;p&gt;
+&lt;p&gt;\[
+s_x^- : p \longrightarrow 1 + m
+\qquad\text{and}\qquad
+s_x^+ : 1 + n \longrightarrow q.
+\]&lt;&#x2F;p&gt;
+&lt;p&gt;Every other occurrence is moved onto its own fresh wire, carrying the same
+label as \(x\). This makes the result monogamous: each fresh wire connects
+exactly one spider port to one operation port or global boundary. It also makes
+the result acyclic. All original operations lie between the left and right
+spiders, so every directed path moves from left spiders, through at most one
+original operation, to right spiders.&lt;&#x2F;p&gt;
+&lt;p&gt;Finally, the construction is reversible modulo the Frobenius equations.
+Fusing each explicit spider and identifying its incident wires recovers the
+original node \(x\), and doing this for every node recovers the original open
+hypergraph.&lt;&#x2F;p&gt;
+&lt;p&gt;Now let&#x27;s look at a small acyclic example: the composition of &lt;code&gt;f&lt;&#x2F;code&gt; followed by
+&lt;code&gt;g&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;div class=&quot;flex justify-center&quot;&gt;
+  &lt;img class=&quot;w-1&#x2F;2&quot; src=&quot;compose-f-g.svg&quot; alt=&quot;The acyclic composition of f followed by g&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Here&#x27;s its Frobenius decomposition, computed as described above:&lt;&#x2F;p&gt;
+&lt;div class=&quot;flex justify-center&quot;&gt;
+  &lt;img class=&quot;w-2&#x2F;3&quot; src=&quot;compose-f-g-frobenius.svg&quot; alt=&quot;The full Frobenius decomposition of the composition of f and g&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Unfortunately, this is incredibly ugly.
+Notice that by decomposing in this way, we &lt;em&gt;always&lt;&#x2F;em&gt; get a three-layer diagram:
+source spiders, operations, and target spiders.
+Even this small acyclic example becomes difficult to read.&lt;&#x2F;p&gt;
+&lt;p&gt;What can we do about this?&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;cycle-breaking&quot;&gt;Cycle Breaking&lt;&#x2F;h1&gt;
+&lt;p&gt;To fix this, we replace wires with explicit left and right spiders &lt;em&gt;only where
+necessary&lt;&#x2F;em&gt;.
+Which wires need to be replaced?
+Precisely those which cause cycles!&lt;&#x2F;p&gt;
+&lt;p&gt;Finding this set is the process of &lt;em&gt;cycle breaking&lt;&#x2F;em&gt;, closely related to the
+cycle-removal stage of layered graph drawing algorithms such as
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;graphviz.org&#x2F;doc&#x2F;info&#x2F;lang.html&quot;&gt;dot&lt;&#x2F;a&gt;.
+Finding a minimum set of wires that intersects every directed cycle is
+NP-hard, so we use a fast greedy heuristic. The one used in
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;hellas-ai&#x2F;typed-pictures&quot;&gt;typed-pictures&lt;&#x2F;a&gt; works as follows:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Turn the hypergraph into a directed bipartite graph with one vertex for each
+wire and one for each operation. An operation input becomes an arc
+&lt;code&gt;wire → operation&lt;&#x2F;code&gt;, and an operation output becomes an arc
+&lt;code&gt;operation → wire&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Repeatedly remove every source and sink--that is, every vertex with no
+incoming or no outgoing arcs. Such a vertex cannot be part of a directed
+cycle, so removing it does not require us to spiderize anything. We call
+this step &lt;em&gt;peeling&lt;&#x2F;em&gt; the acyclic fringe.&lt;&#x2F;li&gt;
+&lt;li&gt;If vertices remain after peeling, the residual graph contains a cycle.
+Choose the remaining wire with the largest
+&lt;code&gt;indegree × outdegree&lt;&#x2F;code&gt; score, record it as a cycle breaker, and remove it.
+This score favours wires whose removal is likely to break several cycles at
+once.&lt;&#x2F;li&gt;
+&lt;li&gt;Peel again, and repeat until no vertices remain.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;The selected wires are not necessarily the smallest possible set, but they are
+guaranteed to intersect every directed cycle: anything not selected was
+eventually removed as part of an acyclic fringe. Spiderizing exactly these
+wires therefore makes the diagram acyclic while leaving the rest of its wiring
+unchanged.&lt;&#x2F;p&gt;
+&lt;p&gt;For comparison, here is the latch after a full Frobenius decomposition, with
+every wire replaced by explicit spiders:&lt;&#x2F;p&gt;
+&lt;div class=&quot;flex justify-center&quot;&gt;
+  &lt;img class=&quot;w-2&#x2F;3&quot; src=&quot;latch-frobenius.svg&quot; alt=&quot;The latch circuit after a full Frobenius decomposition&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;For this latch, cycle breaking needs only one wire.
+Spiderizing that wire yields an acyclic diagram, shown here:&lt;&#x2F;p&gt;
+&lt;div class=&quot;flex justify-center&quot;&gt;
+  &lt;img class=&quot;w-2&#x2F;3&quot; src=&quot;latch.svg&quot; alt=&quot;The latch circuit after spiderizing only a cycle-breaking wire&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;Both diagrams represent the same open hypergraph modulo the Frobenius
+equations, but cycle-broken diagrams are typically easier to read.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;summing-up&quot;&gt;Summing up&lt;&#x2F;h1&gt;
+&lt;p&gt;To sum up: Frobenius decompositions let us lift an algorithm for rendering
+&lt;strong&gt;acyclic open hypergraphs&lt;&#x2F;strong&gt; into one that works on &lt;strong&gt;any open hypergraph&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;In practice, we only add spiders where we need them to break cycles.
+That means simple diagrams stay simple, while cyclic ones still get an
+equivalent acyclic representation using the usual Frobenius structure.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;addendum-sigma-terms-open-hypergraphs-and-monogamous-acyclicity&quot;&gt;Addendum: \(\Sigma\)-terms, Open Hypergraphs, and Monogamous Acyclicity&lt;&#x2F;h1&gt;
+&lt;p&gt;For the categorically minded, here is the categorical picture.
+Let \(\Sigma = (\Sigma_0, \Sigma_1)\) be a monoidal signature consisting
+of generating objects and typed operations. Write
+\(\mathrm{Free}_\Sigma\) for its category of terms, built using composition
+and tensor product and taken modulo the symmetric monoidal laws. If the
+signature also carries equations \(\Sigma_2\), quotient every category
+below by the congruence they generate.&lt;&#x2F;p&gt;
+&lt;p&gt;Let \(\mathrm{Hyp}_\Sigma\) be the category of \(\Sigma\)-labelled open
+hypergraphs, and let \(\mathrm{MAHyp}_\Sigma\) be its monogamous acyclic
+subcategory. The standard correspondences, together with the optional
+factorisation on the right, fit into this commuting diagram:&lt;&#x2F;p&gt;
+&lt;div class=&quot;flex justify-center&quot;&gt;
+  &lt;img class=&quot;w-full&quot; src=&quot;correspondence-diagram.svg&quot; alt=&quot;A commuting diagram relating Sigma terms, terms with Frobenius structure, monogamous acyclic open hypergraphs, and arbitrary open hypergraphs, with an optional factorisation through explicit Frobenius generators&quot;&gt;
+&lt;&#x2F;div&gt;
+&lt;p&gt;In symbols,
+\(\mathrm{Free}_\Sigma \cong \mathrm{MAHyp}_\Sigma\), and
+\(\mathrm{Free}_{\Sigma+\mathbf{Frob}} \cong \mathrm{Hyp}_\Sigma\).
+On the right, the Frobenius equations identify each connected region of
+Frobenius wiring with a single hypergraph node.&lt;&#x2F;p&gt;
+&lt;p&gt;The right-hand equivalence may be factored through
+\(\mathrm{MAHyp}_{\Sigma+\mathbf{Frob}}&#x2F;{\equiv_{\mathbf{Frob}}}\):
+monogamous acyclic hypergraphs with explicit Frobenius generators, taken
+modulo the Frobenius equations.&lt;&#x2F;p&gt;
+&lt;p&gt;The specific full decomposition in this post is guaranteed to be monogamous
+and acyclic; an arbitrary way of making spiders explicit need not have this
+property. Expanding its spiders gives a
+\((\Sigma+\mathbf{Frob})\)-term, while fusing them recovers the original open
+hypergraph. Such a representative is not unique, but all valid choices agree
+modulo the Frobenius equations.&lt;&#x2F;p&gt;
+&lt;p&gt;The cycle-breaking optimisation is deliberately weaker: it makes only the
+spiders needed to remove directed cycles explicit. The result is guaranteed
+to be acyclic, but it need not be monogamous because unselected wires may
+still branch or merge implicitly.&lt;&#x2F;p&gt;
+</description>
+    </item>
+    <item>
+      <title>Deterministic transcendental functions</title>
+      <pubDate>Mon, 08 Jun 2026 00:00:00 +0000</pubDate>
+      <author>hellas.ai</author>
+      <link>https://blog.hellas.ai/blog/deterministic-transcendentals/</link>
+      <guid>https://blog.hellas.ai/blog/deterministic-transcendentals/</guid>
+      <description xml:base="https://blog.hellas.ai/blog/deterministic-transcendentals/">&lt;h2 id=&quot;background&quot;&gt;Background&lt;&#x2F;h2&gt;
+&lt;p&gt;We want our inference process to be deterministic, meaning that for a given model checkpoint, the same input should result in a reproducible output, identical across all platforms.
+This requires careful control of what optimizations the CPU&#x2F;Metal&#x2F;CUDA&#x2F;HIP compilers are allowed to make, what platform APIs and primitives can be relied on and how operations and reductions are ordered during execution. Due to floating point rounding the latter is a notorious source of nondeterminism, making FP addition be non-associative, but it is important even in pure low precision integer arithmetic due to saturation and clamping.&lt;&#x2F;p&gt;
+&lt;p&gt;Since all current realistic workloads contain floating point operations (even quantized models keep a few sensitive layers in high precision), we will not discuss integer arithmetic here.&lt;&#x2F;p&gt;
+&lt;p&gt;For deterministic execution all the component building blocks of the computation graph must themselves be deterministic. While in a modern transformer model the majority of these are matmuls, there are a few blocks using transcendental functions too:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;softmax relies on &lt;strong&gt;exp&lt;&#x2F;strong&gt; and is present in most self-attention and output layers&lt;&#x2F;li&gt;
+&lt;li&gt;positional embeddings use &lt;strong&gt;sin&lt;&#x2F;strong&gt; and &lt;strong&gt;cos&lt;&#x2F;strong&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;the softplus function in Mamba-like layers is defined as &lt;strong&gt;ln(1+e^x)&lt;&#x2F;strong&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;The problem is these functions are not guaranteed to produce bitwise identical results on different platforms. This snippet will likely write False for all four functions.&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;python&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;import&lt;&#x2F;span&gt;&lt;span&gt; torch&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;# Create tensor on CPU&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;a&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; torch.rand(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;200&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span&gt; f&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; in&lt;&#x2F;span&gt;&lt;span&gt; torch.sin, torch.cos, torch.log, torch.exp:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;    print&lt;&#x2F;span&gt;&lt;span&gt;(torch.equal(f(a), f(a.to(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;&amp;#39;cuda:0&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;)).to(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;&amp;#39;cpu&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;)))&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This post will look at how to make these transcendental functions have reproducible outputs.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;floating-point-notions&quot;&gt;Floating point notions&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;IEEE 754&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt; - The IEEE Standard for Floating-Point Arithmetic, originally published in 1985, most recently updated in 2019.
+It defines the floating point formats, operations, rounding modes and exceptions that a conforming implementation should support.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Floating point formats&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt; - the different precision bit representations on floating point numbers. IEEE 754 describes binary16, binary32, binary64, binary128 and binary256 along with a few decimal formats. binary32 and binary64 used to be called single and double in the original text and correspond to the float and double C types. For deep learning only binary16 and binary32 are relevant.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Rounding modes&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt; - the standard describes five rounding modes: toward −∞, toward ∞, toward 0, round to nearest ties away from 0, round to nearest ties to even. The latter is the most commonly used in deep learning, for determinism one should pick this one and stick to it.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Correctly rounded&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt; - a floating point operation that behaves as if it computed the exact real result and then rounded it according to the chosen rounding mode. This makes it deterministic.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Faithfully rounded&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt; - a floating point operation where the returned result is either one of the two floating-point numbers neighbouring the exact result. This makes it nondeterministic but the implementation is usually faster than for correctly rounded alternatives.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Transcendental functions&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt; - functions that are not algebraic, so cannot be written as a polynomial equation. They can be trigonometric, exponential, hyperbolic and their inverses, for example sin, cos, exp, ln, tanh.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Elementary functions&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt; - in floating point and approximation theory literature these refer to the transcendental and also some algebraic functions like sqrt(1-x^2), basic functions that are not primitive arithmetic operations but are commonly used in numerical computations.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Required operations&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt; in IEEE 754: +, -, *, &#x2F;, sqrt, and starting with the the 2008 update FMA (fused-multiply-add). The standard requires these to be correctly rounded.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Recommended operations&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt; in IEEE 754: most of the elementary functions are recommended but not required to be part of an IEEE 754 compliant implementation.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;implementing-transcendental-functions&quot;&gt;Implementing transcendental functions&lt;&#x2F;h2&gt;
+&lt;p&gt;Since these are not required operations in IEEE 754, they generally do not have correctly rounded implementations in most libraries. If that were the case, determinism would be a solved problem for transcendentals.&lt;&#x2F;p&gt;
+&lt;p&gt;These functions are usually provided by the platform &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;C_mathematical_functions&quot;&gt;libm&lt;&#x2F;a&gt; or its equivalents - they are independent implementations part of the Linux glibc, LLVM libc and the CUDA and HIP runtime libraries, tailored to specific platforms with different trade-offs between performance and accuracy. Their outputs&#x27; bitwise representations are not identical due to the approximation method used, rounding choice and other implementation details.
+The CUDA API even has two variants, the very fast &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;docs.nvidia.com&#x2F;cuda&#x2F;cuda-math-api&#x2F;cuda_math_api&#x2F;group__CUDA__MATH__INTRINSIC__SINGLE.html&quot;&gt;intrinsics&lt;&#x2F;a&gt; like &lt;strong&gt;__sinf&lt;&#x2F;strong&gt; and &lt;strong&gt;__cosf&lt;&#x2F;strong&gt; that translate to hardware instructions run on the GPU&#x27;s Special Function Unit, and the slower but more accurate APIs building on these intrinsics.&lt;&#x2F;p&gt;
+&lt;p&gt;We need reproducible, reasonably performant and reasonably accurate implementations of transcendental functions for deep learning workloads. The reproducibility requirement rules out relying on platform APIs. Using a correctly rounded implementation from projects like the &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;core-math.gitlabpages.inria.fr&quot;&gt;Core-Math&lt;&#x2F;a&gt;, &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;people.cs.rutgers.edu&#x2F;~sn349&#x2F;rlibm&quot;&gt;RLibm&lt;&#x2F;a&gt; or &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;sleef.org&quot;&gt;SLEEF&lt;&#x2F;a&gt; as a starting point is one possibility, but these are more generic and complex than necessary for deep learning, target high precision scientific computing too and more often than not need porting to non-CPU platforms. The other option left is to implement the functions from scratch, specifically for our use case.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;polynomial-approximation&quot;&gt;Polynomial approximation&lt;&#x2F;h3&gt;
+&lt;p&gt;Transcendental functions do not have exact formulas in terms of primitive operations, so they are usually implemented using approximation methods like polynomial expansions and&#x2F;or lookup tables.
+According to &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Weierstrass_approximation_theorem&quot;&gt;the Weierstrass approximation theorem&lt;&#x2F;a&gt; any continuous function can be approximated to an arbitrary precision using a polynomial, the higher the degree the better the approximation. Briefly, to approximate a given function for a given input range, a function-specific polynomial is picked according to the desired accuracy, then each call to the function evaluates this fixed polynomial on the input. For example a very straightforward and naive implementation for &lt;strong&gt;sin&lt;&#x2F;strong&gt; and &lt;strong&gt;cos&lt;&#x2F;strong&gt; would be the sum of the first few terms of their respective Taylor series (also known as Maclaurin series in this particular case of looking at the derivatives of sin at 0):&lt;&#x2F;p&gt;
+&lt;p&gt;\[
+\sin(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{(2n+1)!}
+\]&lt;&#x2F;p&gt;
+&lt;p&gt;and&lt;&#x2F;p&gt;
+&lt;p&gt;\[
+\cos(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n}}{(2n)!}
+\]&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;python&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;import&lt;&#x2F;span&gt;&lt;span&gt; math&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;import&lt;&#x2F;span&gt;&lt;span&gt; torch&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;def&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; sin_taylor&lt;&#x2F;span&gt;&lt;span&gt;(x):&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    return&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;math.factorial(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; +&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;5&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;math.factorial(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;5&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;7&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;math.factorial(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;7&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;def&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; cos_taylor&lt;&#x2F;span&gt;&lt;span&gt;(x):&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    return&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 1&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;math.factorial(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; +&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;4&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;math.factorial(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;4&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;6&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;math.factorial(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;6&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;inputs&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; torch.linspace(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span&gt;math.pi&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;4&lt;&#x2F;span&gt;&lt;span&gt;, math.pi&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;4&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 100&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;print&lt;&#x2F;span&gt;&lt;span&gt;(torch.allclose(inputs.sin(), sin_taylor(inputs)))&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;print&lt;&#x2F;span&gt;&lt;span&gt;(torch.allclose(inputs.cos(), cos_taylor(inputs)))&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;True&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;True&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;If the input interval is small and close to zero, such an approximation can be acceptable, but in the script above changing the interval to &lt;code&gt;[-π&#x2F;2, π&#x2F;2]&lt;&#x2F;code&gt; will cause divergence and extra terms need to be added from the Taylor expansion to keep the errors under control. In production implementations that have to deal with large input ranges another approach is needed, one that involves better polynomials and mapping the inputs to a smaller range.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;minimax-polynomial&quot;&gt;Minimax polynomial&lt;&#x2F;h3&gt;
+&lt;p&gt;Because the Taylor polynomial is increasingly inaccurate as the input moves away from zero, even as more terms of the expansion are used, a so-called &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Minimax_polynomial&quot;&gt;minimax polynomial&lt;&#x2F;a&gt; is the usual choice.
+At the expense of a bit more divergence close to zero, it provides uniform accuracy over the entire input range. It is called minimax because it minimizes the maximum error over the input range. Where the Taylor polynomial approximation error shoots up as we move away from zero, the minimax polynomial error is a small bounded uniform sine-like oscillation. The theory behind computing the such a polynomial involves Chebyshev nodes, Lagrange interpolation and the &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Remez_algorithm&quot;&gt;Remez algorithm&lt;&#x2F;a&gt;, which is the standard iterative method of producing the coefficients.&lt;&#x2F;p&gt;
+&lt;p&gt;Depending on the input range and the accuracy requirements, there are multiple possible minimax polynomials for a given function. The coefficients can be lifted from existing production libraries or computed from scratch using the Remez algorithm. One popular implementation is in the &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;sollya.org&quot;&gt;Sollya&lt;&#x2F;a&gt; project, which is both a library and small scripting language for safe floating-point code development.&lt;&#x2F;p&gt;
+&lt;p&gt;Here are invocations of Sollya from the command line to compute the minimax polynomials for &lt;code&gt;sin(x)&lt;&#x2F;code&gt; and &lt;code&gt;cos(x)&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;shellscript&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;echo&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; &amp;quot;fpminimax(sin(x), [|1,3,5,7|], [|SG...|], [-pi&#x2F;4, pi&#x2F;4], absolute);&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; |&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; sollya&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (1&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; + x^2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (-0.166666507720947265625&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; + x^2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (8.331983350217342376708984375e-3&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; + x^2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (-1.94961365195922553539276123046875e-4))))&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;echo&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; &amp;quot;fpminimax(cos(x), [|0,2,4,6|], [|SG...|], [-pi&#x2F;4, pi&#x2F;4], absolute);&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; |&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; sollya&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; + x^2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (-0.49999892711639404296875&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; + x^2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (4.16561998426914215087890625e-2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; + x^2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (-1.35968066751956939697265625e-3)))&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We passed the &lt;code&gt;[-π&#x2F;4, π&#x2F;4]&lt;&#x2F;code&gt; range on which to approximate, and the degrees of the polynomials to use. Since sin is an odd function (&lt;code&gt;f(-x) = -f(x)&lt;&#x2F;code&gt;), and cos is an even function (&lt;code&gt;f(-x) = f(x)&lt;&#x2F;code&gt;), their minimax polynomials also have non-zero coefficients only for odd and even powers of x respectively, but they are slightly different from the corresponding Taylor coefficients.&lt;&#x2F;p&gt;
+&lt;p&gt;The output of Sollya is an expression that can be used to evaluate the polynomial for any input value on the given interval. It is of the form \[C0 + x * (C1 + x* (C2 + x * (...)))\] so that the polynomial can be evaluated with fewer multiplications than the naive Python Taylor expressions above. This is known as &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Horner%27s_scheme&quot;&gt;Horner&#x27;s scheme&lt;&#x2F;a&gt;. There&#x27;s a parallelized version known as Estrin&#x27;s scheme, but for such low degree polynomials as used in most transcendental function implementations with only 4-5 terms, it is rarely justified. On the other hand one frequent optimization is using FMA (fused multiply-add) instead of explicit multiplication and addition operations because the fused operation will only require a single rounding operation instead of two, yielding better precision. FMA is present on most modern CPUs and GPUs so it is recommended to be used consistently in a deterministic implementation.&lt;&#x2F;p&gt;
+&lt;p&gt;Here are examples of sin and cos approximations using the minimax polynomials computed above, evaluated using Horner&#x27;s scheme, one using explicit multiplication and addition operations and the other using FMA:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;python&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;def&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; sin_approx&lt;&#x2F;span&gt;&lt;span&gt;(x):&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;    Approximates sin(x) using a minimax polynomial of degree 7 on the reduced interval [-π&#x2F;4, π&#x2F;4].&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C1&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 1&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C3&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; = -&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;0.166666507720947265625&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C5&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 8.331983350217342376708984375e-3&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C7&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; = -&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;1.94961365195922553539276123046875e-4&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;    # Horner&amp;#39;s scheme for sin&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    return&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (C1&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; +&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;(C3&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; +&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;(C5&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; +&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;C7)))&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;def&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; cos_approx&lt;&#x2F;span&gt;&lt;span&gt;(x):&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;    Approximates cos(x) using a minimax polynomial of degree 6 on the reduced interval [-π&#x2F;4, π&#x2F;4].&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C0&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 1&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; = -&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;0.49999892711639404296875&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C4&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 4.16561998426914215087890625e-2&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C6&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; = -&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;1.35968066751956939697265625e-3&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;    # Horner&amp;#39;s scheme for cos using FMA&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;    # return C0 + x*x*(C2 + x*x*(C4 + x*x*C6))&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    x2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    c&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; math.fma(x2, C6, C4)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    c&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; math.fma(x2, c, C2)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    c&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; math.fma(x2, c, C0)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    return&lt;&#x2F;span&gt;&lt;span&gt; c&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h3 id=&quot;range-reduction&quot;&gt;Range reduction&lt;&#x2F;h3&gt;
+&lt;p&gt;Even with minimax polynomials it is impractical to approximate a function over a large input range. To maintain accuracy the degree of the polynomial needs to increase as the range increases, slowing down computation and causing representation issues if coefficients become too large or small. One way around this is piecewise approximation, where the input range is divided into smaller intervals and a different polynomial is used for each one, but this makes the code more complicated.&lt;&#x2F;p&gt;
+&lt;p&gt;The standard approach is range reduction:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;find a small fixed range for the input values where the approximation of the function we are interested in is good enough with small degree polynomials&lt;&#x2F;li&gt;
+&lt;li&gt;find an algebraic relation that expresses the function using itself called on only input values from this small fixed range&lt;&#x2F;li&gt;
+&lt;li&gt;implement the function by translating inputs to the small range, approximate the output on that range, and compute the final result based on this reduced approximation by doing an inverse translation&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Since they are related periodic functions, sin(x) and cos(x) can be expressed as ±sin(xr) or ±cos(xr) where xr is in the &lt;code&gt;[-π&#x2F;4, π&#x2F;4]&lt;&#x2F;code&gt; range.&lt;&#x2F;p&gt;
+&lt;p&gt;Let \(x = q\frac{\pi}{2} + r\) where \(r \in \left[-\frac{\pi}{4}, \frac{\pi}{4}\right]\) and \(q \in \mathbb{Z}\). Then, depending on \(q \bmod 4\):&lt;&#x2F;p&gt;
+&lt;p&gt;\[sin(x) = \begin{cases}
+\sin(r) &amp;amp; q \equiv 0 \pmod{4} \\
+\cos(r) &amp;amp; q \equiv 1 \pmod{4} \\
+-\sin(r) &amp;amp; q \equiv 2 \pmod{4} \\
+-\cos(r) &amp;amp; q \equiv 3 \pmod{4}
+\end{cases}\]&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;python&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;def&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; reduced_sincos&lt;&#x2F;span&gt;&lt;span&gt;(x):&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    q&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; (x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; &#x2F;&lt;&#x2F;span&gt;&lt;span&gt; (math.pi&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;)).round()&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;    # direct subtraction causing catastrophic cancellation&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;    # xr = x - q * (math.pi&#x2F;2)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;    # use Cody-Waite subtraction instead&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    xr&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; cody_waite_subtract(x, q)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    sin&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; sin_approx(xr)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    cos&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; cos_approx(xr)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    match&lt;&#x2F;span&gt;&lt;span&gt; q:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;        case&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 0&lt;&#x2F;span&gt;&lt;span&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;            return&lt;&#x2F;span&gt;&lt;span&gt; sin, cos&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;        case&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 1&lt;&#x2F;span&gt;&lt;span&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;            return&lt;&#x2F;span&gt;&lt;span&gt; cos,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span&gt;sin&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;        case&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 2&lt;&#x2F;span&gt;&lt;span&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;            return -&lt;&#x2F;span&gt;&lt;span&gt;sin,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span&gt;cos&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;        case&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 3&lt;&#x2F;span&gt;&lt;span&gt;:&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;            return -&lt;&#x2F;span&gt;&lt;span&gt;cos, sin&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The naive reduction &lt;code&gt;xr = x - q * (math.pi&#x2F;2)&lt;&#x2F;code&gt; calculation can suffer from &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Catastrophic_cancellation&quot;&gt;catastrophic cancellation&lt;&#x2F;a&gt; so most implementations use the Cody-Waite reduction: π&#x2F;2 is expressed as a sum of constants of different magnitudes, each being exactly representable, and instead of a single subtraction, these constants are subtracted individually.&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;python&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;def&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; cody_waite_subtract&lt;&#x2F;span&gt;&lt;span&gt;(x, q):&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;    # P0 + P1 = π&#x2F;2&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    P0&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; float&lt;&#x2F;span&gt;&lt;span&gt;.fromhex(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;&amp;quot;0x1.92p+0&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    P1&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; float&lt;&#x2F;span&gt;&lt;span&gt;.fromhex(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;&amp;quot;0x1.fb54442d18p-12&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    return&lt;&#x2F;span&gt;&lt;span&gt; (x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span&gt; q&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;P0)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span&gt; q&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;P1&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;It is better to express constants as hexadecimal or binary literals to avoid any possible ambiguity in parsing and bit representation of decimal literals.
+This is a generic approach, used regardless of the reduction interval - for example &lt;code&gt;[-π&#x2F;2, π&#x2F;2]&lt;&#x2F;code&gt; is used for approximating &lt;strong&gt;tan&lt;&#x2F;strong&gt;.  When working with double precision there are variants of expressing the sum using 3 or 4 constants instead of just the 2 here.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;approximating-exponential-and-logarithm&quot;&gt;Approximating exponential and logarithm&lt;&#x2F;h3&gt;
+&lt;p&gt;The same principles apply for &lt;strong&gt;log&lt;&#x2F;strong&gt; and &lt;strong&gt;exp&lt;&#x2F;strong&gt; as for the trigonometric functions: find a reduction interval and a formula to map arbitrarily large inputs to that interval, then use polynomial approximation on it. Unlike for the periodic trigonometric functions where these approximated values can be readily used, here we need a reconstruction step to map the values on the small interval back to the full range.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;exponential&quot;&gt;Exponential&lt;&#x2F;h4&gt;
+&lt;p&gt;For &lt;strong&gt;exp&lt;&#x2F;strong&gt; we reduce to the interval &lt;code&gt;[0, log(2)]&lt;&#x2F;code&gt; and use a minimax polynomial where the coefficients are computed using Sollya. Any exp value can be expressed as
+\[
+e^x = 2^k e^{x - k \log 2}
+\]
+where k is the integer part of x&#x2F;log(2).&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;shellscript&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;echo&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; &amp;quot;fpminimax(exp(x), [|0,1,2,3|], [|SG...|], [0, log(2)], absolute);&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; |&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; sollya&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;0.9998929500579833984375&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; + x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (1.0047757625579833984375&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; + x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (0.4669305980205535888671875&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; + x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; * 0.23783318698406219482421875&lt;&#x2F;span&gt;&lt;span&gt;))&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;python&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;def&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; reduced_exp&lt;&#x2F;span&gt;&lt;span&gt;(x):&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    k&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; round&lt;&#x2F;span&gt;&lt;span&gt;(x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;math.log(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;))&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;    # Split log(2) in two to avoid catastrophic cancellation&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;    LN2_HI&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; float&lt;&#x2F;span&gt;&lt;span&gt;.fromhex(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;&amp;#39;0x1.62e4000000000p-1&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;    LN2_LO&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; float&lt;&#x2F;span&gt;&lt;span&gt;.fromhex(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;&amp;#39;0x1.7f7d1cf780000p-20&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    xr&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span&gt; k&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;LN2_HI&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&lt;&#x2F;span&gt;&lt;span&gt; k&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;LN2_LO&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C0&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 0.9998929500579833984375&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C1&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 1.0047757625579833984375&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 0.4669305980205535888671875&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C3&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 0.23783318698406219482421875&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    xr&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; C0&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; +&lt;&#x2F;span&gt;&lt;span&gt; xr&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (C1&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; +&lt;&#x2F;span&gt;&lt;span&gt; xr&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (C2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; +&lt;&#x2F;span&gt;&lt;span&gt; xr&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; C3))&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    return&lt;&#x2F;span&gt;&lt;span&gt;  xr&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span&gt;k)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h4 id=&quot;logarithm&quot;&gt;Logarithm&lt;&#x2F;h4&gt;
+&lt;p&gt;The natural logarithm of a number can be expressed using the mantissa and exponent of its float representation.&lt;&#x2F;p&gt;
+&lt;p&gt;\[
+\ln(x) = \ln(m) + e \ln(2)
+\]&lt;&#x2F;p&gt;
+&lt;p&gt;If we use frexp, the mantissa is normalized to &lt;code&gt;[0.5, 1)&lt;&#x2F;code&gt;, so that is the reduction range we look for minimax coefficients on:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;shellscript&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;echo&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; &amp;quot;fpminimax(log(x), [|0,1,2,3|], [|SG...|], [0.5, 1], absolute);&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; |&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; sollya&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;-2.1859228610992431640625&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; + x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (4.22526264190673828125&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; + x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (-2.9164140224456787109375&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; + x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; * 0.877515852451324462890625&lt;&#x2F;span&gt;&lt;span&gt;))&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;python&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;def&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; reduced_log&lt;&#x2F;span&gt;&lt;span&gt;(x):&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    assert&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; &amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 0&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    m,e&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; math.frexp(x)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C0&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; = -&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;2.1859228610992431640625&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C1&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 4.22526264190673828125&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; = -&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;2.9164140224456787109375&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    C3&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 0.877515852451324462890625&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    rl&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; C0&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; +&lt;&#x2F;span&gt;&lt;span&gt; m&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (C1&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; +&lt;&#x2F;span&gt;&lt;span&gt; m&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; (C2&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; +&lt;&#x2F;span&gt;&lt;span&gt; m&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; C3))&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    return&lt;&#x2F;span&gt;&lt;span&gt; rl&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; +&lt;&#x2F;span&gt;&lt;span&gt; e&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;math.log(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;&lt;h3 id=&quot;zeros-nans-and-infinities&quot;&gt;Zeros, NaNs and infinities&lt;&#x2F;h3&gt;
+&lt;p&gt;These edge values need explicit handling because NaN representation can vary across platforms. We should pick a valid NaN bit pattern of the several available, and use it consistently. The checks for NaN and infinity should come first, before any other computation, so range reduction and approximation works on valid inputs only. The above python snippets do not include these checks.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;For &lt;strong&gt;sin and cos&lt;&#x2F;strong&gt;, Inf input should be treated as NaN and return NaN.&lt;&#x2F;li&gt;
+&lt;li&gt;For &lt;strong&gt;sin&lt;&#x2F;strong&gt;, if the input is ±0 return the same sign 0.&lt;&#x2F;li&gt;
+&lt;li&gt;For &lt;strong&gt;cos&lt;&#x2F;strong&gt; and &lt;strong&gt;exp&lt;&#x2F;strong&gt;, if the input is ±0 return 1 directly.&lt;&#x2F;li&gt;
+&lt;li&gt;For &lt;strong&gt;exp&lt;&#x2F;strong&gt;, if the input is +Inf return +Inf, and if the input is -Inf return +0.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;deep-learning-specific-considerations&quot;&gt;Deep learning specific considerations&lt;&#x2F;h3&gt;
+&lt;p&gt;It makes sense to also implement a function that computes both sine and cosine at the same time. They share the reduction stage and often both values are needed for the same input anyway, as in the case of positional embeddings.&lt;&#x2F;p&gt;
+&lt;p&gt;Plain table lookup without polynomial approximation is a good option when the range of possible inputs is known to be small and fixed such as in FP8 or a subset of BF16, although these are not really used for positional embeddings due to loss of accuracy at longer contexts.&lt;&#x2F;p&gt;
+&lt;p&gt;The Cody-Waite method cannot very accurately compute the reduced range for sin and cosine for very large inputs (&amp;gt; 2^20), and in those cases Payne-Hanek reduction is used instead, but for positional embeddings we&#x27;re fine with the simpler approximation.&lt;&#x2F;p&gt;
+&lt;p&gt;We can get away with using interval reduction and Taylor series expansion of four terms for sin, cos and exp for running LLMs, but since minimax polynomials can get the same or better accuracy with fewer terms, we prefer to use them instead.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h3&gt;
+&lt;p&gt;For determinism we must pick a rounding mode, decide whether or not to use FMA, the range reduction method, the polynomial approximation method and coefficients and the evaluation method and implement the algorithm in the same way for all target platforms. These choices should be made depending on the input range, the accuracy requirements and even benchmarking various options for speed and compliance. There is a wide range of options for each of them but it is safe to just use FMA, round to nearest ties to even, a minimax polynomial generated by Sollya and Horner evaluation.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;references&quot;&gt;References&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;docs.nvidia.com&#x2F;cuda&#x2F;floating-point&#x2F;index.html&quot;&gt;Nvidia article on floating point&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;dl.acm.org&#x2F;doi&#x2F;full&#x2F;10.1145&#x2F;3747840&quot;&gt;Correctly Rounded Evaluation of a Function: Why, How, and at What Cost?&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;link.springer.com&#x2F;book&#x2F;10.1007&#x2F;978-1-4899-7983-4&quot;&gt;Elementary Functions: Algorithms and Implementation&lt;&#x2F;a&gt;, a book by Jean-Michel Muller&lt;&#x2F;p&gt;
+</description>
+    </item>
+    <item>
+      <title>thunderbolt-ibverbs: We have InfiniBand at home</title>
+      <pubDate>Thu, 28 May 2026 00:00:00 +0000</pubDate>
+      <author>hellas.ai</author>
+      <link>https://blog.hellas.ai/blog/thunderbolt-ibverbs/</link>
+      <guid>https://blog.hellas.ai/blog/thunderbolt-ibverbs/</guid>
+      <description xml:base="https://blog.hellas.ai/blog/thunderbolt-ibverbs/">&lt;p&gt;I spent the past few weeks building a linux kernel module that makes ordinary USB4&#x2F;Thunderbolt ports on AMD mini PCs pretend to be InfiniBand devices. The goal is simple: let existing AI runtimes like vLLM&#x2F;RCCL split inference or training across multiple boxes at home, without buying enterprise networking gear.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;TL;DR.&lt;&#x2F;strong&gt; We built experimental RDMA-over-USB4 for 128GB Strix Halo mini PCs. It lets two consumer boxes talk fast enough to run tensor-parallel inference and FSDP workloads across both machines: ~95 Gb&#x2F;s bidirectional raw RDMA, ~7 µs one-way latency, a MiniMax-M2.7 TP=2 inference run that does not fit on one box, and a Gemma 3 27B LoRA FSDP step falling from 1359 s over Ethernet to 126 s over 4-HCA USB4 RDMA.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;.&#x2F;strix-strix.jpeg&quot; alt=&quot;Two Strix Halo mini-PCs (strix-1, strix-2) connected by USB4&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;~48 Gb&#x2F;s per direction (~95 Gb&#x2F;s bidi total)&lt;&#x2F;strong&gt; sustained &lt;code&gt;ib_write_bw&lt;&#x2F;code&gt;, 4-HCA aggregate at 1 MiB &#x2F; 8 QPs with IOMMU off — vs &lt;code&gt;~2.3 Gb&#x2F;s&lt;&#x2F;code&gt; over the onboard 2.5 GbE and &lt;code&gt;~9 Gb&#x2F;s&lt;&#x2F;code&gt; for soft-RoCE on top of &lt;code&gt;thunderbolt-net&lt;&#x2F;code&gt; at the per-rail level.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;~7 µs&lt;&#x2F;strong&gt; one-way &lt;code&gt;ib_write_lat&lt;&#x2F;code&gt; at 64 B, single QP — vs &lt;code&gt;~28 µs&lt;&#x2F;code&gt; over RXE&#x2F;2.5 GbE and &lt;code&gt;~65 µs&lt;&#x2F;code&gt; over RXE&#x2F;TBnet.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;.&#x2F;bench&#x2F;perftest&#x2F;write_bw_vs_size.svg&quot; alt=&quot;ib_write_bw between strix-1 and strix-2, by transport and QPs&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p class=&quot;text-red-700 dark:text-red-400 font-medium&quot;&gt;&lt;strong&gt;DISCLAIMER:&lt;&#x2F;strong&gt; this is research code, most of it AI-generated, and it loads experimental kernel modules on machines I was willing to crash repeatedly. I made an effort to understand enough of it to keep it on-track, but there are almost certainly false assumptions and sharp edges throughout. No warranty, no support promise, not production software.&lt;&#x2F;p&gt;
+</description>
+    </item>
+    <item>
+      <title>Inductive Types in Lean</title>
+      <pubDate>Thu, 02 Apr 2026 00:00:00 +0000</pubDate>
+      <author>hellas.ai</author>
+      <link>https://blog.hellas.ai/blog/inductive-types-in-lean/</link>
+      <guid>https://blog.hellas.ai/blog/inductive-types-in-lean/</guid>
+      <description xml:base="https://blog.hellas.ai/blog/inductive-types-in-lean/">&lt;p&gt;Inductive types in Lean allow for conservative extensions of the core theory
+(the calculus of inductive constructions) by adding new freely generated types.
+Here &quot;conservative&quot; is a term of art: it means that our additions do not
+&quot;increase the power&quot; of the underlying theory by adding new axioms; instead,
+they extend the language in a way designed to preserve consistency.&lt;&#x2F;p&gt;
+&lt;p&gt;But how does this work internally?
+What exactly is added to the logical theory when we write &lt;code&gt;inductive ...&lt;&#x2F;code&gt;?
+This post answers that question using natural numbers as the running example.
+Suppose we declare a &lt;code&gt;Nat&lt;&#x2F;code&gt; type as follows:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;lean&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;namespace&lt;&#x2F;span&gt;&lt;span&gt; MyNat&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;  inductive&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Nat&lt;&#x2F;span&gt;&lt;span&gt; : &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;Type&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  | zero : Nat&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  | succ : Nat → Nat&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;end&lt;&#x2F;span&gt;&lt;span&gt; MyNat&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;When we do this, Lean adds constructors, or &quot;introduction rules&quot;:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;lean&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;Nat.zero : Nat&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;Nat.succ : Nat → Nat&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;These let us &lt;em&gt;construct&lt;&#x2F;em&gt; (or &#x27;introduce&#x27;) &lt;code&gt;Nat&lt;&#x2F;code&gt; values.
+For example, the value for &lt;code&gt;1&lt;&#x2F;code&gt; is introduced as &lt;code&gt;Nat.succ Nat.zero : Nat&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;But we also need to &lt;em&gt;deconstruct&lt;&#x2F;em&gt; or (&#x27;eliminate&#x27;) a &lt;code&gt;Nat&lt;&#x2F;code&gt; value.
+Lean adds a &quot;recursor&quot; &lt;code&gt;Nat.rec&lt;&#x2F;code&gt; for this, whose type can be printed using
+&lt;code&gt;#check Nat.rec&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;MyNat.Nat.rec.{u}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    {motive : Nat → Sort u}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    (zero : motive Nat.zero)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    (succ : (a : Nat) → motive a → motive a.succ)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    (t : Nat) : motive t&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Spelling this out, we have:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;A dependent function &lt;code&gt;motive&lt;&#x2F;code&gt; assigning to each &lt;code&gt;Nat&lt;&#x2F;code&gt; value &lt;code&gt;n&lt;&#x2F;code&gt; some type denoted &lt;code&gt;motive n&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;A base case - a &lt;em&gt;value&lt;&#x2F;em&gt; &lt;code&gt;zero&lt;&#x2F;code&gt; of type &lt;code&gt;motive Nat.zero&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;An inductive case - a &lt;em&gt;function&lt;&#x2F;em&gt; &lt;code&gt;succ&lt;&#x2F;code&gt; mapping a &lt;em&gt;value&lt;&#x2F;em&gt; of type &lt;code&gt;motive a&lt;&#x2F;code&gt; to a value &lt;code&gt;motive (Nat.succ a)&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;With these three arguments applied, we&#x27;re left with a function of type
+&lt;code&gt;(t : Nat) → motive t&lt;&#x2F;code&gt;.
+This is a &lt;em&gt;dependent function type&lt;&#x2F;em&gt; mapping each nat value to a result whose
+type &lt;em&gt;depends on the value&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;A motivating proof-shaped use is &lt;code&gt;∀ n, n = n&lt;&#x2F;code&gt;.
+In Lean, proving this means constructing a term of that type.
+&lt;code&gt;Nat.rec&lt;&#x2F;code&gt; is exactly the induction&#x2F;recursion principle that lets us build such
+terms by giving:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;a value at &lt;code&gt;zero&lt;&#x2F;code&gt;, and&lt;&#x2F;li&gt;
+&lt;li&gt;a way to extend a value at &lt;code&gt;a&lt;&#x2F;code&gt; to one at &lt;code&gt;succ a&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Together, the constructors (introduction rules) and recursor (elimination rule)
+form the core logical&#x2F;computational content of an inductive declaration.
+However, Lean also automatically derives a couple useful utilities.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;helpers-caseson-and-noconfusion&quot;&gt;Helpers: &lt;code&gt;casesOn&lt;&#x2F;code&gt; and &lt;code&gt;noConfusion&lt;&#x2F;code&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;In addition to &lt;code&gt;rec&lt;&#x2F;code&gt;, lean adds a special case: &lt;code&gt;Nat.casesOn&lt;&#x2F;code&gt;, which lets us do
+a &#x27;shallow match&#x27; of cases, without recursing.&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;lean&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;-- casesOn&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;#check&lt;&#x2F;span&gt;&lt;span&gt; Nat.casesOn&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;-- MyNat.Nat.casesOn.{u} {motive : Nat → &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;Sort&lt;&#x2F;span&gt;&lt;span&gt; u} (t : Nat) (zero : motive Nat.zero) (succ : (a : Nat) → motive a.succ) :&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;  motive t&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;As a quick aside, note that if you try to add a case to Nat with the same name
+as one of these automatically added functions, you will get an error! E.g., adding&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;lean&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;inductive&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Nat&lt;&#x2F;span&gt;&lt;span&gt; : &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;Type&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;| zero : Nat&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;| casesOn : Nat -- will cause an error&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;| succ : Nat → Nat&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;... will cause an error like this:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;error: (kernel) constant has already been declared &amp;#39;MyNat.Nat.casesOn&amp;#39;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;A more important helper is &lt;code&gt;Nat.noConfusion&lt;&#x2F;code&gt;.
+This is a theorem that says if &lt;code&gt;t = t&#x27;&lt;&#x2F;code&gt;, then:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Matching constructors imply equal arguments&lt;&#x2F;li&gt;
+&lt;li&gt;Different constructors are impossible&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;In table form:&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;code&gt;t&lt;&#x2F;code&gt;&lt;&#x2F;th&gt;&lt;th&gt;&lt;code&gt;t&#x27;&lt;&#x2F;code&gt;&lt;&#x2F;th&gt;&lt;th&gt;???&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;zero&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;zero&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;Trivial - no args to compare&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;zero&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;succ a&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;Impossible - different constructors&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;succ a&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;zero&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;Impossible - different constructors&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;succ a&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;succ a₁&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;a = a₁&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;Note that &lt;code&gt;noConfusion&lt;&#x2F;code&gt; is purely a helper: we &lt;em&gt;could&lt;&#x2F;em&gt; write it by hand, but it&#x27;s both tedious
+&lt;em&gt;and&lt;&#x2F;em&gt; mechanically derivable, so Lean gives it to us automatically.
+How does this work? Let&#x27;s examine &lt;code&gt;Nat.noConfusion&lt;&#x2F;code&gt; by &lt;code&gt;#check&lt;&#x2F;code&gt;ing it first.&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;-- #check Nat.noConfusion&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;MyNat.Nat.noConfusion.{u} {P : Sort u} {t t&amp;#39; : Nat} (eq : t = t&amp;#39;) : Nat.noConfusionType P t t&amp;#39;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This isn&#x27;t particularly helpful until we examine the &lt;em&gt;definition&lt;&#x2F;em&gt; of &lt;code&gt;noConfusionType&lt;&#x2F;code&gt;.
+Informally, it unpacks as the following case analysis:&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;code&gt;t&lt;&#x2F;code&gt;&lt;&#x2F;th&gt;&lt;th&gt;&lt;code&gt;t&#x27;&lt;&#x2F;code&gt;&lt;&#x2F;th&gt;&lt;th&gt;&lt;code&gt;Nat.noConfusionType P t t&#x27;&lt;&#x2F;code&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;zero&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;zero&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;P → P&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;zero&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;succ a&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;P&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;succ a&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;zero&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;P&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;succ a&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;succ a₁&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td&gt;&lt;code&gt;(a = a₁ → P) → P&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;More precisely, when we &lt;code&gt;#print Nat.noConfusionType&lt;&#x2F;code&gt;, we get this nested case
+analysis which first unpacks &lt;code&gt;t&lt;&#x2F;code&gt;, then &lt;code&gt;t&#x27;&lt;&#x2F;code&gt; within each branch.
+I&#x27;ve indented the &lt;code&gt;#print&lt;&#x2F;code&gt; for easier reading:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;lean&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;@[reducible] protected def&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; MyNat.Nat.noConfusionType.&lt;&#x2F;span&gt;&lt;span&gt;{u} : &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;Sort&lt;&#x2F;span&gt;&lt;span&gt; u → Nat → Nat → &lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;Sort&lt;&#x2F;span&gt;&lt;span&gt; u :=&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    fun&lt;&#x2F;span&gt;&lt;span&gt; P t t&amp;#39; =&amp;gt;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        Nat.casesOn t&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            (Nat.casesOn t&amp;#39;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;                (P → P)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;                fun&lt;&#x2F;span&gt;&lt;span&gt; a =&amp;gt; P&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            )&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            (&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;fun&lt;&#x2F;span&gt;&lt;span&gt; a =&amp;gt; Nat.casesOn t&amp;#39;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;                        P&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;                        (&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;fun&lt;&#x2F;span&gt;&lt;span&gt; a_1 =&amp;gt; (a = a_1 → P) → P)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            )&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Lean will also add an injectivity helper &lt;code&gt;Nat.succ.inj&lt;&#x2F;code&gt; as a useful special
+case proof that &lt;code&gt;Succ(a) = Succ(a&#x27;) ⇒ a = a&#x27;&lt;&#x2F;code&gt; - and this generalises to cases
+of other inductive types across each constructor.&lt;&#x2F;p&gt;
+</description>
+    </item>
+    <item>
+      <title>Will AI do to Software Engineering what Offshoring did to Manufacturing?</title>
+      <pubDate>Fri, 31 Oct 2025 00:00:00 +0000</pubDate>
+      <author>hellas.ai</author>
+      <link>https://blog.hellas.ai/blog/ai-vs-outsourcing/</link>
+      <guid>https://blog.hellas.ai/blog/ai-vs-outsourcing/</guid>
+      <description xml:base="https://blog.hellas.ai/blog/ai-vs-outsourcing/">&lt;p&gt;AI is replacing work traditionally given to junior software engineers&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#1&quot;&gt;1&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;.
+The thesis&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#2&quot;&gt;2&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt; &lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#3&quot;&gt;3&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt; is that repetitive, boilerplate work can now be automated,
+freeing senior engineers to apply the &lt;em&gt;tacit&lt;&#x2F;em&gt; skills of programming which AI is not yet able to automate.&lt;&#x2F;p&gt;
+&lt;p&gt;But this tacit knowledge is developed through years of practice:
+the design and management of large codebases, managing complexity, knowing when
+to incur tech debt, when to pay it off, and so on.&lt;&#x2F;p&gt;
+&lt;p&gt;So if there are no longer incentives to train junior software engineers,
+what will happen to the industry?
+We can make a prediction by observing how the same pattern unfolded in another
+industry: manufacturing.&lt;&#x2F;p&gt;
+&lt;p&gt;US manufacturing employment peaked in 1979&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#4&quot;&gt;4&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;, after which offshoring began to
+erode the labor force.
+Consequently, there was less demand for trainees, resulting in a
+&quot;labor population pyramid&quot; skewed toward older (senior) workers.
+Now, as those seniors retire, they take their tacit knowledge with them, and it
+becomes harder and harder to train new juniors&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#5&quot;&gt;5&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;.
+Ultimately, offshoring caused a vicious cycle which led to a skills gap around
+30 years later&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#6&quot;&gt;6&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Note that the opposite of this effect happens as well, to quote &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;hbr.org&#x2F;2009&#x2F;07&#x2F;restoring-american-competitiveness&quot;&gt;Pisano and
+Shih&lt;&#x2F;a&gt;:&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Once an industrial commons has taken root in a region, a powerful virtuous
+cycle feeds its growth. Experts flock there because that’s where the jobs and
+knowledge networks are. Firms do the same to tap the talent pool, stay
+abreast of advances, and be near suppliers and potential partners.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;Now let&#x27;s translate this to software engineering to make a prediction.
+We have the same initial conditions, except instead of offshoring replacing
+juniors, it&#x27;s AI.
+If the same pattern unfolds, then in ~30 years time we&#x27;d expect to see much of
+the tacit knowledge of programming disappear from the workforce, and a similar
+skills gap.&lt;&#x2F;p&gt;
+&lt;p&gt;Will this actually happen? This time there are some differences:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;AI may progress enough to replace seniors too (exacerbating the problem?)&lt;&#x2F;li&gt;
+&lt;li&gt;Software skills become outdated faster (we&#x27;ll be training more juniors anyway)&lt;&#x2F;li&gt;
+&lt;li&gt;Software has a low barrier to entry for learning, and AI can help you learn&lt;&#x2F;li&gt;
+&lt;li&gt;Junior work is not offshored (if the AI is US-based), so is the &quot;industrial commons&quot; really eroded?&lt;&#x2F;li&gt;
+&lt;li&gt;The &quot;industrial commons&quot; of open source software is distributed and
+accessible from anywhere&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;I&#x27;d bet against the erosion of software engineering purely based on (3) and
+(5): it&#x27;s easy enough to train oneself without significant monetary investment,
+and the &quot;industrial commons&quot; of software exists at least partly in open source
+projects where new developers can learn from seniors by contributing their
+labor for free.&lt;&#x2F;p&gt;
+&lt;p&gt;However, I &lt;em&gt;would&lt;&#x2F;em&gt; predict that new software engineers will have to front more
+of the cost of learning that could previously be done on the job, and that this
+will mean fewer people will select software engineering as a career for purely
+economic reasons over &quot;love of the game&quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;Time will tell!&lt;&#x2F;p&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;1&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;1&lt;&#x2F;sup&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.cio.com&#x2F;article&#x2F;4062024&#x2F;demand-for-junior-developers-softens-as-ai-takes-over.html&quot;&gt;Demand for junior developers softens as AI takes over&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;2&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;2&lt;&#x2F;sup&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;x.com&#x2F;yacineMTB&#x2F;status&#x2F;1984161544570335676&quot;&gt;https:&#x2F;&#x2F;x.com&#x2F;yacineMTB&#x2F;status&#x2F;1984161544570335676&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;3&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;3&lt;&#x2F;sup&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.sundeepteki.org&#x2F;advice&#x2F;impact-of-ai-on-the-2025-software-engineering-job-market&quot;&gt;Impact of AI on the 2025 Software Engineering Job Market&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;4&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;4&lt;&#x2F;sup&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.bls.gov&#x2F;opub&#x2F;btn&#x2F;volume-9&#x2F;forty-years-of-falling-manufacturing-employment.htm&quot;&gt;Forty years of falling manufacturing employment&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;5&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;5&lt;&#x2F;sup&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.ptc.com&#x2F;en&#x2F;technologies&#x2F;augmented-reality&#x2F;training&#x2F;manufacturing-skills-gap&quot;&gt;The Manufacturing Skills Gap &lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;6&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;6&lt;&#x2F;sup&gt;
+&lt;p&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;www.nist.gov&#x2F;system&#x2F;files&#x2F;2015_skills_gap_report.pdf&quot;&gt;The skills gap in U.S. manufacturing&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+</description>
+    </item>
+    <item>
+      <title>Three Solutions to Nondeterminism in AI</title>
+      <pubDate>Mon, 29 Sep 2025 00:00:00 +0000</pubDate>
+      <author>hellas.ai</author>
+      <link>https://blog.hellas.ai/blog/three-solutions-to-nondeterminism-in-ai/</link>
+      <guid>https://blog.hellas.ai/blog/three-solutions-to-nondeterminism-in-ai/</guid>
+      <description xml:base="https://blog.hellas.ai/blog/three-solutions-to-nondeterminism-in-ai/">&lt;p&gt;I want to convince you that &lt;em&gt;verification is necessary&lt;&#x2F;em&gt; for you to
+safely offload cognitive work onto AI while &lt;em&gt;still trusting the results&lt;&#x2F;em&gt;.
+Then I want to show you three ways to do this:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Deal with floating-point nonassociativity&lt;&#x2F;li&gt;
+&lt;li&gt;Remove floating-point calculations from models entirely&lt;&#x2F;li&gt;
+&lt;li&gt;Verify tasks directly&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;I&#x27;ll frame the discussion in terms of LLMs, but it applies to a much
+broader class of models.&lt;&#x2F;p&gt;
+&lt;p&gt;(Side note: You may have seen a
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;thinkingmachines.ai&#x2F;blog&#x2F;defeating-nondeterminism-in-llm-inference&#x2F;&quot;&gt;recent blog post by Horace He&lt;&#x2F;a&gt;
+at Thinking Machines
+which discusses how non-determinism in tensor compute &quot;turns on-policy RL into off-policy RL&quot;.
+It&#x27;s a great blog post which you should read, but consequences for RL are not
+what I want to talk about here.)&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-problem-closed-source-is-not-verifiable&quot;&gt;The Problem: Closed Source is not Verifiable&lt;&#x2F;h2&gt;
+&lt;p&gt;Assume you have no access to model weights, code, or inputs (e.g., the system prompt).
+This is the state of affairs when you use a closed model provider like OpenAI or Anthropic.
+In this case, the model provider is able to &lt;em&gt;undetectably&lt;&#x2F;em&gt; behave in ways which
+are not aligned with your interests, e.g.:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Routing to lower-quality models at peak usage times&lt;&#x2F;li&gt;
+&lt;li&gt;Quantizing or degrading model quality to save money&lt;&#x2F;li&gt;
+&lt;li&gt;Injecting hidden messages into your context&lt;&#x2F;li&gt;
+&lt;li&gt;Censoring tokens, words, or full requests and responses outright&lt;&#x2F;li&gt;
+&lt;li&gt;Inserting overt or covert advertisements into responses&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;This is really just the AI flavour of
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Enshittification&quot;&gt;enshittification&lt;&#x2F;a&gt;,
+where closed-source
+software vendors extract value from you by degrading your experience.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;but-even-open-code-and-open-weights-are-not-enough&quot;&gt;... but even open code and open weights are not enough&lt;&#x2F;h2&gt;
+&lt;p&gt;Now suppose you have an open model where code, weights, and inputs are all known to you,
+and that you trust it to behave roughly in-line with your interests.
+Assume that you don&#x27;t have the hardware to run this model, and instead you ask
+a third party compute provider to run it for you.
+Ideally, you could in principle verify your model&#x27;s outputs as genuine and detect any
+naughty behaviour.&lt;&#x2F;p&gt;
+&lt;p&gt;However, nondeterminism means this is &lt;em&gt;still&lt;&#x2F;em&gt; not possible in practice.
+Simply put, nondeterminism means model outputs are not uniquely determined by inputs,
+so you cannot distinguish between:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Honest behaviour (A genuine model output which is different to the one you calculate)&lt;&#x2F;li&gt;
+&lt;li&gt;Dishonest behaviour (A faked model output which has been manipulated on purpose)&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Model nondeterminism fundamentally arises from non-associativity of floating point arithmetic:
+the &quot;Original Sin&quot; as Horace He &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;thinkingmachines.ai&#x2F;blog&#x2F;defeating-nondeterminism-in-llm-inference&#x2F;#the-original-sin-floating-point-non-associativity&quot;&gt;puts it&lt;&#x2F;a&gt;.
+A simple example is the sum below&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;&amp;gt;&amp;gt;&amp;gt; 0.1 + (0.2 + 0.3)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;... 0.6&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;&amp;gt;&amp;gt;&amp;gt; (0.1 + 0.2) + 0.3&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;... 0.6000000000000001&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Even small differences like this can cause large output changes when a model
+contains nonlinearities:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;python&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;import&lt;&#x2F;span&gt;&lt;span&gt; numpy&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; as&lt;&#x2F;span&gt;&lt;span&gt; np&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;def&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; foo&lt;&#x2F;span&gt;&lt;span&gt;(w, x, y):&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    return&lt;&#x2F;span&gt;&lt;span&gt; (&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;sum&lt;&#x2F;span&gt;&lt;span&gt;(w)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; &amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; x)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; *&lt;&#x2F;span&gt;&lt;span&gt; y&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;# returns either 0 or 3.14e10, depending on chosen reduction bracketing.&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;foo(np.array([&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;0.1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 0.2&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 0.3&lt;&#x2F;span&gt;&lt;span&gt;]),&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 0.6&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 3.14e10&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This example is a little contrived, but the problem &lt;em&gt;does&lt;&#x2F;em&gt; occur in real
+models. For example, in
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2103.04514&quot;&gt;Nondeterminism and instability in neural network optimization&lt;&#x2F;a&gt;
+the authors claim:&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(..) that even one- bit changes in initial parameters result in models
+converging to vastly different values.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;So how do we solve this?&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;solution-1-say-what-you-mean&quot;&gt;Solution 1: Say what you mean&lt;&#x2F;h1&gt;
+&lt;p&gt;The essence of the problem is that a model is not a single function,
+but instead a &lt;em&gt;set&lt;&#x2F;em&gt; of functions considered equal
+&lt;em&gt;up to associativity of floating point arithmetic&lt;&#x2F;em&gt;.
+For example, the two &quot;bracketings&quot; &lt;code&gt;x + (y + z)&lt;&#x2F;code&gt; and &lt;code&gt;(x + y) + z&lt;&#x2F;code&gt; represent
+two different functions (because addition is not associative).
+But when we write &lt;code&gt;sum([x, y, z])&lt;&#x2F;code&gt;, it is ambiguous which function is meant!&lt;&#x2F;p&gt;
+&lt;p&gt;In fact, this ambiguity is &lt;em&gt;useful&lt;&#x2F;em&gt;: if we avoid specifying, our compiler can
+choose the function which will perform best on some specified hardware--
+typically in the form of specialised instructions.&lt;&#x2F;p&gt;
+&lt;p&gt;The first solution to nondeterminism is then to simply &lt;em&gt;not throw away the
+information&lt;&#x2F;em&gt; about which bracketing was chosen by the compiler.
+Concretely:&lt;&#x2F;p&gt;
+&lt;ol start=&quot;0&quot;&gt;
+&lt;li&gt;Choose a model (m), representing a set of functions equal up to FP nonassociativity&lt;&#x2F;li&gt;
+&lt;li&gt;Compiler chooses a (deterministic) function (f \in m) optimized for chosen hardware&lt;&#x2F;li&gt;
+&lt;li&gt;The user runs (y = f(x)) on the untrusted compute provider&lt;&#x2F;li&gt;
+&lt;li&gt;The result (y) is now deterministic and verifiable given inputs (x).&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Incidentally, supporting this flow is a major design goal of &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;catgrad.com&quot;&gt;catgrad&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Note that there are still a couple practical challenges:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Intrinsics like &lt;code&gt;exp&lt;&#x2F;code&gt; can vary across devices (even the same device can have
+multiple versions; see &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;docs.nvidia.com&#x2F;cuda&#x2F;cuda-c-programming-guide&#x2F;index.html#mathematical-functions-appendix-standard-functions&quot;&gt;CUDA&#x27;s &lt;code&gt;exp&lt;&#x2F;code&gt; vs
+&lt;code&gt;__expf&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Interleaving compute with other requests for efficiency requires &lt;em&gt;batch
+invariance&lt;&#x2F;em&gt;; read more about this latter point in &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;thinkingmachines.ai&#x2F;blog&#x2F;defeating-nondeterminism-in-llm-inference&#x2F;&quot;&gt;the Thinking Machines
+post&lt;&#x2F;a&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;solution-2-avoid-floating-point&quot;&gt;Solution 2: Avoid floating-point&lt;&#x2F;h1&gt;
+&lt;p&gt;The second solution is simple to state but harder to do:
+&lt;strong&gt;don&#x27;t use floating point arithmetic in your model&lt;&#x2F;strong&gt;.
+If we want to verify AI tensor compute in general, this means floats have to be
+eliminated at both inference &lt;em&gt;and&lt;&#x2F;em&gt; train time.&lt;&#x2F;p&gt;
+&lt;p&gt;There are several approaches in this direction
+but to my knowledge, none achieves the gold standard of completely
+eliminating floating point at inference &lt;em&gt;and&lt;&#x2F;em&gt; train time (including in the
+optimizer) while also providing convergence guarantees.&lt;&#x2F;p&gt;
+&lt;p&gt;Some approaches which get close are below:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2310.11453&quot;&gt;BitNet&lt;&#x2F;a&gt; replaces floating-point weights in linear layers with 1-bit weights, but but does not fully eliminate the use of floating point weights at inference time.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2402.17764&quot;&gt;1 bit LLMs&lt;&#x2F;a&gt; binarize &lt;em&gt;all&lt;&#x2F;em&gt; weights, but still require floats at train time&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2101.10488&quot;&gt;RDA&lt;&#x2F;a&gt; defines a backprop procedure for training boolean circuits entirely without floats, but provides no convergence guarantees.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2405.16339&quot;&gt;BOLD&lt;&#x2F;a&gt; propose a method for directly training models with boolean weights, provides a convergence proof, but requires floating point values at train time.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;... and here&#x27;s how they fare at eliminating floats where ✅= no floats, ❓= floats in some layers, and ❌= floats required:&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Paper&lt;&#x2F;th&gt;&lt;th&gt;Inference&lt;&#x2F;th&gt;&lt;th&gt;Training&lt;&#x2F;th&gt;&lt;th&gt;Optimizer&lt;&#x2F;th&gt;&lt;th&gt;Convergence&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2310.11453&quot;&gt;BitNet&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;td&gt;❓&lt;&#x2F;td&gt;&lt;td&gt;❌&lt;&#x2F;td&gt;&lt;td&gt;❌&lt;&#x2F;td&gt;&lt;td&gt;✅ (empirical)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2402.17764&quot;&gt;1-bit LLMs&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;td&gt;✅&lt;&#x2F;td&gt;&lt;td&gt;❌&lt;&#x2F;td&gt;&lt;td&gt;❌&lt;&#x2F;td&gt;&lt;td&gt;✅ (empirical)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2101.10488&quot;&gt;RDA&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;td&gt;✅&lt;&#x2F;td&gt;&lt;td&gt;✅&lt;&#x2F;td&gt;&lt;td&gt;✅&lt;&#x2F;td&gt;&lt;td&gt;❌&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2405.16339&quot;&gt;BOLD&lt;&#x2F;a&gt;&lt;&#x2F;td&gt;&lt;td&gt;✅&lt;&#x2F;td&gt;&lt;td&gt;❌&lt;&#x2F;td&gt;&lt;td&gt;❌&lt;&#x2F;td&gt;&lt;td&gt;✅&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;My (&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;1905.02438&quot;&gt;and others&lt;&#x2F;a&gt;) opinion is that this
+research direction is still underexplored: not only should we seek to replace
+the underlying arithmetic upon which models are built, but also reconsider the
+architectures and optimization procedures used.&lt;&#x2F;p&gt;
+&lt;p&gt;My own contribution in this direction is a paper to appear at OPT 2025 at NeurIPS
+(blog post and arxiv link to follow)
+in which we show that convergence guarantees can be obtained even when parameter updates are fully discrete.
+We give an example based on multinomial sampling which still requires full precision gradients,
+but in principle our method allows for fully discrete inference, training and
+optimization with convergence guarantees as long as some standard assumptions are
+satisfied.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Paper&lt;&#x2F;th&gt;&lt;th&gt;Inference&lt;&#x2F;th&gt;&lt;th&gt;Training&lt;&#x2F;th&gt;&lt;th&gt;Optimizer&lt;&#x2F;th&gt;&lt;th&gt;Convergence&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Multinomial&lt;&#x2F;td&gt;&lt;td&gt;✅ None&lt;&#x2F;td&gt;&lt;td&gt;❌ Yes&lt;&#x2F;td&gt;&lt;td&gt;✅ Yes&lt;&#x2F;td&gt;&lt;td&gt;✅ Yes&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;At &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;hellas.ai&quot;&gt;Hellas&lt;&#x2F;a&gt; we continue to investigate this direction,
+in particular towards finding an optimizer which satisfies the &quot;gold standard&quot;.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;solution-level-3-verify-a-task-not-compute&quot;&gt;Solution Level 3: Verify a &lt;em&gt;task&lt;&#x2F;em&gt;, not compute&lt;&#x2F;h1&gt;
+&lt;p&gt;Another solution is to embrace model nondeterminism, and instead verify &lt;em&gt;tasks&lt;&#x2F;em&gt; instead.
+This does not work for every task; only those which are &lt;em&gt;mechanically verifiable&lt;&#x2F;em&gt;.
+Nevertheless, there are several interesting&#x2F;useful examples:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mathematical: e.g., prove a theorem&lt;&#x2F;li&gt;
+&lt;li&gt;Algorithmic&#x2F;search: e.g., find a negative-weight cycle in this graph of exchange rates&lt;&#x2F;li&gt;
+&lt;li&gt;Software engineering: e.g. write a function which passes these unit tests&lt;&#x2F;li&gt;
+&lt;li&gt;Cryptographic: e.g., obtain a signature for message (m) from the owner of public key (k)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;This last point hints at a more &quot;agentic&quot; ecosystem: imagine for example where
+(k) is the public key identifier of an online shop, and the message (m) is a
+proof that a user purchased an item.
+This would allow an agent to show that the task has been completed &quot;up to
+trust of real-world delivery&quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;The advantage of direct task verification is that it also unlocks &quot;intelligence markets&quot;:
+one no longer has to care about which model was run (or even if it was a model at all!)
+Instead, one can directly verify that the model achieved the goal you wanted to
+achieve.
+This means that instead of having &lt;em&gt;compute providers&lt;&#x2F;em&gt; compete on cost to run a particular model,
+we can instead of &lt;em&gt;intelligence providers&lt;&#x2F;em&gt; which compete on &lt;em&gt;solutions to tasks&lt;&#x2F;em&gt;:
+a true, efficient market for cognitive work.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h1&gt;
+&lt;p&gt;To sum up, we talked about three ways to offload cognitive work while still trusting the results:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Make models deterministic again&lt;&#x2F;li&gt;
+&lt;li&gt;Throw away your floating point&lt;&#x2F;li&gt;
+&lt;li&gt;Verify tasks directly&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;We&#x27;re continuing to work on all three of these, so if you find this
+interesting, I&#x27;d love to hear from you on the &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;discord.gg&#x2F;qHqZyuAa3u&quot;&gt;Hellas
+discord&lt;&#x2F;a&gt;!&lt;&#x2F;p&gt;
+</description>
+    </item>
+    <item>
+      <title>Visualising LLMs with Open Hypergraphs and Catgrad</title>
+      <pubDate>Tue, 10 Jun 2025 00:00:00 +0000</pubDate>
+      <author>hellas.ai</author>
+      <link>https://blog.hellas.ai/blog/visualising-llms/</link>
+      <guid>https://blog.hellas.ai/blog/visualising-llms/</guid>
+      <description xml:base="https://blog.hellas.ai/blog/visualising-llms/">&lt;p&gt;Let&#x27;s visualise some LLM architectures!
+In this blog post, I&#x27;ll show you how to generate these diagrams
+using
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;hellas-ai&#x2F;open-hypergraphs&quot;&gt;open hypergraphs&lt;&#x2F;a&gt;
+and
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;hellas-ai&#x2F;catgrad&quot;&gt;catgrad&lt;&#x2F;a&gt;.
+We&#x27;ll produce three examples, including the attention diagram above and a
+huge SVG of every single op in the Qwen architecture.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;open-hypergraphs&quot;&gt;Open Hypergraphs&lt;&#x2F;h2&gt;
+&lt;p&gt;Let&#x27;s start with
+a simple example -- a residual connection around a linear layer.
+In catgrad, layers and architectures are represented as &lt;em&gt;Open Hypergraphs&lt;&#x2F;em&gt;:
+a datastructure for representing &quot;circuit-like&quot; syntax.
+Here&#x27;s the code defining our layer:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;pub fn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; residual&lt;&#x2F;span&gt;&lt;span&gt;(x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Var&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;NdArrayType&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Operation&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Var&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;NdArrayType&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Operation&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;    linear_layer&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;&amp;quot;linear&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;clone&lt;&#x2F;span&gt;&lt;span&gt;())&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; +&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Under the hood, this constructs an open hypergraph
+which we can visualise with the
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;open-hypergraphs-dot&#x2F;&quot;&gt;open-hypergraphs-dot&lt;&#x2F;a&gt; library:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;visualising-llms&#x2F;.&#x2F;residual.svg&quot; alt=&quot;residual&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s break this down:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Nodes are depicted as black circles ● labeled with an &lt;em&gt;array shape&lt;&#x2F;em&gt; (e.g., &lt;code&gt;[8, 8]&lt;&#x2F;code&gt;).&lt;&#x2F;li&gt;
+&lt;li&gt;Hyperedges are depicted as boxes with multiple inputs and outputs. They correspond to &lt;em&gt;operations&lt;&#x2F;em&gt; like &lt;code&gt;MatrixMultiply&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Some nodes are designated as inputs and outputs: these are depicted as dashed, open-ended lines.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Point (3) is why these are &lt;strong&gt;open&lt;&#x2F;strong&gt; hypergraphs, and not just hypergraphs.&lt;&#x2F;p&gt;
+&lt;p&gt;Importantly, &lt;strong&gt;copying is explicit in the hypergraph structure&lt;&#x2F;strong&gt;.
+See the multiple outgoing edges of the top-right node ● which encode the reuse of
+the &lt;code&gt;x&lt;&#x2F;code&gt; variable inside the &lt;code&gt;residual&lt;&#x2F;code&gt; function.
+Aside from being a useful way to visualise variable sharing, representing
+copying explicitly is important to how our
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2305.01041&quot;&gt;ahead-of-time autodiff algorithm&lt;&#x2F;a&gt; works,
+enabling &lt;em&gt;decentralised training&lt;&#x2F;em&gt; on the Hellas Network.&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#details&quot;&gt;1&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;attention-please&quot;&gt;Attention Please&lt;&#x2F;h2&gt;
+&lt;p&gt;Now let&#x27;s do a complete, self-contained example: an Attention layer. Here&#x27;s the code:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;rust&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;use&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; catgrad&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;core&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;nn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;layers&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::*&lt;&#x2F;span&gt;&lt;span&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;use&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; catgrad&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;core&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;Dtype&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; NdArrayType&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Operation&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Shape&lt;&#x2F;span&gt;&lt;span&gt;};&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;use&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; open_hypergraphs&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;lax&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;OpenHypergraph&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; functor&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::*&lt;&#x2F;span&gt;&lt;span&gt;, var,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; var&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;Var&lt;&#x2F;span&gt;&lt;span&gt;};&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;use&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; std&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;cell&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;RefCell&lt;&#x2F;span&gt;&lt;span&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;use&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; std&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;rc&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;Rc&lt;&#x2F;span&gt;&lt;span&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;&#x2F;&#x2F; 1. Create an OpenHypergraph for Gemma&amp;#39;s attention layer,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;&#x2F;&#x2F; 2. Turn explicit copy operations into *nodes* in the hypergraph&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;&#x2F;&#x2F; 3. Save as an SVG.&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;pub fn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; main&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; std&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;io&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;Result&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;()&amp;gt; {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; arrow&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; attention_arrow&lt;&#x2F;span&gt;&lt;span&gt;();&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; arrow&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; var&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;forget&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;Forget&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;map_arrow&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;arrow);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;    save_svg&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;arrow,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; &amp;quot;images&#x2F;attention.svg&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;pub fn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; attention&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    builder&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;Rc&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;RefCell&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;OpenHypergraph&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;NdArrayType&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Operation&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;&amp;gt;&amp;gt;,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    dim&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; usize&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    name&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Var&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;NdArrayType&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Operation&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Var&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;NdArrayType&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Operation&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; num_heads&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 4&lt;&#x2F;span&gt;&lt;span&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; head_dim&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; dim&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; &#x2F;&lt;&#x2F;span&gt;&lt;span&gt; num_heads;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; b&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;label&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;shape&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;];&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; s&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;label&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;shape&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;];&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; k&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; linear&lt;&#x2F;span&gt;&lt;span&gt;(builder, dim, dim,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;format!&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;&amp;quot;{name}.key&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;), x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;clone&lt;&#x2F;span&gt;&lt;span&gt;());&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; q&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; linear&lt;&#x2F;span&gt;&lt;span&gt;(builder, dim, dim,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;format!&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;&amp;quot;{name}.query&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;), x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;clone&lt;&#x2F;span&gt;&lt;span&gt;());&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; v&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; linear&lt;&#x2F;span&gt;&lt;span&gt;(builder, dim, dim,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;format!&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;&amp;quot;{name}.value&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;), x);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; q&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; reshape&lt;&#x2F;span&gt;&lt;span&gt;(builder,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Shape&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;vec!&lt;&#x2F;span&gt;&lt;span&gt;[b, s, num_heads, head_dim]), q);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; k&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; reshape&lt;&#x2F;span&gt;&lt;span&gt;(builder,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Shape&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;vec!&lt;&#x2F;span&gt;&lt;span&gt;[b, s, num_heads, head_dim]), k);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; v&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; reshape&lt;&#x2F;span&gt;&lt;span&gt;(builder,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Shape&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;vec!&lt;&#x2F;span&gt;&lt;span&gt;[b, s, num_heads, head_dim]), v);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; q&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; transpose&lt;&#x2F;span&gt;&lt;span&gt;(builder,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 2&lt;&#x2F;span&gt;&lt;span&gt;, q);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; k&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; transpose&lt;&#x2F;span&gt;&lt;span&gt;(builder,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 2&lt;&#x2F;span&gt;&lt;span&gt;, k);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; v&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; transpose&lt;&#x2F;span&gt;&lt;span&gt;(builder,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 2&lt;&#x2F;span&gt;&lt;span&gt;, v);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; tk&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; transpose&lt;&#x2F;span&gt;&lt;span&gt;(builder,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 2&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 3&lt;&#x2F;span&gt;&lt;span&gt;, k);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; attn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; mat_mul&lt;&#x2F;span&gt;&lt;span&gt;(builder, q, tk);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; denom&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; constant&lt;&#x2F;span&gt;&lt;span&gt;(builder, attn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;label&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;clone&lt;&#x2F;span&gt;&lt;span&gt;(),&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; f32&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;sqrt&lt;&#x2F;span&gt;&lt;span&gt;(head_dim&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; as&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; f32&lt;&#x2F;span&gt;&lt;span&gt;));&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; attn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span&gt; attn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; &#x2F;&lt;&#x2F;span&gt;&lt;span&gt; denom;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; attn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; softmax&lt;&#x2F;span&gt;&lt;span&gt;(builder, attn);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; attn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; mat_mul&lt;&#x2F;span&gt;&lt;span&gt;(builder, attn, v);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; transpose&lt;&#x2F;span&gt;&lt;span&gt;(builder,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 2&lt;&#x2F;span&gt;&lt;span&gt;, attn);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; reshape&lt;&#x2F;span&gt;&lt;span&gt;(builder,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Shape&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;vec!&lt;&#x2F;span&gt;&lt;span&gt;[b, s, dim]), x);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;    linear&lt;&#x2F;span&gt;&lt;span&gt;(builder, dim, dim,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;format!&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt;&amp;quot;{name}.proj&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;), x)&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;&#x2F;&#x2F; Build the open hypergraph by creating a Var and calling the attention function&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;fn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; attention_arrow&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; OpenHypergraph&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;NdArrayType&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Operation&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; dim&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 8&lt;&#x2F;span&gt;&lt;span&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; name&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #9ECBFF;&quot;&gt; &amp;quot;attention&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;    var&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;build&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;|&lt;&#x2F;span&gt;&lt;span&gt;state&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;|&lt;&#x2F;span&gt;&lt;span&gt; {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;        let&lt;&#x2F;span&gt;&lt;span&gt; x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Var&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;new&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;            state&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;clone&lt;&#x2F;span&gt;&lt;span&gt;(),&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;            NdArrayType&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;new&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;Shape&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;vec!&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #79B8FF;&quot;&gt; 8&lt;&#x2F;span&gt;&lt;span&gt;]),&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Dtype&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;F32&lt;&#x2F;span&gt;&lt;span&gt;),&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        );&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;        let&lt;&#x2F;span&gt;&lt;span&gt; y&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; attention&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;state, dim, name, x&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;clone&lt;&#x2F;span&gt;&lt;span&gt;());&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        (&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;vec!&lt;&#x2F;span&gt;&lt;span&gt;[x],&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; vec!&lt;&#x2F;span&gt;&lt;span&gt;[y])&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    })&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    .&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;unwrap&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;use&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; graphviz_rust&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;cmd&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;CommandArg&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Format&lt;&#x2F;span&gt;&lt;span&gt;};&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #6A737D;&quot;&gt;&#x2F;&#x2F; Render an OpenHypergraph to an SVG using `open-hypergraphs-dot`&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;fn&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; save_svg&lt;&#x2F;span&gt;&lt;span&gt;(arrow&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;OpenHypergraph&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;NdArrayType&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; Operation&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;, filename&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; -&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; std&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;io&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;Result&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;()&amp;gt; {&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; dot_graph&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; open_hypergraphs_dot&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;generate_dot&lt;&#x2F;span&gt;&lt;span&gt;(arrow);&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;    let&lt;&#x2F;span&gt;&lt;span&gt; png_bytes&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt; =&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; graphviz_rust&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;exec&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;        dot_graph,&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;        &amp;amp;mut&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt; graphviz_rust&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;printer&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;PrinterContext&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;default&lt;&#x2F;span&gt;&lt;span&gt;(),&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;        vec!&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;CommandArg&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;Format&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;Format&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;Svg&lt;&#x2F;span&gt;&lt;span&gt;)],&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;    )&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;?&lt;&#x2F;span&gt;&lt;span&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;    std&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;fs&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(filename, png_bytes)&lt;&#x2F;span&gt;&lt;span style=&quot;color: #F97583;&quot;&gt;?&lt;&#x2F;span&gt;&lt;span&gt;;&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span style=&quot;color: #B392F0;&quot;&gt;    Ok&lt;&#x2F;span&gt;&lt;span&gt;(())&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;
+&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;}&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This produces the following diagram:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;visualising-llms&#x2F;.&#x2F;attention.svg&quot; alt=&quot;Attention diagram&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;See &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;statusfailed&#x2F;visualising-llms-diagrams&quot;&gt;here&lt;&#x2F;a&gt; for a github repo with both examples.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;bonus-qwen3-0-6b&quot;&gt;Bonus: Qwen3-0.6B&lt;&#x2F;h2&gt;
+&lt;p&gt;To conclude, you can download the whole
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;huggingface.co&#x2F;Qwen&#x2F;Qwen3-0.6B&quot;&gt;Qwen3-0.6B&lt;&#x2F;a&gt; architecture as a diagram
+&lt;a href=&quot;https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;visualising-llms&#x2F;.&#x2F;qwen.svg&quot;&gt;here&lt;&#x2F;a&gt;.
+I haven&#x27;t included it on this page because it&#x27;s 7MB!&lt;&#x2F;p&gt;
+&lt;p&gt;The qwen code is more complex, spread across multiple functions in &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;hellas-ai&#x2F;catgrad&quot;&gt;catgrad&lt;&#x2F;a&gt;,
+so to reproduce this diagram, see the code &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;github.com&#x2F;statusfailed&#x2F;catgrad-rs&#x2F;tree&#x2F;model-svg-demo&quot;&gt;on this branch&lt;&#x2F;a&gt;,
+and run:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;giallo&quot; style=&quot;color: #E1E4E8; background-color: #24292E;&quot;&gt;&lt;code data-lang=&quot;plain&quot;&gt;&lt;span class=&quot;giallo-l&quot;&gt;&lt;span&gt;cargo run --release --example llm -- -m Qwen&#x2F;Qwen3-0.6B -p &amp;quot;Catgrad is &amp;quot; -s 10 --model-svg qwen.svg&lt;&#x2F;span&gt;&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Finally, I want to emphasize that open hypergraphs are a &lt;em&gt;general&lt;&#x2F;em&gt;
+datastructure for syntax, not just for neural networks and catgrad.
+Any kind of &quot;circuit-like&quot; term is a natural fit: from actual circuits to the
+kind of boxes-and-wires visual languages used in game engines.&lt;&#x2F;p&gt;
+&lt;p&gt;If you have an idea for how you could use open hypergraphs and you want some help with the library,
+hop in &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;discord.gg&#x2F;qHqZyuAa3u&quot;&gt;our discord&lt;&#x2F;a&gt; and let us know!&lt;&#x2F;p&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;details&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;1&lt;&#x2F;sup&gt;
+&lt;p&gt;For further reading about open hypergraphs for (differentiable) syntax,
+you should know that the diagrams produced here are called
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;String_diagram&quot;&gt;string diagrams&lt;&#x2F;a&gt;,
+a formal graphical syntax for
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Symmetric_monoidal_category&quot;&gt;Symmetric Monoidal Categories&lt;&#x2F;a&gt; (SMCs).
+&quot;Open Hypergraphs&quot; (aka cospans of hypergraphs) &lt;em&gt;formally&lt;&#x2F;em&gt; correspond to arrows
+of SMCs, and our &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2305.01041&quot;&gt;autodiff algorithm&lt;&#x2F;a&gt;
+is built on this correspondence this to implement &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;1910.07065&quot;&gt;Reverse
+Derivatives&lt;&#x2F;a&gt; for AoT autodiff.&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+</description>
+    </item>
+    <item>
+      <title>Announcing Hellas Gate</title>
+      <pubDate>Mon, 19 May 2025 00:00:00 +0000</pubDate>
+      <author>hellas.ai</author>
+      <link>https://blog.hellas.ai/blog/hellas-gate/</link>
+      <guid>https://blog.hellas.ai/blog/hellas-gate/</guid>
+      <description xml:base="https://blog.hellas.ai/blog/hellas-gate/">&lt;p&gt;Today we&#x27;re launching &lt;a href=&quot;&#x2F;&#x2F;gate.hellas.ai&quot;&gt;Hellas Gate&lt;&#x2F;a&gt;.
+Right now, it&#x27;s an LLM gateway similar to
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;openrouter.ai&#x2F;&quot;&gt;OpenRouter&lt;&#x2F;a&gt;,
+&lt;a href=&quot;https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;hellas-gate&#x2F;litellm.ai&quot;&gt;LiteLLM&lt;&#x2F;a&gt;, and others, allowing you
+to access models from many different providers through a central API.&lt;&#x2F;p&gt;
+&lt;p&gt;But this is table stakes.&lt;&#x2F;p&gt;
+&lt;p&gt;We&#x27;re aiming for something a little different: empowering individual devs, not
+enterprises.
+Here&#x27;s a quick taste of our roadmap, and how we&#x27;re planning to do that.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;local-compute&quot;&gt;Local Compute&lt;&#x2F;h1&gt;
+&lt;p&gt;First up, we&#x27;re making your local LLM accessible from anywhere.
+Think &quot;tailscale for your home GPU&quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;You will be able to:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Access your own vLLM&#x2F;Ollama API from anywhere&lt;&#x2F;li&gt;
+&lt;li&gt;Pool shared compute resources with friends&lt;&#x2F;li&gt;
+&lt;li&gt;Inspect, debug, and modify the prompts and chats made by your local tools&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;... and more to come.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;virtual-models-and-smart-routing&quot;&gt;Virtual Models and  Smart Routing&lt;&#x2F;h1&gt;
+&lt;p&gt;Next up: virtual models and smart routing.
+Our aim here is to save you money, and level up your tools so they use the best
+models for any given task.&lt;&#x2F;p&gt;
+&lt;p&gt;Writing some SQL? Use a cost-effective SQL fine-tune.&lt;&#x2F;p&gt;
+&lt;p&gt;Paying Anthropic $10 for RAG with claude-cli?
+Use your local Qwen instance instead.&lt;&#x2F;p&gt;
+&lt;p&gt;Here&#x27;s how it works.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;model-aliases&quot;&gt;Model Aliases&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Create a model alias like &lt;code&gt;myusername&#x2F;coding-rag&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Configure routing this alias in the Hellas dashboard. For example, have it always use &lt;code&gt;QwQ-32B&lt;&#x2F;code&gt; on your local GPU.&lt;&#x2F;li&gt;
+&lt;li&gt;Configure your local tools to use the model &lt;code&gt;myusername&#x2F;coding-rag&lt;&#x2F;code&gt; for RAG&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Want to change things later?
+It&#x27;s managed in one central place: edit your alias in the dashboard.
+No fiddling with all your different tool configs!&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;smart-routing&quot;&gt;Smart Routing&lt;&#x2F;h2&gt;
+&lt;p&gt;Model aliases aren&#x27;t just for picking one model.
+You can set rules to route to different models dynamically based on criteria.
+For example, let&#x27;s say we want to use DeepSeek, but only when during off-peak times for lower cost.&lt;&#x2F;p&gt;
+&lt;p&gt;Achieve this, by configuring the &lt;code&gt;myusername&#x2F;coding-rag&lt;&#x2F;code&gt; alias with &lt;em&gt;price limits&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Other filters and options in smart routing:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Geography (for data privacy)&lt;&#x2F;li&gt;
+&lt;li&gt;Providers (e.g., &quot;OpenAI models only&quot;)&lt;&#x2F;li&gt;
+&lt;li&gt;Attributes (e.g., &quot;Best model for coding&quot;)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;... and more to come.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h1&gt;
+&lt;p&gt;We&#x27;re constantly improving Gate.
+If you have questions, feedback, or just want to hang out, come talk to us on
+&lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;discord.gg&#x2F;qHqZyuAa3u&quot;&gt;discord&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+</description>
+    </item>
+    <item>
+      <title>Hello, World!</title>
+      <pubDate>Thu, 01 May 2025 00:00:00 +0000</pubDate>
+      <author>hellas.ai</author>
+      <link>https://blog.hellas.ai/blog/hello-world/</link>
+      <guid>https://blog.hellas.ai/blog/hello-world/</guid>
+      <description xml:base="https://blog.hellas.ai/blog/hello-world/">&lt;p&gt;Hello, World!&lt;&#x2F;p&gt;
+&lt;p&gt;Welcome to the blog for Hellas: a decentralised network for AI.&lt;&#x2F;p&gt;
+&lt;p&gt;We&#x27;re building Hellas to guarantee an open-source future where the power of
+artificial intelligence concentrates in the hands of individuals, and &lt;em&gt;not&lt;&#x2F;em&gt; in
+a few big companies.&lt;&#x2F;p&gt;
+&lt;p&gt;Keep an eye on the blog for research, product updates, and community announcements,
+and make sure to &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;discord.gg&#x2F;qHqZyuAa3u&quot;&gt;join our discord&lt;&#x2F;a&gt;!&lt;&#x2F;p&gt;
+</description>
+    </item>
+  </channel>
+</rss>

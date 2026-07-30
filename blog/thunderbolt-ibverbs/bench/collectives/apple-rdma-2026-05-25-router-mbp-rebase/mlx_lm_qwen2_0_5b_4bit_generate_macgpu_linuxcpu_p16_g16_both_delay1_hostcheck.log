@@ -1,0 +1,27 @@
+copying 0 paths...
+copying 0 paths...
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== lm mac0-linux1 via 192.168.23.73:30020 ==
+-- mac output (mac0-linux1 rank 0) --
+rank 0/2 backend=jaccl MLX_RANK=0 device=Device(gpu, 0) model=/tmp/mlx-lm-qwen2-0.5b-instruct-4bit
+rank 0 sharded_load OK
+rank 0 sync generation start prompt_tokens=16 generation_tokens=16 cache=kv
+-- linux output (mac0-linux1 rank 1) --
+[jaccl] Connection attempt 0 waiting 1000 ms
+rank 1/2 backend=jaccl MLX_RANK=1 device=Device(cpu, 0) model=/tmp/mlx-lm-qwen2-0.5b-instruct-4bit
+rank 1 sharded_load OK
+rank 1 sync generation start prompt_tokens=16 generation_tokens=16 cache=kv
+Traceback (most recent call last):
+  File "/tmp/tibverbs_mlx_distributed_probe.py", line 416, in <module>
+    status = main()
+  File "/tmp/tibverbs_mlx_distributed_probe.py", line 327, in main
+    mx.eval(logits, [c.state for c in prompt_cache])
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: NYI
+host token agreement missing generated token list (mac0-linux1)

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" class="dark:bg-hellas-black bg-hellas-white">
+
+<head>
+  
+  
+  <!-- HTML Meta Tags -->
+  <title>Three Solutions to Nondeterminism in AI</title>
+  <meta name="description" content="Three ways to deal with nondeterminism caused by floating-point nonassociativity">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <link rel="stylesheet" type="text/css" href="https://blog.hellas.ai/style.css">
+  <link rel="alternate" type="application/atom+xml" title="Hellas Blog Atom Feed" href="https://blog.hellas.ai/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Hellas Blog RSS Feed" href="https://blog.hellas.ai/rss.xml">
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Three Solutions to Nondeterminism in AI">
+  <meta property="og:description" content="Three ways to deal with nondeterminism caused by floating-point nonassociativity">
+  <meta property="og:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="hellas.ai">
+  <meta property="twitter:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta name="twitter:title" content="Three Solutions to Nondeterminism in AI">
+  <meta name="twitter:description" content="Three ways to deal with nondeterminism caused by floating-point nonassociativity">
+  <meta name="twitter:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- e.g. for safari tab bar -->
+  <meta name="theme-color" content="#1C1C1C" />
+
+  <!-- MathJax for LaTeX support -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Mobile menu toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+
+</head>
+
+<body class="dark:bg-hellas-black bg-hellas-white dark:text-hellas-white text-hellas-black flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30">
+    <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="flex items-center">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_Black.svg" alt="Hellas" class="h-8 dark:hidden">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 hidden dark:block">
+      </a>
+      <nav class="hidden md:flex space-x-8 font-sans">
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Home</a>
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Blog</a>
+        <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200">Main Site</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobile-menu-button" type="button" class="text-hellas-cool-grey">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+      <!-- Mobile menu, hidden by default -->
+      <div id="mobile-menu" class="hidden fixed top-[70px] right-0 left-0 bg-hellas-white dark:bg-hellas-black border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30 md:hidden">
+        <nav class="container mx-auto px-4 py-4 flex flex-col space-y-4 font-sans">
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Home</a>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Blog</a>
+          <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Main Site</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    
+
+
+
+<article class="py-12">
+  <!-- Post Header -->
+  <header class="mb-8">
+    <h1 class="font-paplane text-7xl mb-4 text-hellas-black dark:text-hellas-white">
+      Three Solutions to Nondeterminism in AI
+    </h1>
+    <div class="flex items-center text-hellas-cool-grey">
+      <time datetime="2025-09-29">September 29, 2025</time>
+      
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <div class="prose prose-lg dark:prose-invert max-w-3xl mb-12 text-hellas-black dark:text-hellas-white font-sans">
+    <p>I want to convince you that <em>verification is necessary</em> for you to
+safely offload cognitive work onto AI while <em>still trusting the results</em>.
+Then I want to show you three ways to do this:</p>
+<ol>
+<li>Deal with floating-point nonassociativity</li>
+<li>Remove floating-point calculations from models entirely</li>
+<li>Verify tasks directly</li>
+</ol>
+<p>I'll frame the discussion in terms of LLMs, but it applies to a much
+broader class of models.</p>
+<p>(Side note: You may have seen a
+<a rel="external" href="https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/">recent blog post by Horace He</a>
+at Thinking Machines
+which discusses how non-determinism in tensor compute "turns on-policy RL into off-policy RL".
+It's a great blog post which you should read, but consequences for RL are not
+what I want to talk about here.)</p>
+<h2 id="the-problem-closed-source-is-not-verifiable">The Problem: Closed Source is not Verifiable</h2>
+<p>Assume you have no access to model weights, code, or inputs (e.g., the system prompt).
+This is the state of affairs when you use a closed model provider like OpenAI or Anthropic.
+In this case, the model provider is able to <em>undetectably</em> behave in ways which
+are not aligned with your interests, e.g.:</p>
+<ul>
+<li>Routing to lower-quality models at peak usage times</li>
+<li>Quantizing or degrading model quality to save money</li>
+<li>Injecting hidden messages into your context</li>
+<li>Censoring tokens, words, or full requests and responses outright</li>
+<li>Inserting overt or covert advertisements into responses</li>
+</ul>
+<p>This is really just the AI flavour of
+<a rel="external" href="https://en.wikipedia.org/wiki/Enshittification">enshittification</a>,
+where closed-source
+software vendors extract value from you by degrading your experience.</p>
+<h2 id="but-even-open-code-and-open-weights-are-not-enough">... but even open code and open weights are not enough</h2>
+<p>Now suppose you have an open model where code, weights, and inputs are all known to you,
+and that you trust it to behave roughly in-line with your interests.
+Assume that you don't have the hardware to run this model, and instead you ask
+a third party compute provider to run it for you.
+Ideally, you could in principle verify your model's outputs as genuine and detect any
+naughty behaviour.</p>
+<p>However, nondeterminism means this is <em>still</em> not possible in practice.
+Simply put, nondeterminism means model outputs are not uniquely determined by inputs,
+so you cannot distinguish between:</p>
+<ol>
+<li>Honest behaviour (A genuine model output which is different to the one you calculate)</li>
+<li>Dishonest behaviour (A faked model output which has been manipulated on purpose)</li>
+</ol>
+<p>Model nondeterminism fundamentally arises from non-associativity of floating point arithmetic:
+the "Original Sin" as Horace He <a rel="external" href="https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/#the-original-sin-floating-point-non-associativity">puts it</a>.
+A simple example is the sum below</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>&gt;&gt;&gt; 0.1 + (0.2 + 0.3)</span></span>
+<span class="giallo-l"><span>... 0.6</span></span>
+<span class="giallo-l"><span>&gt;&gt;&gt; (0.1 + 0.2) + 0.3</span></span>
+<span class="giallo-l"><span>... 0.6000000000000001</span></span></code></pre>
+<p>Even small differences like this can cause large output changes when a model
+contains nonlinearities:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #F97583;">import</span><span> numpy</span><span style="color: #F97583;"> as</span><span> np</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">def</span><span style="color: #B392F0;"> foo</span><span>(w, x, y):</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    return</span><span> (</span><span style="color: #79B8FF;">sum</span><span>(w)</span><span style="color: #F97583;"> &gt;</span><span> x)</span><span style="color: #F97583;"> *</span><span> y</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;"># returns either 0 or 3.14e10, depending on chosen reduction bracketing.</span></span>
+<span class="giallo-l"><span>foo(np.array([</span><span style="color: #79B8FF;">0.1</span><span>,</span><span style="color: #79B8FF;"> 0.2</span><span>,</span><span style="color: #79B8FF;"> 0.3</span><span>]),</span><span style="color: #79B8FF;"> 0.6</span><span>,</span><span style="color: #79B8FF;"> 3.14e10</span><span>)</span></span></code></pre>
+<p>This example is a little contrived, but the problem <em>does</em> occur in real
+models. For example, in
+<a rel="external" href="https://arxiv.org/pdf/2103.04514">Nondeterminism and instability in neural network optimization</a>
+the authors claim:</p>
+<blockquote>
+<p>(..) that even one- bit changes in initial parameters result in models
+converging to vastly different values.</p>
+</blockquote>
+<p>So how do we solve this?</p>
+<h1 id="solution-1-say-what-you-mean">Solution 1: Say what you mean</h1>
+<p>The essence of the problem is that a model is not a single function,
+but instead a <em>set</em> of functions considered equal
+<em>up to associativity of floating point arithmetic</em>.
+For example, the two "bracketings" <code>x + (y + z)</code> and <code>(x + y) + z</code> represent
+two different functions (because addition is not associative).
+But when we write <code>sum([x, y, z])</code>, it is ambiguous which function is meant!</p>
+<p>In fact, this ambiguity is <em>useful</em>: if we avoid specifying, our compiler can
+choose the function which will perform best on some specified hardware--
+typically in the form of specialised instructions.</p>
+<p>The first solution to nondeterminism is then to simply <em>not throw away the
+information</em> about which bracketing was chosen by the compiler.
+Concretely:</p>
+<ol start="0">
+<li>Choose a model (m), representing a set of functions equal up to FP nonassociativity</li>
+<li>Compiler chooses a (deterministic) function (f \in m) optimized for chosen hardware</li>
+<li>The user runs (y = f(x)) on the untrusted compute provider</li>
+<li>The result (y) is now deterministic and verifiable given inputs (x).</li>
+</ol>
+<p>Incidentally, supporting this flow is a major design goal of <a rel="external" href="https://catgrad.com">catgrad</a>.</p>
+<p>Note that there are still a couple practical challenges:</p>
+<ul>
+<li>Intrinsics like <code>exp</code> can vary across devices (even the same device can have
+multiple versions; see <a rel="external" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#mathematical-functions-appendix-standard-functions">CUDA's <code>exp</code> vs
+<code>__expf</code></a>.</li>
+<li>Interleaving compute with other requests for efficiency requires <em>batch
+invariance</em>; read more about this latter point in <a rel="external" href="https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/">the Thinking Machines
+post</a>.</li>
+</ul>
+<h1 id="solution-2-avoid-floating-point">Solution 2: Avoid floating-point</h1>
+<p>The second solution is simple to state but harder to do:
+<strong>don't use floating point arithmetic in your model</strong>.
+If we want to verify AI tensor compute in general, this means floats have to be
+eliminated at both inference <em>and</em> train time.</p>
+<p>There are several approaches in this direction
+but to my knowledge, none achieves the gold standard of completely
+eliminating floating point at inference <em>and</em> train time (including in the
+optimizer) while also providing convergence guarantees.</p>
+<p>Some approaches which get close are below:</p>
+<ul>
+<li><a rel="external" href="https://arxiv.org/pdf/2310.11453">BitNet</a> replaces floating-point weights in linear layers with 1-bit weights, but but does not fully eliminate the use of floating point weights at inference time.</li>
+<li><a rel="external" href="https://arxiv.org/abs/2402.17764">1 bit LLMs</a> binarize <em>all</em> weights, but still require floats at train time</li>
+<li><a rel="external" href="https://arxiv.org/abs/2101.10488">RDA</a> defines a backprop procedure for training boolean circuits entirely without floats, but provides no convergence guarantees.</li>
+<li><a rel="external" href="https://arxiv.org/pdf/2405.16339">BOLD</a> propose a method for directly training models with boolean weights, provides a convergence proof, but requires floating point values at train time.</li>
+</ul>
+<p>... and here's how they fare at eliminating floats where ✅= no floats, ❓= floats in some layers, and ❌= floats required:</p>
+<table><thead><tr><th>Paper</th><th>Inference</th><th>Training</th><th>Optimizer</th><th>Convergence</th></tr></thead><tbody>
+<tr><td><a rel="external" href="https://arxiv.org/pdf/2310.11453">BitNet</a></td><td>❓</td><td>❌</td><td>❌</td><td>✅ (empirical)</td></tr>
+<tr><td><a rel="external" href="https://arxiv.org/abs/2402.17764">1-bit LLMs</a></td><td>✅</td><td>❌</td><td>❌</td><td>✅ (empirical)</td></tr>
+<tr><td><a rel="external" href="https://arxiv.org/abs/2101.10488">RDA</a></td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+<tr><td><a rel="external" href="https://arxiv.org/pdf/2405.16339">BOLD</a></td><td>✅</td><td>❌</td><td>❌</td><td>✅</td></tr>
+</tbody></table>
+<p>My (<a rel="external" href="https://arxiv.org/pdf/1905.02438">and others</a>) opinion is that this
+research direction is still underexplored: not only should we seek to replace
+the underlying arithmetic upon which models are built, but also reconsider the
+architectures and optimization procedures used.</p>
+<p>My own contribution in this direction is a paper to appear at OPT 2025 at NeurIPS
+(blog post and arxiv link to follow)
+in which we show that convergence guarantees can be obtained even when parameter updates are fully discrete.
+We give an example based on multinomial sampling which still requires full precision gradients,
+but in principle our method allows for fully discrete inference, training and
+optimization with convergence guarantees as long as some standard assumptions are
+satisfied.</p>
+<table><thead><tr><th>Paper</th><th>Inference</th><th>Training</th><th>Optimizer</th><th>Convergence</th></tr></thead><tbody>
+<tr><td>Multinomial</td><td>✅ None</td><td>❌ Yes</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+</tbody></table>
+<p>At <a rel="external" href="https://hellas.ai">Hellas</a> we continue to investigate this direction,
+in particular towards finding an optimizer which satisfies the "gold standard".</p>
+<h1 id="solution-level-3-verify-a-task-not-compute">Solution Level 3: Verify a <em>task</em>, not compute</h1>
+<p>Another solution is to embrace model nondeterminism, and instead verify <em>tasks</em> instead.
+This does not work for every task; only those which are <em>mechanically verifiable</em>.
+Nevertheless, there are several interesting/useful examples:</p>
+<ul>
+<li>Mathematical: e.g., prove a theorem</li>
+<li>Algorithmic/search: e.g., find a negative-weight cycle in this graph of exchange rates</li>
+<li>Software engineering: e.g. write a function which passes these unit tests</li>
+<li>Cryptographic: e.g., obtain a signature for message (m) from the owner of public key (k)</li>
+</ul>
+<p>This last point hints at a more "agentic" ecosystem: imagine for example where
+(k) is the public key identifier of an online shop, and the message (m) is a
+proof that a user purchased an item.
+This would allow an agent to show that the task has been completed "up to
+trust of real-world delivery".</p>
+<p>The advantage of direct task verification is that it also unlocks "intelligence markets":
+one no longer has to care about which model was run (or even if it was a model at all!)
+Instead, one can directly verify that the model achieved the goal you wanted to
+achieve.
+This means that instead of having <em>compute providers</em> compete on cost to run a particular model,
+we can instead of <em>intelligence providers</em> which compete on <em>solutions to tasks</em>:
+a true, efficient market for cognitive work.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>To sum up, we talked about three ways to offload cognitive work while still trusting the results:</p>
+<ol>
+<li>Make models deterministic again</li>
+<li>Throw away your floating point</li>
+<li>Verify tasks directly</li>
+</ol>
+<p>We're continuing to work on all three of these, so if you find this
+interesting, I'd love to hear from you on the <a rel="external" href="https://discord.gg/qHqZyuAa3u">Hellas
+discord</a>!</p>
+
+  </div>
+
+  
+  
+  <nav class="flex justify-between max-w-3xl border-t border-hellas-cool-grey/20 pt-8 mt-12 font-sans">
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;ai-vs-outsourcing&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+        ← Will AI do to Software Engineering what Offshoring did to Manufacturing?
+      </a>
+    
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;visualising-llms&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline text-right">
+        Visualising LLMs with Open Hypergraphs and Catgrad →
+      </a>
+    
+  </nav>
+  
+
+  <!-- Post Footer -->
+  
+  
+  
+  <div class="border-t border-hellas-cool-grey/20 pt-8 mt-8 max-w-3xl">
+    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="inline-flex items-center text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+      </svg>
+      Back
+    </a>
+  </div>
+</article>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-hellas-black text-hellas-white py-12 border-t border-hellas-cool-grey/20">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 mb-4">
+          <p class="text-hellas-cool-grey mb-4 font-sans">Powering limitless intelligence</p>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Links</h3>
+          <ul class="space-y-2 font-sans">
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="hover:text-hellas-yellow transition duration-200">Home</a></li>
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="hover:text-hellas-yellow transition duration-200">Blog</a></li>
+            <li><a href="https://hellas.ai" class="hover:text-hellas-yellow transition duration-200">Main Site</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="https://twitter.com/hellasdotai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-twitter-white.svg" alt="Twitter" class="h-6 w-6">
+            </a>
+            <a href="https://discord.gg/qHqZyuAa3u" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+
+              <img src="https://blog.hellas.ai/socials/socials-discord-white.svg" alt="Discord" class="h-6 w-6">
+            </a>
+            <a href="https://t.me/hellasai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-telegram-white.svg" alt="Telegram" class="h-6 w-6">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-hellas-cool-grey/20 mt-8 pt-8 text-hellas-cool-grey text-sm font-sans">
+        <p>© 2026 Hellas.ai — All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img" aria-labelledby="title description">
+  <title id="title">Diagram placeholder</title>
+  <desc id="description">Placeholder artwork for the spiderization blog post.</desc>
+  <rect width="1200" height="600" fill="#f2f2ee"/>
+  <rect x="24" y="24" width="1152" height="552" rx="16" fill="none" stroke="#777" stroke-width="4" stroke-dasharray="16 12"/>
+  <text x="600" y="285" text-anchor="middle" font-family="sans-serif" font-size="52" fill="#333">Diagram placeholder</text>
+  <text x="600" y="345" text-anchor="middle" font-family="sans-serif" font-size="26" fill="#666">Replace with final artwork</text>
+</svg>

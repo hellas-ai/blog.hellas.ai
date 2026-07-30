@@ -1,0 +1,241 @@
+copying 0 paths...
+copying 0 paths...
+== linux module load cycle 1/1 ==
+peer 1 backend=apple rails=1
+  rail=0x0 route=0x2 local=0 remote=0 path=64087 link_speed=20Gb/s link_width=0x2 active=1 data_ready=1 state=tunnel_enabled negotiated=0 ready_sent=0 remote_ready=0 attempts=0 last_error=0 local_out=9 local_tx=2 local_rx=2 remote_rail=0x0 remote_out=-1 remote_tx=-1 remote_rx=-1
+    data_tx_enqueued=0 data_tx_posted=0 data_tx_completed=0 data_tx_credit_stalls=0 data_tx_credit_received=0 tx_credits=0/0
+    path_cfg tx_flags=0x2 rx_flags=0x6 e2e=1 wire_flags=0x3 tx_ring=1024 rx_ring=1024 sof_mask=0x2 eof_mask=0xc
+    data_rx_completed=0 data_rx_credit_sent=0 data_rx_credit_send_error=0 data_rx_repost_failed=0 rx_credit_pending=0
+hca_id:	usb4_rdma4
+	transport:			InfiniBand (0)
+	node_guid:			0300:5442:5752:4253
+	sys_image_guid:			0300:5442:5752:4253
+	vendor_id:			0x1d6b
+	vendor_part_id:			21570
+	hw_ver:				0x1
+	phys_port_cnt:			1
+	max_mr_size:			0xffffffffffffffff
+	page_size_cap:			0x40201000
+	max_qp:				1
+	max_qp_wr:			1024
+	device_cap_flags:		0x00000020
+					CHANGE_PHY_PORT
+	max_sge:			4
+	max_sge_rd:			4
+	max_cq:				256
+	max_cqe:			4096
+	max_mr:				1024
+	max_pd:				256
+	max_qp_rd_atom:			0
+	max_ee_rd_atom:			0
+	max_res_rd_atom:		0
+	max_qp_init_rd_atom:		0
+	max_ee_init_rd_atom:		0
+	atomic_cap:			ATOMIC_NONE (0)
+	max_ee:				0
+	max_rdd:			0
+	max_mw:				0
+	max_raw_ipv6_qp:		0
+	max_raw_ethy_qp:		0
+	max_mcast_grp:			0
+	max_mcast_qp_attach:		0
+	max_total_mcast_qp_attach:	0
+	max_ah:				0
+	max_fmr:			0
+	max_srq:			0
+	max_pkeys:			1
+	local_ca_ack_delay:		15
+	general_odp_caps:
+	rc_odp_caps:
+					NO SUPPORT
+	uc_odp_caps:
+					NO SUPPORT
+	ud_odp_caps:
+					NO SUPPORT
+	xrc_odp_caps:
+					NO SUPPORT
+	completion_timestamp_mask not supported
+	core clock not supported
+	device_cap_flags_ex:		0x20
+	tso_caps:
+		max_tso:			0
+	rss_caps:
+		max_rwq_indirection_tables:			0
+		max_rwq_indirection_table_size:			0
+		rx_hash_function:				0x0
+		rx_hash_fields_mask:				0x0
+	max_wq_type_rq:			0
+	packet_pacing_caps:
+		qp_rate_limit_min:	0kbps
+		qp_rate_limit_max:	0kbps
+	tag matching not supported
+	num_comp_vectors:		16
+		port:	1
+			state:			PORT_ACTIVE (4)
+			max_mtu:		4096 (5)
+			active_mtu:		4096 (5)
+			sm_lid:			0
+			port_lid:		0
+			port_lmc:		0x00
+			link_layer:		Ethernet
+			max_msg_sz:		0x1000000
+			port_cap_flags:		0x00000000
+			port_cap_flags2:	0x0000
+			max_vl_num:		1 (1)
+			bad_pkey_cntr:		0x0
+			qkey_viol_cntr:		0x0
+			sm_sl:			0
+			pkey_tbl_len:		1
+			gid_tbl_len:		8
+			subnet_timeout:		0
+			init_type_reply:	0
+			active_width:		4X (2)
+			active_speed:		10.0 Gbps (8)
+			phys_state:		LINK_UP (5)
+			GID[  0]:		fe80::5835:18ff:fedb:8d52, RoCE v2
+			GID[  1]:		::ffff:10.0.3.44, RoCE v2
+
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+			state:			PORT_ACTIVE (4)
+			GID[  0]:		fe80::3426:afff:fe6d:6208
+			GID[  1]:		::ffff:10.0.3.3
+== linux0-mac1 barrier ==
+-- mac output (rank 1) --
+rank 1 entering barrier
+rank 1 exited barrier
+rank 1: post-barrier all_sum OK (3)
+-- linux output (rank 0) --
+rank 0 entering barrier
+rank 0 exited barrier
+rank 0: post-barrier all_sum OK (3)
+== linux0-mac1 sequence ==
+-- mac output (rank 1) --
+rank 1 step 0 begin allreduce 4194304
+rank 1 step 0 end allreduce 4194304 11053.3 us
+rank 1 step 1 begin allreduce 4194304
+rank 1 step 1 end allreduce 4194304 9882.25 us
+rank 1 step 2 begin allreduce 4194304
+rank 1 step 2 end allreduce 4194304 10228.2 us
+rank 1 step 3 begin allreduce 4194304
+rank 1 step 3 end allreduce 4194304 10098.2 us
+rank 1 step 4 begin allreduce 4194304
+rank 1 step 4 end allreduce 4194304 10018.2 us
+rank 1 step 5 begin allreduce 4194304
+rank 1 step 5 end allreduce 4194304 10080.8 us
+rank 1 step 6 begin allreduce 4194304
+rank 1 step 6 end allreduce 4194304 11941.1 us
+rank 1 step 7 begin allreduce 4194304
+rank 1 step 7 end allreduce 4194304 10307.2 us
+rank 1 step 8 begin allreduce 4194304
+rank 1 step 8 end allreduce 4194304 10162.5 us
+rank 1 step 9 begin allreduce 4194304
+rank 1 step 9 end allreduce 4194304 10508.1 us
+rank 1 step 10 begin allreduce 4194304
+rank 1 step 10 end allreduce 4194304 10166.3 us
+rank 1 step 11 begin allreduce 4194304
+rank 1 step 11 end allreduce 4194304 10134.6 us
+rank 1 step 12 begin allreduce 4194304
+rank 1 step 12 end allreduce 4194304 9947.62 us
+rank 1 step 13 begin allreduce 4194304
+rank 1 step 13 end allreduce 4194304 10703.3 us
+rank 1 step 14 begin allreduce 4194304
+rank 1 step 14 end allreduce 4194304 10078.3 us
+rank 1 step 15 begin allreduce 4194304
+rank 1 step 15 end allreduce 4194304 10115.1 us
+rank 1 step 16 begin allreduce 4194304
+rank 1 step 16 end allreduce 4194304 10021 us
+rank 1 step 17 begin allreduce 4194304
+rank 1 step 17 end allreduce 4194304 10130.2 us
+rank 1 step 18 begin allreduce 4194304
+rank 1 step 18 end allreduce 4194304 10320.5 us
+rank 1 step 19 begin allreduce 4194304
+rank 1 step 19 end allreduce 4194304 10155.8 us
+rank 1 step 20 begin allreduce 4194304
+rank 1 step 20 end allreduce 4194304 10223.4 us
+rank 1 step 21 begin allreduce 4194304
+rank 1 step 21 end allreduce 4194304 10142.8 us
+rank 1 step 22 begin allreduce 4194304
+rank 1 step 22 end allreduce 4194304 10045.5 us
+rank 1 step 23 begin checkallreduce 4194304
+rank 1 step 23 end checkallreduce 4194304 9838.38 us OK
+-- linux output (rank 0) --
+rank 0 step 0 begin allreduce 4194304
+rank 0 step 0 end allreduce 4194304 11706.9 us
+rank 0 step 1 begin allreduce 4194304
+rank 0 step 1 end allreduce 4194304 9851.96 us
+rank 0 step 2 begin allreduce 4194304
+rank 0 step 2 end allreduce 4194304 10230 us
+rank 0 step 3 begin allreduce 4194304
+rank 0 step 3 end allreduce 4194304 10094.7 us
+rank 0 step 4 begin allreduce 4194304
+rank 0 step 4 end allreduce 4194304 10024.3 us
+rank 0 step 5 begin allreduce 4194304
+rank 0 step 5 end allreduce 4194304 10085.8 us
+rank 0 step 6 begin allreduce 4194304
+rank 0 step 6 end allreduce 4194304 11868.8 us
+rank 0 step 7 begin allreduce 4194304
+rank 0 step 7 end allreduce 4194304 10328.1 us
+rank 0 step 8 begin allreduce 4194304
+rank 0 step 8 end allreduce 4194304 10228.6 us
+rank 0 step 9 begin allreduce 4194304
+rank 0 step 9 end allreduce 4194304 10494.6 us
+rank 0 step 10 begin allreduce 4194304
+rank 0 step 10 end allreduce 4194304 10161.4 us
+rank 0 step 11 begin allreduce 4194304
+rank 0 step 11 end allreduce 4194304 10183.8 us
+rank 0 step 12 begin allreduce 4194304
+rank 0 step 12 end allreduce 4194304 9947.46 us
+rank 0 step 13 begin allreduce 4194304
+rank 0 step 13 end allreduce 4194304 10123 us
+rank 0 step 14 begin allreduce 4194304
+rank 0 step 14 end allreduce 4194304 10674.9 us
+rank 0 step 15 begin allreduce 4194304
+rank 0 step 15 end allreduce 4194304 10103.5 us
+rank 0 step 16 begin allreduce 4194304
+rank 0 step 16 end allreduce 4194304 10014.3 us
+rank 0 step 17 begin allreduce 4194304
+rank 0 step 17 end allreduce 4194304 10139.1 us
+rank 0 step 18 begin allreduce 4194304
+rank 0 step 18 end allreduce 4194304 10317.8 us
+rank 0 step 19 begin allreduce 4194304
+rank 0 step 19 end allreduce 4194304 10149.6 us
+rank 0 step 20 begin allreduce 4194304
+rank 0 step 20 end allreduce 4194304 10253.6 us
+rank 0 step 21 begin allreduce 4194304
+rank 0 step 21 end allreduce 4194304 10116.6 us
+rank 0 step 22 begin allreduce 4194304
+rank 0 step 22 end allreduce 4194304 10042.8 us
+rank 0 step 23 begin checkallreduce 4194304
+rank 0 step 23 end checkallreduce 4194304 9861.17 us OK
+tbnet_identity_arp_requests: 1
+tbnet_identity_arp_replies: 1
+tbnet_identity_arp_ignored: 0
+tbnet_identity_arp_errors: 0
+data_wr_send: 98
+data_tx_completed: 24578
+data_rx_completed: 24578
+data_rx_bad_frame: 0
+data_rx_bad_header: 0
+data_rx_send: 98
+data_rx_no_qp: 0
+data_rx_no_recv: 0
+data_rx_copy_error: 0
+data_rx_reorder_buffered: 0
+data_rx_reorder_delivered: 0
+data_rx_reorder_dropped: 0
+data_rx_pending_discarded: 0
+apple_rx_sof: 24578
+apple_rx_eof3: 98
+apple_rx_eof_other: 24480
+apple_rx_sof_while_active: 24480
+apple_rx_no_sof_when_idle: 0
+apple_rx_eof_without_active: 0
+apple_rx_len_overrun: 0
+data_cq_overflow: 0
+PASS: Apple/macOS JACCL clean-driver gate completed

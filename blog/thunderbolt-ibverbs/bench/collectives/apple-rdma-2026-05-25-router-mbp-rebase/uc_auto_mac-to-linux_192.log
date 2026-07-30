@@ -1,0 +1,27 @@
+Result directory: /mnt/Home/src/blog/content/blog/thunderbolt-ibverbs/bench/collectives/apple-rdma-2026-05-25-router-mbp-rebase/uc_auto_mac-to-linux_192
+copying 0 paths...
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+== mac-to-linux-size192-count64-depth1 port=18610 ==
+-- mac output --
+created QP qp_num=2336 actual_cap send_wr=1 recv_wr=1 send_sge=1 recv_sge=1
+send local_qpn=2336 remote_qpn=2304 size=192 count=64 depth=1 recv_posts=0 mtu=4096
+transitioning QP to RTS
+modify INIT ret=0 errno=0
+modify RTR ret=0 errno=0 dest_qpn=2304 sgid_index=1 dlid=0
+modify RTS ret=0 errno=0
+QP is RTS
+send progress done=64/64 delta=64 rate=697.19 Mbit/s elapsed=0.000 s
+-- linux output --
+listening on TCP port 18610
+created QP qp_num=2304 actual_cap send_wr=1 recv_wr=1 send_sge=1 recv_sge=1
+recv local_qpn=2304 remote_qpn=2336 size=192 count=64 depth=1 recv_posts=1 mtu=4096
+transitioning QP to RTS
+modify INIT ret=0 errno=0
+modify RTR ret=0 errno=0 dest_qpn=2336 sgid_index=1 dlid=3
+modify RTS ret=0 errno=0
+QP is RTS
+posting 1 receives
+posted receives
+recv progress done=64/64 delta=64 rate=552.58 Mbit/s elapsed=0.000 s
+PASS: Apple/macOS uc_oneway gate completed
+Logs: /mnt/Home/src/blog/content/blog/thunderbolt-ibverbs/bench/collectives/apple-rdma-2026-05-25-router-mbp-rebase/uc_auto_mac-to-linux_192

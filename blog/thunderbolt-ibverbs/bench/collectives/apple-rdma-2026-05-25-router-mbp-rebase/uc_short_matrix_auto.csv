@@ -1,0 +1,19 @@
+topology,direction,size_bytes,count,depth,linux_hca,completed_ok,error
+router-mbp,linux-to-mac,64,64,1,usb4_rdma4,0,"check failed completed=1 wr_id=0 recv_slot=0 expected_seq=1 observed_seq=3 byte_len=64 off=0 got=0x03 want=0x01"
+router-mbp,mac-to-linux,64,64,1,usb4_rdma4,1,
+router-mbp,linux-to-mac,128,64,1,usb4_rdma4,1,
+router-mbp,mac-to-linux,128,64,1,usb4_rdma4,1,
+router-mbp,linux-to-mac,192,64,1,usb4_rdma4,0,"check failed completed=1 wr_id=0 recv_slot=0 expected_seq=1 observed_seq=2 byte_len=192 off=0 got=0x02 want=0x01"
+router-mbp,mac-to-linux,192,64,1,usb4_rdma4,1,
+router-mbp,linux-to-mac,255,64,1,usb4_rdma4,0,"recv wc error wr_id=0 status=12 opcode=128 byte_len=0"
+router-mbp,mac-to-linux,255,64,1,usb4_rdma4,1,
+router-mbp,linux-to-mac,256,64,1,usb4_rdma4,0,"recv wc error wr_id=0 status=12 opcode=128 byte_len=0"
+router-mbp,mac-to-linux,256,64,1,usb4_rdma4,1,
+router-mbp,linux-to-mac,257,64,1,usb4_rdma4,1,
+router-mbp,mac-to-linux,257,64,1,usb4_rdma4,1,
+router-mbp,linux-to-mac,512,64,1,usb4_rdma4,1,
+router-mbp,mac-to-linux,512,64,1,usb4_rdma4,1,
+router-mbp,linux-to-mac,1024,64,1,usb4_rdma4,0,"check failed completed=1 wr_id=0 recv_slot=0 expected_seq=1 observed_seq=2 byte_len=1024 off=0 got=0x02 want=0x01"
+router-mbp,mac-to-linux,1024,64,1,usb4_rdma4,1,
+router-mbp,linux-to-mac,4096,64,1,usb4_rdma4,1,
+router-mbp,mac-to-linux,4096,64,1,usb4_rdma4,1,

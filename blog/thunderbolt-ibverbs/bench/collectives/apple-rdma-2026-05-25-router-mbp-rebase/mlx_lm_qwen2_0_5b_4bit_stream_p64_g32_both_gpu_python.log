@@ -1,0 +1,443 @@
+copying 0 paths...
+copying 0 paths...
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== lm mac0-linux1 via 192.168.23.73:30820 ==
+-- mac output (mac0-linux1 rank 0) --
+rank 0/2 backend=jaccl MLX_RANK=0 device=Device(gpu, 0) model=/tmp/mlx-lm-qwen2-0.5b-instruct-4bit
+rank 0 sharded_load OK
+rank 0 stream generation start prompt_tokens=64 generation_tokens=32
+rank 0 generation response tokens=1 finish=None
+rank 0 step 0 synchronize start
+rank 0 step 0 synchronize OK
+rank 0 generation response tokens=2 finish=None
+rank 0 step 1 synchronize start
+rank 0 step 1 synchronize OK
+rank 0 generation response tokens=3 finish=None
+rank 0 step 2 synchronize start
+rank 0 step 2 synchronize OK
+rank 0 generation response tokens=4 finish=None
+rank 0 step 3 synchronize start
+rank 0 step 3 synchronize OK
+rank 0 generation response tokens=5 finish=None
+rank 0 step 4 synchronize start
+rank 0 step 4 synchronize OK
+rank 0 generation response tokens=6 finish=None
+rank 0 step 5 synchronize start
+rank 0 step 5 synchronize OK
+rank 0 generation response tokens=7 finish=None
+rank 0 step 6 synchronize start
+rank 0 step 6 synchronize OK
+rank 0 generation response tokens=8 finish=None
+rank 0 step 7 synchronize start
+rank 0 step 7 synchronize OK
+rank 0 generation response tokens=9 finish=None
+rank 0 step 8 synchronize start
+rank 0 step 8 synchronize OK
+rank 0 generation response tokens=10 finish=None
+rank 0 step 9 synchronize start
+rank 0 step 9 synchronize OK
+rank 0 generation response tokens=11 finish=None
+rank 0 step 10 synchronize start
+rank 0 step 10 synchronize OK
+rank 0 generation response tokens=12 finish=None
+rank 0 step 11 synchronize start
+rank 0 step 11 synchronize OK
+rank 0 generation response tokens=13 finish=None
+rank 0 step 12 synchronize start
+rank 0 step 12 synchronize OK
+rank 0 generation response tokens=14 finish=None
+rank 0 step 13 synchronize start
+rank 0 step 13 synchronize OK
+rank 0 generation response tokens=15 finish=None
+rank 0 step 14 synchronize start
+rank 0 step 14 synchronize OK
+rank 0 generation response tokens=16 finish=None
+rank 0 step 15 synchronize start
+rank 0 step 15 synchronize OK
+rank 0 generation response tokens=17 finish=None
+rank 0 step 16 synchronize start
+rank 0 step 16 synchronize OK
+rank 0 generation response tokens=18 finish=None
+rank 0 step 17 synchronize start
+rank 0 step 17 synchronize OK
+rank 0 generation response tokens=19 finish=None
+rank 0 step 18 synchronize start
+rank 0 step 18 synchronize OK
+rank 0 generation response tokens=20 finish=None
+rank 0 step 19 synchronize start
+rank 0 step 19 synchronize OK
+rank 0 generation response tokens=21 finish=None
+rank 0 step 20 synchronize start
+rank 0 step 20 synchronize OK
+rank 0 generation response tokens=22 finish=None
+rank 0 step 21 synchronize start
+rank 0 step 21 synchronize OK
+rank 0 generation response tokens=23 finish=None
+rank 0 step 22 synchronize start
+rank 0 step 22 synchronize OK
+rank 0 generation response tokens=24 finish=None
+rank 0 step 23 synchronize start
+rank 0 step 23 synchronize OK
+rank 0 generation response tokens=25 finish=None
+rank 0 step 24 synchronize start
+rank 0 step 24 synchronize OK
+rank 0 generation response tokens=26 finish=None
+rank 0 step 25 synchronize start
+rank 0 step 25 synchronize OK
+rank 0 generation response tokens=27 finish=None
+rank 0 step 26 synchronize start
+rank 0 step 26 synchronize OK
+rank 0 generation response tokens=28 finish=None
+rank 0 step 27 synchronize start
+rank 0 step 27 synchronize OK
+rank 0 generation response tokens=29 finish=None
+rank 0 step 28 synchronize start
+rank 0 step 28 synchronize OK
+rank 0 generation response tokens=30 finish=None
+rank 0 step 29 synchronize start
+rank 0 step 29 synchronize OK
+rank 0 generation response tokens=31 finish=None
+rank 0 step 30 synchronize start
+rank 0 step 30 synchronize OK
+rank 0 generation response tokens=32 finish=length
+rank 0 step 31 synchronize start
+rank 0 step 31 synchronize OK
+rank 0 synchronize start
+rank 0 synchronize OK
+rank 0 sleeping 1000 ms after generation
+rank 0 generated=32 prompt_tps=56.116 generation_tps=8.941 peak_memory_gb=0.245 finish=length
+-- linux output (mac0-linux1 rank 1) --
+[jaccl] Connection attempt 0 waiting 1000 ms
+rank 1/2 backend=jaccl MLX_RANK=1 device=Device(gpu, 0) model=/tmp/mlx-lm-qwen2-0.5b-instruct-4bit
+rank 1 sharded_load OK
+rank 1 stream generation start prompt_tokens=64 generation_tokens=32
+Warning: rocBLAS does not support GPU architecture 'gfx1103'. Matrix multiplication operations will not be available. Supported architectures: gfx908, gfx90a, gfx942, gfx950, gfx1030, gfx1100, gfx1101, gfx1102, gfx1150, gfx1151, gfx1200, gfx1201.
+rank 1 generation response tokens=1 finish=None
+rank 1 step 0 synchronize start
+rank 1 step 0 synchronize OK
+rank 1 generation response tokens=2 finish=None
+rank 1 step 1 synchronize start
+rank 1 step 1 synchronize OK
+rank 1 generation response tokens=3 finish=None
+rank 1 step 2 synchronize start
+rank 1 step 2 synchronize OK
+rank 1 generation response tokens=4 finish=None
+rank 1 step 3 synchronize start
+rank 1 step 3 synchronize OK
+rank 1 generation response tokens=5 finish=None
+rank 1 step 4 synchronize start
+rank 1 step 4 synchronize OK
+rank 1 generation response tokens=6 finish=None
+rank 1 step 5 synchronize start
+rank 1 step 5 synchronize OK
+rank 1 generation response tokens=7 finish=None
+rank 1 step 6 synchronize start
+rank 1 step 6 synchronize OK
+rank 1 generation response tokens=8 finish=None
+rank 1 step 7 synchronize start
+rank 1 step 7 synchronize OK
+rank 1 generation response tokens=9 finish=None
+rank 1 step 8 synchronize start
+rank 1 step 8 synchronize OK
+rank 1 generation response tokens=10 finish=None
+rank 1 step 9 synchronize start
+rank 1 step 9 synchronize OK
+rank 1 generation response tokens=11 finish=None
+rank 1 step 10 synchronize start
+rank 1 step 10 synchronize OK
+rank 1 generation response tokens=12 finish=None
+rank 1 step 11 synchronize start
+rank 1 step 11 synchronize OK
+rank 1 generation response tokens=13 finish=None
+rank 1 step 12 synchronize start
+rank 1 step 12 synchronize OK
+rank 1 generation response tokens=14 finish=None
+rank 1 step 13 synchronize start
+rank 1 step 13 synchronize OK
+rank 1 generation response tokens=15 finish=None
+rank 1 step 14 synchronize start
+rank 1 step 14 synchronize OK
+rank 1 generation response tokens=16 finish=None
+rank 1 step 15 synchronize start
+rank 1 step 15 synchronize OK
+rank 1 generation response tokens=17 finish=None
+rank 1 step 16 synchronize start
+rank 1 step 16 synchronize OK
+rank 1 generation response tokens=18 finish=None
+rank 1 step 17 synchronize start
+rank 1 step 17 synchronize OK
+rank 1 generation response tokens=19 finish=None
+rank 1 step 18 synchronize start
+rank 1 step 18 synchronize OK
+rank 1 generation response tokens=20 finish=None
+rank 1 step 19 synchronize start
+rank 1 step 19 synchronize OK
+rank 1 generation response tokens=21 finish=None
+rank 1 step 20 synchronize start
+rank 1 step 20 synchronize OK
+rank 1 generation response tokens=22 finish=None
+rank 1 step 21 synchronize start
+rank 1 step 21 synchronize OK
+rank 1 generation response tokens=23 finish=None
+rank 1 step 22 synchronize start
+rank 1 step 22 synchronize OK
+rank 1 generation response tokens=24 finish=None
+rank 1 step 23 synchronize start
+rank 1 step 23 synchronize OK
+rank 1 generation response tokens=25 finish=None
+rank 1 step 24 synchronize start
+rank 1 step 24 synchronize OK
+rank 1 generation response tokens=26 finish=None
+rank 1 step 25 synchronize start
+rank 1 step 25 synchronize OK
+rank 1 generation response tokens=27 finish=None
+rank 1 step 26 synchronize start
+rank 1 step 26 synchronize OK
+rank 1 generation response tokens=28 finish=None
+rank 1 step 27 synchronize start
+rank 1 step 27 synchronize OK
+rank 1 generation response tokens=29 finish=None
+rank 1 step 28 synchronize start
+rank 1 step 28 synchronize OK
+rank 1 generation response tokens=30 finish=None
+rank 1 step 29 synchronize start
+rank 1 step 29 synchronize OK
+rank 1 generation response tokens=31 finish=None
+rank 1 step 30 synchronize start
+rank 1 step 30 synchronize OK
+rank 1 generation response tokens=32 finish=length
+rank 1 step 31 synchronize start
+rank 1 step 31 synchronize OK
+rank 1 synchronize start
+rank 1 synchronize OK
+rank 1 sleeping 1000 ms after generation
+rank 1 generated=32 prompt_tps=61.671 generation_tps=8.948 peak_memory_gb=0.194 finish=length
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== lm linux0-mac1 via 192.168.23.1:30821 ==
+-- mac output (linux0-mac1 rank 1) --
+rank 1/2 backend=jaccl MLX_RANK=1 device=Device(gpu, 0) model=/tmp/mlx-lm-qwen2-0.5b-instruct-4bit
+rank 1 sharded_load OK
+rank 1 stream generation start prompt_tokens=64 generation_tokens=32
+rank 1 generation response tokens=1 finish=None
+rank 1 step 0 synchronize start
+rank 1 step 0 synchronize OK
+rank 1 generation response tokens=2 finish=None
+rank 1 step 1 synchronize start
+rank 1 step 1 synchronize OK
+rank 1 generation response tokens=3 finish=None
+rank 1 step 2 synchronize start
+rank 1 step 2 synchronize OK
+rank 1 generation response tokens=4 finish=None
+rank 1 step 3 synchronize start
+rank 1 step 3 synchronize OK
+rank 1 generation response tokens=5 finish=None
+rank 1 step 4 synchronize start
+rank 1 step 4 synchronize OK
+rank 1 generation response tokens=6 finish=None
+rank 1 step 5 synchronize start
+rank 1 step 5 synchronize OK
+rank 1 generation response tokens=7 finish=None
+rank 1 step 6 synchronize start
+rank 1 step 6 synchronize OK
+rank 1 generation response tokens=8 finish=None
+rank 1 step 7 synchronize start
+rank 1 step 7 synchronize OK
+rank 1 generation response tokens=9 finish=None
+rank 1 step 8 synchronize start
+rank 1 step 8 synchronize OK
+rank 1 generation response tokens=10 finish=None
+rank 1 step 9 synchronize start
+rank 1 step 9 synchronize OK
+rank 1 generation response tokens=11 finish=None
+rank 1 step 10 synchronize start
+rank 1 step 10 synchronize OK
+rank 1 generation response tokens=12 finish=None
+rank 1 step 11 synchronize start
+rank 1 step 11 synchronize OK
+rank 1 generation response tokens=13 finish=None
+rank 1 step 12 synchronize start
+rank 1 step 12 synchronize OK
+rank 1 generation response tokens=14 finish=None
+rank 1 step 13 synchronize start
+rank 1 step 13 synchronize OK
+rank 1 generation response tokens=15 finish=None
+rank 1 step 14 synchronize start
+rank 1 step 14 synchronize OK
+rank 1 generation response tokens=16 finish=None
+rank 1 step 15 synchronize start
+rank 1 step 15 synchronize OK
+rank 1 generation response tokens=17 finish=None
+rank 1 step 16 synchronize start
+rank 1 step 16 synchronize OK
+rank 1 generation response tokens=18 finish=None
+rank 1 step 17 synchronize start
+rank 1 step 17 synchronize OK
+rank 1 generation response tokens=19 finish=None
+rank 1 step 18 synchronize start
+rank 1 step 18 synchronize OK
+rank 1 generation response tokens=20 finish=None
+rank 1 step 19 synchronize start
+rank 1 step 19 synchronize OK
+rank 1 generation response tokens=21 finish=None
+rank 1 step 20 synchronize start
+rank 1 step 20 synchronize OK
+rank 1 generation response tokens=22 finish=None
+rank 1 step 21 synchronize start
+rank 1 step 21 synchronize OK
+rank 1 generation response tokens=23 finish=None
+rank 1 step 22 synchronize start
+rank 1 step 22 synchronize OK
+rank 1 generation response tokens=24 finish=None
+rank 1 step 23 synchronize start
+rank 1 step 23 synchronize OK
+rank 1 generation response tokens=25 finish=None
+rank 1 step 24 synchronize start
+rank 1 step 24 synchronize OK
+rank 1 generation response tokens=26 finish=None
+rank 1 step 25 synchronize start
+rank 1 step 25 synchronize OK
+rank 1 generation response tokens=27 finish=None
+rank 1 step 26 synchronize start
+rank 1 step 26 synchronize OK
+rank 1 generation response tokens=28 finish=None
+rank 1 step 27 synchronize start
+rank 1 step 27 synchronize OK
+rank 1 generation response tokens=29 finish=None
+rank 1 step 28 synchronize start
+rank 1 step 28 synchronize OK
+rank 1 generation response tokens=30 finish=None
+rank 1 step 29 synchronize start
+rank 1 step 29 synchronize OK
+rank 1 generation response tokens=31 finish=None
+rank 1 step 30 synchronize start
+rank 1 step 30 synchronize OK
+rank 1 generation response tokens=32 finish=length
+rank 1 step 31 synchronize start
+rank 1 step 31 synchronize OK
+rank 1 synchronize start
+rank 1 synchronize OK
+rank 1 sleeping 1000 ms after generation
+rank 1 generated=32 prompt_tps=55.696 generation_tps=8.999 peak_memory_gb=0.245 finish=length
+-- linux output (linux0-mac1 rank 0) --
+rank 0/2 backend=jaccl MLX_RANK=0 device=Device(gpu, 0) model=/tmp/mlx-lm-qwen2-0.5b-instruct-4bit
+rank 0 sharded_load OK
+rank 0 stream generation start prompt_tokens=64 generation_tokens=32
+Warning: rocBLAS does not support GPU architecture 'gfx1103'. Matrix multiplication operations will not be available. Supported architectures: gfx908, gfx90a, gfx942, gfx950, gfx1030, gfx1100, gfx1101, gfx1102, gfx1150, gfx1151, gfx1200, gfx1201.
+rank 0 generation response tokens=1 finish=None
+rank 0 step 0 synchronize start
+rank 0 step 0 synchronize OK
+rank 0 generation response tokens=2 finish=None
+rank 0 step 1 synchronize start
+rank 0 step 1 synchronize OK
+rank 0 generation response tokens=3 finish=None
+rank 0 step 2 synchronize start
+rank 0 step 2 synchronize OK
+rank 0 generation response tokens=4 finish=None
+rank 0 step 3 synchronize start
+rank 0 step 3 synchronize OK
+rank 0 generation response tokens=5 finish=None
+rank 0 step 4 synchronize start
+rank 0 step 4 synchronize OK
+rank 0 generation response tokens=6 finish=None
+rank 0 step 5 synchronize start
+rank 0 step 5 synchronize OK
+rank 0 generation response tokens=7 finish=None
+rank 0 step 6 synchronize start
+rank 0 step 6 synchronize OK
+rank 0 generation response tokens=8 finish=None
+rank 0 step 7 synchronize start
+rank 0 step 7 synchronize OK
+rank 0 generation response tokens=9 finish=None
+rank 0 step 8 synchronize start
+rank 0 step 8 synchronize OK
+rank 0 generation response tokens=10 finish=None
+rank 0 step 9 synchronize start
+rank 0 step 9 synchronize OK
+rank 0 generation response tokens=11 finish=None
+rank 0 step 10 synchronize start
+rank 0 step 10 synchronize OK
+rank 0 generation response tokens=12 finish=None
+rank 0 step 11 synchronize start
+rank 0 step 11 synchronize OK
+rank 0 generation response tokens=13 finish=None
+rank 0 step 12 synchronize start
+rank 0 step 12 synchronize OK
+rank 0 generation response tokens=14 finish=None
+rank 0 step 13 synchronize start
+rank 0 step 13 synchronize OK
+rank 0 generation response tokens=15 finish=None
+rank 0 step 14 synchronize start
+rank 0 step 14 synchronize OK
+rank 0 generation response tokens=16 finish=None
+rank 0 step 15 synchronize start
+rank 0 step 15 synchronize OK
+rank 0 generation response tokens=17 finish=None
+rank 0 step 16 synchronize start
+rank 0 step 16 synchronize OK
+rank 0 generation response tokens=18 finish=None
+rank 0 step 17 synchronize start
+rank 0 step 17 synchronize OK
+rank 0 generation response tokens=19 finish=None
+rank 0 step 18 synchronize start
+rank 0 step 18 synchronize OK
+rank 0 generation response tokens=20 finish=None
+rank 0 step 19 synchronize start
+rank 0 step 19 synchronize OK
+rank 0 generation response tokens=21 finish=None
+rank 0 step 20 synchronize start
+rank 0 step 20 synchronize OK
+rank 0 generation response tokens=22 finish=None
+rank 0 step 21 synchronize start
+rank 0 step 21 synchronize OK
+rank 0 generation response tokens=23 finish=None
+rank 0 step 22 synchronize start
+rank 0 step 22 synchronize OK
+rank 0 generation response tokens=24 finish=None
+rank 0 step 23 synchronize start
+rank 0 step 23 synchronize OK
+rank 0 generation response tokens=25 finish=None
+rank 0 step 24 synchronize start
+rank 0 step 24 synchronize OK
+rank 0 generation response tokens=26 finish=None
+rank 0 step 25 synchronize start
+rank 0 step 25 synchronize OK
+rank 0 generation response tokens=27 finish=None
+rank 0 step 26 synchronize start
+rank 0 step 26 synchronize OK
+rank 0 generation response tokens=28 finish=None
+rank 0 step 27 synchronize start
+rank 0 step 27 synchronize OK
+rank 0 generation response tokens=29 finish=None
+rank 0 step 28 synchronize start
+rank 0 step 28 synchronize OK
+rank 0 generation response tokens=30 finish=None
+rank 0 step 29 synchronize start
+rank 0 step 29 synchronize OK
+rank 0 generation response tokens=31 finish=None
+rank 0 step 30 synchronize start
+rank 0 step 30 synchronize OK
+rank 0 generation response tokens=32 finish=length
+rank 0 step 31 synchronize start
+rank 0 step 31 synchronize OK
+rank 0 synchronize start
+rank 0 synchronize OK
+rank 0 sleeping 1000 ms after generation
+rank 0 generated=32 prompt_tps=60.652 generation_tps=9.014 peak_memory_gb=0.194 finish=length
+tbnet_identity_arp_errors: 0
+data_rx_no_recv: 0
+data_rx_copy_error: 0
+data_rx_reorder_dropped: 0
+data_cq_overflow: 0
+PASS: Apple/macOS MLX distributed JACCL smoke completed

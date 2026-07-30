@@ -1,0 +1,86 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="1040"
+  height="340"
+  viewBox="0 0 1040 340"
+  role="img"
+  aria-labelledby="title description"
+>
+  <title id="title">Correspondence between terms and open hypergraphs</title>
+  <desc id="description">
+    A commuting square relating Sigma terms, terms with Frobenius structure,
+    monogamous acyclic open hypergraphs, and arbitrary open hypergraphs. A
+    triangle of equivalences on the right factors the Frobenius correspondence
+    through monogamous acyclic hypergraphs with explicit Frobenius generators
+    modulo the Frobenius equations.
+  </desc>
+  <style>
+    svg { color-scheme: light dark; }
+    .diagram { color: #111; }
+    .node { fill: none; stroke: currentColor; stroke-width: 1.5; }
+    .arrow { fill: none; stroke: currentColor; stroke-width: 1.5; }
+    .arrowhead { fill: #111; }
+    .label {
+      fill: currentColor;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      text-anchor: middle;
+    }
+    .main { font-size: 22px; }
+    .sub { font-size: 15px; }
+    .edge { font-size: 14px; }
+    @media (prefers-color-scheme: dark) {
+      .diagram { color: #f5f5f5; }
+      .arrowhead { fill: #f5f5f5; }
+    }
+  </style>
+
+  <defs>
+    <marker id="arrow-end" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse">
+      <path class="arrowhead" d="M 0 0 L 8 4 L 0 8 Z"/>
+    </marker>
+  </defs>
+
+  <g class="diagram">
+    <rect class="node" x="30" y="30" width="260" height="72" rx="10"/>
+    <text class="label main" x="160" y="61">Free<tspan baseline-shift="sub" font-size="14">Σ</tspan></text>
+    <text class="label sub" x="160" y="85">Σ-terms</text>
+
+    <rect class="node" x="470" y="30" width="260" height="72" rx="10"/>
+    <text class="label main" x="600" y="61">Free<tspan baseline-shift="sub" font-size="14">Σ + Frob</tspan></text>
+    <text class="label sub" x="600" y="85">(Σ + Frob)-terms</text>
+
+    <rect class="node" x="30" y="238" width="260" height="72" rx="10"/>
+    <text class="label main" x="160" y="269">MA Hyp<tspan baseline-shift="sub" font-size="14">Σ</tspan></text>
+    <text class="label sub" x="160" y="293">monogamous acyclic</text>
+
+    <rect class="node" x="470" y="238" width="260" height="72" rx="10"/>
+    <text class="label main" x="600" y="269">Hyp<tspan baseline-shift="sub" font-size="14">Σ</tspan></text>
+    <text class="label sub" x="600" y="293">all open hypergraphs</text>
+
+    <rect class="node" x="770" y="134" width="250" height="82" rx="10"/>
+    <text class="label main" x="895" y="166">MA Hyp<tspan baseline-shift="sub" font-size="14">Σ + Frob</tspan></text>
+    <text class="label sub" x="895" y="192">modulo Frobenius equations</text>
+
+    <path class="arrow" d="M 290 66 L 470 66" marker-end="url(#arrow-end)"/>
+    <text class="label edge" x="380" y="52">add Frobenius structure</text>
+
+    <path class="arrow" d="M 290 274 L 470 274" marker-end="url(#arrow-end)"/>
+    <text class="label edge" x="380" y="260">include</text>
+
+    <path class="arrow" d="M 151 102 L 151 238" marker-end="url(#arrow-end)"/>
+    <path class="arrow" d="M 169 238 L 169 102" marker-end="url(#arrow-end)"/>
+    <text class="label main" x="192" y="177">≅</text>
+
+    <path class="arrow" d="M 591 102 L 591 238" marker-end="url(#arrow-end)"/>
+    <path class="arrow" d="M 609 238 L 609 102" marker-end="url(#arrow-end)"/>
+    <text class="label main" x="632" y="177">≅</text>
+
+    <path class="arrow" d="M 730 66 C 754 76 760 112 784 134"
+      marker-start="url(#arrow-end)" marker-end="url(#arrow-end)"/>
+    <text class="label edge" x="860" y="112">spiders as operations</text>
+
+    <path class="arrow" d="M 784 216 C 760 238 754 264 730 274"
+      marker-start="url(#arrow-end)" marker-end="url(#arrow-end)"/>
+    <text class="label edge" x="860" y="252">fuse spiders</text>
+  </g>
+</svg>

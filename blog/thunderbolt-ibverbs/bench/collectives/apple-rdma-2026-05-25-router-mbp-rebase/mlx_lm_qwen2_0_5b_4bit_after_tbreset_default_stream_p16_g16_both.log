@@ -1,0 +1,30 @@
+copying 0 paths...
+copying 0 paths...
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+== lm mac0-linux1 via 192.168.23.73:30790 ==
+-- mac output (mac0-linux1 rank 0) --
+Traceback (most recent call last):
+  File "/tmp/tibverbs_mlx_distributed_probe.py", line 416, in <module>
+    status = main()
+  File "/tmp/tibverbs_mlx_distributed_probe.py", line 95, in main
+    mx.set_default_device(mx.gpu)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+ValueError: [set_default_device] Cannot set gpu device without gpu backend.
+-- linux output (mac0-linux1 rank 1) --
+[jaccl] Connection attempt 0 waiting 1000 ms
+[jaccl] Connection attempt 1 waiting 2000 ms
+[jaccl] Connection attempt 2 waiting 4000 ms
+[jaccl] Connection attempt 3 waiting 8000 ms
+Traceback (most recent call last):
+  File "/tmp/tibverbs_mlx_distributed_probe.py", line 416, in <module>
+    status = main()
+  File "/tmp/tibverbs_mlx_distributed_probe.py", line 105, in main
+    group = mx.distributed.init(strict=True, backend=args.backend)
+RuntimeError: [jaccl] Couldn't connect (error: 111)
+MLX probe failed (mac0-linux1): mac_rc=1 linux_rc=124

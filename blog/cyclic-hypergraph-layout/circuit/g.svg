@@ -1,0 +1,6 @@
+<g class="drawable gate-g">
+  <path d="M 0 1 L 0.7 1" fill="none" stroke="black" stroke-width="0.05"/>
+  <rect x="0.7" y="0.2" width="1.6" height="1.6" rx="0.16" ry="0.16" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 2.3 1 L 3 1" fill="none" stroke="black" stroke-width="0.05"/>
+  <text x="1.5" y="1.16" text-anchor="middle" font-size="0.42">g</text>
+</g>

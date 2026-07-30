@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" class="dark:bg-hellas-black bg-hellas-white">
+
+<head>
+  
+  
+  <!-- HTML Meta Tags -->
+  <title>Background</title>
+  <meta name="description" content="">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <link rel="stylesheet" type="text/css" href="https://blog.hellas.ai/style.css">
+  <link rel="alternate" type="application/atom+xml" title="Hellas Blog Atom Feed" href="https://blog.hellas.ai/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Hellas Blog RSS Feed" href="https://blog.hellas.ai/rss.xml">
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Background">
+  <meta property="og:description" content="">
+  <meta property="og:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="hellas.ai">
+  <meta property="twitter:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta name="twitter:title" content="Background">
+  <meta name="twitter:description" content="">
+  <meta name="twitter:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- e.g. for safari tab bar -->
+  <meta name="theme-color" content="#1C1C1C" />
+
+  <!-- MathJax for LaTeX support -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Mobile menu toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+
+</head>
+
+<body class="dark:bg-hellas-black bg-hellas-white dark:text-hellas-white text-hellas-black flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30">
+    <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="flex items-center">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_Black.svg" alt="Hellas" class="h-8 dark:hidden">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 hidden dark:block">
+      </a>
+      <nav class="hidden md:flex space-x-8 font-sans">
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Home</a>
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Blog</a>
+        <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200">Main Site</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobile-menu-button" type="button" class="text-hellas-cool-grey">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+      <!-- Mobile menu, hidden by default -->
+      <div id="mobile-menu" class="hidden fixed top-[70px] right-0 left-0 bg-hellas-white dark:bg-hellas-black border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30 md:hidden">
+        <nav class="container mx-auto px-4 py-4 flex flex-col space-y-4 font-sans">
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Home</a>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Blog</a>
+          <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Main Site</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    
+
+
+
+<article class="py-12">
+  <!-- Post Header -->
+  <header class="mb-8">
+    <h1 class="font-paplane text-7xl mb-4 text-hellas-black dark:text-hellas-white"><span class="text-hellas-cool-grey">I.</span>
+      
+      Background
+    </h1>
+    <div class="flex items-center text-hellas-cool-grey">
+      
+      
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <div class="prose prose-lg dark:prose-invert max-w-3xl mb-12 text-hellas-black dark:text-hellas-white font-sans">
+    <h2 id="small-models-at-home">Small Models at Home</h2>
+<p>To run an AI model yourself, on your own hardware, you basically need one thing- lots of fast memory. At price-points accessible to the 'AI at Home' crowd, this generally means a gaming GPU (or an Apple M-series device- more on that later).
+However, for unknown reasons- inexplicable by consumer demand- these max out at 32GB of VRAM (<a rel="external" href="https://www.alibaba.com/trade/search?SearchText=4090+48gb">48GB if you buy one from a chinese factory made from recycled chips on a custom PCB</a>).</p>
+<p>One problem- 32GB puts you squarely in the 'Small' category.  Looking at the current open-weight LLM frontier, you can carve the chart into three regimes by hardware envelope: what fits in roughly <strong>32GB</strong> on a single consumer GPU, what fits on a ganged set of consumer GPUs ("milk-crate"), and what only fits when you gang together multiple machines:</p>
+<p><img src="../bench/models/elo_vs_params.svg" alt="Open-weight LLM ELO vs total parameters, with hardware-envelope bands at FP16" /></p>
+<p>That's at FP16.  4-bit quantization (<code>Q4_K_M</code>) buys you roughly <strong>4× more model in the same memory</strong>, which is enough to bring the frontier 100-400 B open-weight models into reach of the ganged-machines tier:</p>
+<p><img src="../bench/models/elo_vs_params_quant.svg" alt="Same chart, with hardware bands sized for Q4_K_M (~5 bit/param) weights" /></p>
+<p>If we want to make it out of the "Small Model" bracket without paying the quality cost of aggressive quantization, we're going to have to use multiple devices in parallel:</p>
+<p><img src="../rig.webp" alt="typical milk-crate rig, image from r/LocalLlama" /></p>
+<p>Like in Proof-Of-Work crypto-mining days of yore, enthusiasts (hint: it's the same people) are assembling 'milk-crate' rigs consisting of used GPUs: usually NVidia 3090s - depending on local availability- around $1000-1500. With 24 GB GDDR VRAM each, four of them together make a ~$5k system that will run medium-sized open-weight AI models pretty well. It's a cheap way to wire up some of the best value-for-money FLOPs on the market for those with the skills and time, but in the same way that "Grandma- you need to remember your 24-word seed phrase otherwise you lose all your bitcoins" was never going to happen- I very much doubt that "Grandma- you need to make sure you have re-timers on your risers otherwise they won't train at Gen4 speeds" will ever be a thing either. Retimers are little signal-cleanup chips that make long PCIe risers behave at high speed; needing to know that is exactly the point. These rigs are noisy and hot, unreliable and the idea that even 1% of people would want one of these in their home seems generous.</p>
+<p>So where does that leave the non-technical, left out of the AI revolution? Forced to lease capacity- access-gated and data-mined- quantized and ad-injected? On someone else's hardware? We can look back at how console manufacturers made video games truly mainstream- mostly by wrapping the now- mass-produced and commodified PC hardware in a plastic box with simple, user-friendly interface. It seems clear that if self-sovereign, owner-operated AI is going to be the norm, we need commoditized consumer-grade hardware.</p>
+<p>This is the <a rel="external" href="https://hellas.ai/">Hellas</a> hardware problem in miniature: if people are going to run useful AI compute wherever they are, cheap local machines need to compose. One 128GB box is interesting. Two, four, or eight boxes connected by a fast local fabric start to look like independent AI infrastructure.</p>
+<p>With console sales in the tens of millions per year, consumer electronics companies have been able to leverage their economies of scale to commission brand-new architectures, optimised to deliver the best performance for the particular task of showing graphics on a screen. Unlike a regular desktop PC which could expect to spend much of it's life displaying a static desktop or spreadsheets- a console would spend most of it's life displaying video graphics- so it makes sense to allocate more of the bill-of-materials to the GPU, rather than the CPU. One of the most expensive components of a console is memory, and most of the 2005-era console used two separate memory buses feeding the CPU and GPU. The Xbox was different- it had a cheaper but higher-performing design which shared a single high-bandwidth GDDR memory bus between the CPU and GPU. The following generation all consoles used this design, and we can see echos of it in contemporary 'consumer vram' hardware:</p>
+<h2 id="medium-sized-models-at-home">Medium-sized Models at Home</h2>
+<table><thead><tr><th>Platform</th><th>Memory (bandwidth)</th><th>Price (128 GB + 4 TB)</th></tr></thead><tbody>
+<tr><td>Apple Mac Studio (M4 Max, 40-core GPU)</td><td>128 GB unified, <strong>546 GB/s</strong></td><td>$4,699</td></tr>
+<tr><td>NVIDIA DGX Spark Founders</td><td>128 GB LPDDR5X-8533, <strong>273 GB/s</strong></td><td>$3,999</td></tr>
+<tr><td>AMD Strix Halo mini-PC (Corsair AI Workstation 300)</td><td>128 GB LPDDR5X-8000, <strong>256 GB/s</strong></td><td>from $2,499</td></tr>
+</tbody></table>
+<p>This year, NVidia, AMD, and Apple all released 'AI at Home' devices with up to 128GB of low-cost, low-power 'unified memory'- enough to perform inference on medium-sized models, albeit slowly.</p>
+<p>On a single Strix Halo box, that 128 GB of unified memory translates to a useful menu of models for one-at-a-time interactive use — comfortably so for sparse MoE checkpoints, and just barely so for the largest dense models that fit:</p>
+<table><thead><tr><th>Model</th><th>Backend</th><th>Single-stream throughput</th></tr></thead><tbody>
+<tr><td>Gemma-4-26B-A4B (bf16, MoE, ~52 GB)</td><td>vLLM, concurrency 1</td><td>~21 tok/s (~27 at concurrency 2)</td></tr>
+<tr><td>Qwen3.6-27B Q4_K_XL (dense, ~17 GB)</td><td>llama.cpp Vulkan, single stream</td><td>~9 tok/s baseline, ~12 with MTP</td></tr>
+</tbody></table>
+<p>Sparse activation is doing exactly what it's supposed to here: a 26 B-parameter MoE with ~4 B active decodes at more than twice the rate of a similarly-sized dense model, despite occupying 3× the memory.</p>
+<p>Performance is not magic- live-assistant or coding-agent workloads can still feel sluggish, for example, but this is clearly in the realm of 'working' for many use cases, and it's undeniably exciting and empowering to be able to run this on hardware you own and control.</p>
+<p>Unfortunately- the last part of that rules out our best-performing device- since Apple devices can only be used with their own closed-source OS- the user remains at best, a guest on Somebody Else's Computer- an expensive one at that.</p>
+<p>NVidia is not much better- their GPUs have required closed-source binary drivers for decades, even basic functionality like turning on and clocking up would not work under linux without a closed-source driver.</p>
+<p>By process of elimination, we have our champion: AMD's Strix Halo platform - cheap and cheerful, open-source drivers that work with linux out of the box. I bought a couple of these when they were first released for around $1800 each, think they've only gone up in price since.</p>
+
+  </div>
+
+  
+  
+  <nav class="flex justify-between max-w-3xl border-t border-hellas-cool-grey/20 pt-8 mt-12 font-sans">
+    <span></span>
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;2-scaling&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline text-right">
+        Scaling →
+      </a>
+    
+  </nav>
+  
+
+  <!-- Post Footer -->
+  
+  
+  
+  <div class="border-t border-hellas-cool-grey/20 pt-8 mt-8 max-w-3xl">
+    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;" class="inline-flex items-center text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+      </svg>
+      Back
+    </a>
+  </div>
+</article>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-hellas-black text-hellas-white py-12 border-t border-hellas-cool-grey/20">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 mb-4">
+          <p class="text-hellas-cool-grey mb-4 font-sans">Powering limitless intelligence</p>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Links</h3>
+          <ul class="space-y-2 font-sans">
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="hover:text-hellas-yellow transition duration-200">Home</a></li>
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="hover:text-hellas-yellow transition duration-200">Blog</a></li>
+            <li><a href="https://hellas.ai" class="hover:text-hellas-yellow transition duration-200">Main Site</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="https://twitter.com/hellasdotai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-twitter-white.svg" alt="Twitter" class="h-6 w-6">
+            </a>
+            <a href="https://discord.gg/qHqZyuAa3u" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+
+              <img src="https://blog.hellas.ai/socials/socials-discord-white.svg" alt="Discord" class="h-6 w-6">
+            </a>
+            <a href="https://t.me/hellasai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-telegram-white.svg" alt="Telegram" class="h-6 w-6">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-hellas-cool-grey/20 mt-8 pt-8 text-hellas-cool-grey text-sm font-sans">
+        <p>© 2026 Hellas.ai — All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

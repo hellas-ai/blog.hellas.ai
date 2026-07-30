@@ -1,0 +1,117 @@
+Result directory: /mnt/Home/src/blog/content/blog/thunderbolt-ibverbs/bench/collectives/apple-rdma-2026-05-25-router-mbp-rebase/uc_send_depth1_count128
+copying 0 paths...
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+== linux-to-mac-size4096-count128-depth1 port=18610 ==
+-- mac output --
+created QP qp_num=2336 actual_cap send_wr=1 recv_wr=128 send_sge=1 recv_sge=1
+recv local_qpn=2336 remote_qpn=2304 size=4096 count=128 depth=1 recv_posts=128 mtu=4096
+transitioning QP to RTS
+modify INIT ret=0 errno=0
+modify RTR ret=0 errno=0 dest_qpn=2304 sgid_index=1 dlid=0
+modify RTS ret=0 errno=0
+QP is RTS
+posting 128 receives
+posted receives
+recv progress done=128/128 delta=128 rate=14614.30 Mbit/s elapsed=0.000 s
+recv progress done=128/128 delta=0 rate=0.00 Mbit/s elapsed=0.000 s
+-- linux output --
+created QP qp_num=2304 actual_cap send_wr=1 recv_wr=1 send_sge=1 recv_sge=1
+listening on TCP port 18610
+send local_qpn=2304 remote_qpn=2336 size=4096 count=128 depth=1 recv_posts=0 mtu=4096
+transitioning QP to RTS
+modify INIT ret=0 errno=0
+modify RTR ret=0 errno=0 dest_qpn=2336 sgid_index=1 dlid=3
+modify RTS ret=0 errno=0
+QP is RTS
+send progress done=128/128 delta=128 rate=1935.66 Mbit/s elapsed=0.002 s
+== mac-to-linux-size4096-count128-depth1 port=18611 ==
+-- mac output --
+created QP qp_num=2336 actual_cap send_wr=1 recv_wr=1 send_sge=1 recv_sge=1
+send local_qpn=2336 remote_qpn=2304 size=4096 count=128 depth=1 recv_posts=0 mtu=4096
+transitioning QP to RTS
+modify INIT ret=0 errno=0
+modify RTR ret=0 errno=0 dest_qpn=2304 sgid_index=1 dlid=0
+modify RTS ret=0 errno=0
+QP is RTS
+send progress done=128/128 delta=128 rate=7570.95 Mbit/s elapsed=0.001 s
+send progress done=128/128 delta=0 rate=0.00 Mbit/s elapsed=0.001 s
+-- linux output --
+listening on TCP port 18611
+created QP qp_num=2304 actual_cap send_wr=1 recv_wr=128 send_sge=1 recv_sge=1
+recv local_qpn=2304 remote_qpn=2336 size=4096 count=128 depth=1 recv_posts=128 mtu=4096
+transitioning QP to RTS
+modify INIT ret=0 errno=0
+modify RTR ret=0 errno=0 dest_qpn=2336 sgid_index=1 dlid=3
+modify RTS ret=0 errno=0
+QP is RTS
+posting 128 receives
+posted receives
+recv progress done=128/128 delta=128 rate=5136.70 Mbit/s elapsed=0.001 s
+== linux-to-mac-size16384-count128-depth1 port=18612 ==
+-- mac output --
+created QP qp_num=2336 actual_cap send_wr=1 recv_wr=128 send_sge=1 recv_sge=1
+recv local_qpn=2336 remote_qpn=2304 size=16384 count=128 depth=1 recv_posts=128 mtu=4096
+transitioning QP to RTS
+modify INIT ret=0 errno=0
+modify RTR ret=0 errno=0 dest_qpn=2304 sgid_index=1 dlid=0
+modify RTS ret=0 errno=0
+QP is RTS
+posting 128 receives
+posted receives
+recv progress done=128/128 delta=128 rate=3405.85 Mbit/s elapsed=0.005 s
+recv progress done=128/128 delta=0 rate=0.00 Mbit/s elapsed=0.005 s
+-- linux output --
+created QP qp_num=2304 actual_cap send_wr=1 recv_wr=1 send_sge=1 recv_sge=1
+listening on TCP port 18612
+send local_qpn=2304 remote_qpn=2336 size=16384 count=128 depth=1 recv_posts=0 mtu=4096
+transitioning QP to RTS
+modify INIT ret=0 errno=0
+modify RTR ret=0 errno=0 dest_qpn=2336 sgid_index=1 dlid=3
+modify RTS ret=0 errno=0
+QP is RTS
+send progress done=128/128 delta=128 rate=2511.99 Mbit/s elapsed=0.007 s
+== mac-to-linux-size16384-count128-depth1 port=18613 ==
+-- mac output --
+created QP qp_num=2336 actual_cap send_wr=1 recv_wr=1 send_sge=1 recv_sge=1
+send local_qpn=2336 remote_qpn=2304 size=16384 count=128 depth=1 recv_posts=0 mtu=4096
+transitioning QP to RTS
+modify INIT ret=0 errno=0
+modify RTR ret=0 errno=0 dest_qpn=2304 sgid_index=1 dlid=0
+modify RTS ret=0 errno=0
+QP is RTS
+send progress done=128/128 delta=128 rate=13595.80 Mbit/s elapsed=0.001 s
+send progress done=128/128 delta=0 rate=0.00 Mbit/s elapsed=0.001 s
+-- linux output --
+created QP qp_num=2304 actual_cap send_wr=1 recv_wr=128 send_sge=1 recv_sge=1
+listening on TCP port 18613
+recv local_qpn=2304 remote_qpn=2336 size=16384 count=128 depth=1 recv_posts=128 mtu=4096
+transitioning QP to RTS
+modify INIT ret=0 errno=0
+modify RTR ret=0 errno=0 dest_qpn=2336 sgid_index=1 dlid=3
+modify RTS ret=0 errno=0
+QP is RTS
+posting 128 receives
+posted receives
+recv progress done=128/128 delta=128 rate=8446.99 Mbit/s elapsed=0.002 s
+== linux-to-mac-size65536-count128-depth1 port=18614 ==
+-- mac output --
+created QP qp_num=2336 actual_cap send_wr=1 recv_wr=128 send_sge=1 recv_sge=1
+recv local_qpn=2336 remote_qpn=2304 size=65536 count=128 depth=1 recv_posts=128 mtu=4096
+transitioning QP to RTS
+modify INIT ret=0 errno=0
+modify RTR ret=0 errno=0 dest_qpn=2304 sgid_index=1 dlid=0
+modify RTS ret=0 errno=0
+QP is RTS
+posting 128 receives
+ibv_post_recv[63/128] ret=-12 errno=0
+-- linux output --
+created QP qp_num=2304 actual_cap send_wr=1 recv_wr=1 send_sge=1 recv_sge=1
+listening on TCP port 18614
+send local_qpn=2304 remote_qpn=2336 size=65536 count=128 depth=1 recv_posts=0 mtu=4096
+transitioning QP to RTS
+modify INIT ret=0 errno=0
+modify RTR ret=0 errno=0 dest_qpn=2336 sgid_index=1 dlid=3
+modify RTS ret=0 errno=0
+QP is RTS
+receiver did not signal ready
+linux-to-mac-size65536-count128-depth1 failed: mac_rc=1 linux_rc=1

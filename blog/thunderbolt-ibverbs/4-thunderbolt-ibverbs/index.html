@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en" class="dark:bg-hellas-black bg-hellas-white">
+
+<head>
+  
+  
+  <!-- HTML Meta Tags -->
+  <title>thunderbolt-ibverbs</title>
+  <meta name="description" content="">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <link rel="stylesheet" type="text/css" href="https://blog.hellas.ai/style.css">
+  <link rel="alternate" type="application/atom+xml" title="Hellas Blog Atom Feed" href="https://blog.hellas.ai/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Hellas Blog RSS Feed" href="https://blog.hellas.ai/rss.xml">
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="thunderbolt-ibverbs">
+  <meta property="og:description" content="">
+  <meta property="og:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="hellas.ai">
+  <meta property="twitter:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta name="twitter:title" content="thunderbolt-ibverbs">
+  <meta name="twitter:description" content="">
+  <meta name="twitter:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- e.g. for safari tab bar -->
+  <meta name="theme-color" content="#1C1C1C" />
+
+  <!-- MathJax for LaTeX support -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Mobile menu toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+
+</head>
+
+<body class="dark:bg-hellas-black bg-hellas-white dark:text-hellas-white text-hellas-black flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30">
+    <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="flex items-center">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_Black.svg" alt="Hellas" class="h-8 dark:hidden">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 hidden dark:block">
+      </a>
+      <nav class="hidden md:flex space-x-8 font-sans">
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Home</a>
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Blog</a>
+        <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200">Main Site</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobile-menu-button" type="button" class="text-hellas-cool-grey">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+      <!-- Mobile menu, hidden by default -->
+      <div id="mobile-menu" class="hidden fixed top-[70px] right-0 left-0 bg-hellas-white dark:bg-hellas-black border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30 md:hidden">
+        <nav class="container mx-auto px-4 py-4 flex flex-col space-y-4 font-sans">
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Home</a>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Blog</a>
+          <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Main Site</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    
+
+
+
+<article class="py-12">
+  <!-- Post Header -->
+  <header class="mb-8">
+    <h1 class="font-paplane text-7xl mb-4 text-hellas-black dark:text-hellas-white"><span class="text-hellas-cool-grey">IV.</span>
+      
+      thunderbolt-ibverbs
+    </h1>
+    <div class="flex items-center text-hellas-cool-grey">
+      
+      
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <div class="prose prose-lg dark:prose-invert max-w-3xl mb-12 text-hellas-black dark:text-hellas-white font-sans">
+    <h2 id="investigation">Investigation</h2>
+<p>Before we can start our agent, we first need to quantify the task- what are we trying to do, and what's preventing us from doing it at the moment?</p>
+<h3 id="stability"><del>Stability</del></h3>
+<p><em>Update: the LKML stability patches below have since landed in mainline. We now build against a recent <code>torvalds/linux</code> tip and skip the local-patches dance entirely — kept here for context.</em></p>
+<p><del>The first thing we need to investigate is the <code>thunderbolt-net</code> failure from the previous section: under bidirectional load, throughput collapses and the interface can eventually stop passing traffic without reporting a link-down event. We can't get anywhere if our interface locks up after a few minutes. After checking the Linux Kernel Mailing List, I found a <a rel="external" href="https://lore.kernel.org/all/20260428015521.3454006-2-benjamin.s.berman@gmail.com/patch">patchset specifically addressing thunderbolt instability under load</a>. Let's look at the patch series and see if they apply to our issue:</del></p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>  Under concurrent load on a single NHI with several rings simultaneously</span></span>
+<span class="giallo-l"><span>  in NAPI poll (e.g. a Maple Ridge TB4 transit forwarding tbnet traffic</span></span>
+<span class="giallo-l"><span>  between two peers), one ring&#39;s interrupt enable bit in</span></span>
+<span class="giallo-l"><span>  REG_RING_INTERRUPT_BASE can stay cleared.  MSI-X stops for that ring,</span></span>
+<span class="giallo-l"><span>  NAPI is never rescheduled, but carrier is reported up and no driver</span></span>
+<span class="giallo-l"><span>  event fires.  The ring stays masked until thunderbolt_net is reloaded.</span></span></code></pre>
+<p><del>This seems exactly the issue we're seeing! Let's wrap the patches into a flake for our project:</del></p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="nix"><span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  description</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;Patched Linux kernel for thunderbolt-ibverbs&quot;</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #B392F0;">  inputs</span><span>.</span><span style="color: #B392F0;">nixpkgs</span><span>.</span><span style="color: #B392F0;">url</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;github:NixOS/nixpkgs/nixos-unstable&quot;</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #B392F0;">  outputs</span><span style="color: #F97583;"> =</span><span> { self</span><span style="color: #F97583;">,</span><span> nixpkgs }:</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    let</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">      system</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;x86_64-linux&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">      pkgs</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> import</span><span style="color: #FFAB70;"> nixpkgs</span><span> {</span><span style="color: #F97583;"> inherit</span><span style="color: #B392F0;"> system</span><span>; };</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">      # The LKML thunderbolt-stability patches we just walked through.</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">      usb4KernelPatches</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> import</span><span style="color: #9ECBFF;"> ./kernel-workflow/patches</span><span> {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">        inherit</span><span> (</span><span style="color: #FFAB70;">pkgs</span><span>)</span><span style="color: #B392F0;"> lib</span><span>;</span></span>
+<span class="giallo-l"><span>      };</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">      # Mainline Linux 7.1 + those patches.</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">      linux_usb4</span><span style="color: #F97583;"> =</span><span style="color: #FFAB70;"> pkgs</span><span style="color: #F97583;">.</span><span style="color: #FFAB70;">linuxManualConfig</span><span> {</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">        pname</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;linux-usb4&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">        version</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;7.1.0-rc1&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">        modDirVersion</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> &quot;7.1.0-rc1&quot;</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">        src</span><span style="color: #F97583;"> =</span><span style="color: #FFAB70;"> pkgs</span><span style="color: #F97583;">.</span><span style="color: #FFAB70;">fetchurl</span><span> {</span><span style="color: #6A737D;"> /* kernel.org tarball */</span><span> };</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">        configfile</span><span style="color: #F97583;"> =</span><span style="color: #9ECBFF;"> ./kernel-workflow/configs/strix.config</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">        kernelPatches</span><span style="color: #F97583;"> =</span><span style="color: #FFAB70;"> usb4KernelPatches</span><span>;</span></span>
+<span class="giallo-l"><span>      };</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    in</span><span> {</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">      packages</span><span>.${</span><span style="color: #FFAB70;">system</span><span>}</span><span style="color: #F97583;"> =</span><span> {</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">        # Bare kernel derivation, for advanced consumers...</span></span>
+<span class="giallo-l"><span style="color: #F97583;">        inherit</span><span style="color: #B392F0;"> linux_usb4</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">        # ...and a full package set, which is what `boot.kernelPackages` wants.</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">        linuxPackages_usb4</span><span style="color: #F97583;"> =</span><span style="color: #FFAB70;"> pkgs</span><span style="color: #F97583;">.</span><span style="color: #FFAB70;">linuxPackagesFor linux_usb4</span><span>;</span></span>
+<span class="giallo-l"><span>      };</span></span>
+<span class="giallo-l"><span>    };</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p><del>— from <a href="https://blog.hellas.ai/blog/thunderbolt-ibverbs/4-thunderbolt-ibverbs/flake.nix"><code>flake.nix</code></a>; the patches list itself lives in <a href="https://blog.hellas.ai/blog/thunderbolt-ibverbs/4-thunderbolt-ibverbs/kernel-workflow/patches/default.nix"><code>kernel-workflow/patches/default.nix</code></a></del></p>
+<p><del>One <code>nixos-rebuild</code> later and we're ready to re-test:</del></p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">  $</span><span style="color: #9ECBFF;"> iperf</span><span style="color: #79B8FF;"> -c 10.0.5.2 -t 180 --bidir -P 4</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">  ...</span></span>
+<span class="giallo-l"><span>  [SUM][RX-C]</span><span style="color: #B392F0;">   0.00-180.00</span><span style="color: #9ECBFF;"> sec</span><span style="color: #79B8FF;">   216</span><span style="color: #9ECBFF;"> GBytes</span><span style="color: #79B8FF;">  10.3</span><span style="color: #9ECBFF;"> Gbits/sec</span><span style="color: #79B8FF;">    0</span><span style="color: #9ECBFF;">             sender</span></span>
+<span class="giallo-l"><span>  [SUM][RX-C]</span><span style="color: #B392F0;">   0.00-180.00</span><span style="color: #9ECBFF;"> sec</span><span style="color: #79B8FF;">   216</span><span style="color: #9ECBFF;"> GBytes</span><span style="color: #79B8FF;">  10.3</span><span style="color: #9ECBFF;"> Gbits/sec                  receiver</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  iperf</span><span style="color: #9ECBFF;"> Done.</span></span></code></pre>
+<p><del>Excellent- our link is at least stable now, and we can start investigating our missing performance.</del></p>
+<h3 id="performance">Performance</h3>
+<p>Let's be realistic about our expectations- how much could we expect from our configuration under ideal conditions?</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>  strix-1                                        strix-2</span></span>
+<span class="giallo-l"><span>  ┌────────┐    cable A: 2 lanes × 20 Gb/s    ┌────────┐</span></span>
+<span class="giallo-l"><span>  │  USB4  ├──── lane 0 ──────────────────────┤  USB4  │</span></span>
+<span class="giallo-l"><span>  │  ctrl  ├──── lane 1 ──────────────────────┤  ctrl  │</span></span>
+<span class="giallo-l"><span>  │  c8:5  │                                  │  c7:5  │</span></span>
+<span class="giallo-l"><span>  ├────────┤    cable B: 2 lanes × 20 Gb/s    ├────────┤</span></span>
+<span class="giallo-l"><span>  │  USB4  ├──── lane 0 ──────────────────────┤  USB4  │</span></span>
+<span class="giallo-l"><span>  │  ctrl  ├──── lane 1 ──────────────────────┤  ctrl  │</span></span>
+<span class="giallo-l"><span>  │  c8:6  │                                  │  c7:6  │</span></span>
+<span class="giallo-l"><span>  └────────┘                                  └────────┘</span></span></code></pre>
+<p>The advertised bandwidth is <em>raw</em>- we have to account for several layers of framing and encoding overhead before we get to the raw data rate:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>┌────────────────────────────────────────┬─────────────┬────────────────────────────┐</span></span>
+<span class="giallo-l"><span>│                 Layer                  │  Bandwidth  │            Loss            │</span></span>
+<span class="giallo-l"><span>├────────────────────────────────────────┼─────────────┼────────────────────────────┤</span></span>
+<span class="giallo-l"><span>│ 2 lanes × 20 Gb/s symbol rate          │     40 Gb/s │                          — │</span></span>
+<span class="giallo-l"><span>├────────────────────────────────────────┼─────────────┼────────────────────────────┤</span></span>
+<span class="giallo-l"><span>│ After 128b/132b encoding               │  ~38.8 Gb/s │                        ~3% │</span></span>
+<span class="giallo-l"><span>├────────────────────────────────────────┼─────────────┼────────────────────────────┤</span></span>
+<span class="giallo-l"><span>│ After USB4 framing / tunnel headers    │ ~32–35 Gb/s │                    ~10–15% │</span></span>
+<span class="giallo-l"><span>├────────────────────────────────────────┼─────────────┼────────────────────────────┤</span></span>
+<span class="giallo-l"><span>│ After PCIe-tunnel + TB headers         │ ~25–28 Gb/s │                 a bit more │</span></span>
+<span class="giallo-l"><span>├────────────────────────────────────────┼─────────────┼────────────────────────────┤</span></span>
+<span class="giallo-l"><span>│ Single TCP stream over thunderbolt-net │  ~9–10 Gb/s │ huge — the gap is software │</span></span>
+<span class="giallo-l"><span>└────────────────────────────────────────┴─────────────┴────────────────────────────┘</span></span></code></pre>
+<p>So, even after accounting for encoding overhead, we're still not getting the expected throughput. One thing that stood out to me was that
+these numbers seemingly have no relation to what speed the link trains at- 10 or 20GBps per-lane doesn't seem to change anything. This
+is a huge clue that our bottleneck is software-related, not hardware- we're not putting bytes on the wire fast enough (or reading them off- if we had flow control) to keep up with the link speed.</p>
+<p>A natural place to start debugging software performance issues is to check interrupts-</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    $</span><span style="color: #9ECBFF;"> grep thunderbolt /proc/interrupts</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> awk</span><span style="color: #9ECBFF;"> &#39;{print $1, $NF}&#39;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    153:</span><span style="color: #9ECBFF;">  nhi-c8:00.5</span><span>  (counting)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    154:</span><span style="color: #9ECBFF;">  nhi-c8:00.5</span><span style="color: #79B8FF;">  0</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    155:</span><span style="color: #9ECBFF;">  nhi-c8:00.5</span><span style="color: #79B8FF;">  0</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    156:</span><span style="color: #9ECBFF;">  nhi-c8:00.5</span><span style="color: #79B8FF;">  0</span></span></code></pre>
+<p>Interesting! We're only seeing interrupts for the first ring, and none for the others. Let's look how many queues we have:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">    ❯</span><span style="color: #9ECBFF;"> ls /sys/class/net/thunderbolt0/queues</span><span> </span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    rx-0</span><span style="color: #9ECBFF;">  tx-0</span></span></code></pre>
+<p>Okay- one rx queue and one tx queue- the driver didn't claim any more. Let's dig into the linux kernel and find out what's happening under the hood. Probably the first place to look is the <a rel="external" href="https://github.com/torvalds/linux/blob/v7.1-rc3/drivers/net/thunderbolt/main.c#L917"><code>drivers/net/thunderbolt/main.c</code></a>, specifically the <code>tbnet_open</code> function:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="c"><span class="giallo-l"><span style="color: #F97583;">    static int</span><span style="color: #B392F0;"> tbnet_open</span><span>(</span><span style="color: #F97583;">struct</span><span> net_device </span><span style="color: #F97583;">*</span><span style="color: #FFAB70;">dev</span><span>)</span></span>
+<span class="giallo-l"><span>    {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">       	struct</span><span> tbnet </span><span style="color: #F97583;">*</span><span>net </span><span style="color: #F97583;">=</span><span style="color: #B392F0;"> netdev_priv</span><span>(dev);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">       	struct</span><span> tb_xdomain </span><span style="color: #F97583;">*</span><span>xd </span><span style="color: #F97583;">=</span><span> net-&gt;xd;</span></span>
+<span class="giallo-l"><span>       	u16 sof_mask, eof_mask;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">       	struct</span><span> tb_ring </span><span style="color: #F97583;">*</span><span>ring;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">       	unsigned int</span><span> flags;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">       	int</span><span> hopid;</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #B392F0;">       	netif_carrier_off</span><span>(dev);</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span>       	flags </span><span style="color: #F97583;">=</span><span> RING_FLAG_FRAME;</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">       	/* Only enable full E2E if the other end supports it too */</span></span>
+<span class="giallo-l"><span style="color: #F97583;">       	if</span><span> (tbnet_e2e </span><span style="color: #F97583;">&amp;&amp;</span><span> net-&gt;svc-&gt;prtcstns</span><span style="color: #F97583;"> &amp;</span><span> TBNET_E2E)</span></span>
+<span class="giallo-l"><span>      		flags </span><span style="color: #F97583;">|=</span><span> RING_FLAG_E2E;</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span>       	ring </span><span style="color: #F97583;">=</span><span style="color: #B392F0;"> tb_ring_alloc_tx</span><span>(xd-&gt;tb-&gt;nhi,</span><span style="color: #F97583;"> -</span><span style="color: #79B8FF;">1</span><span>, TBNET_RING_SIZE, flags);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">       	if</span><span> (</span><span style="color: #F97583;">!</span><span>ring) {</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">      		netdev_err</span><span>(dev,</span><span style="color: #9ECBFF;"> &quot;failed to allocate Tx ring</span><span style="color: #79B8FF;">\n</span><span style="color: #9ECBFF;">&quot;</span><span>);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">      		return -</span><span>ENOMEM;</span></span>
+<span class="giallo-l"><span>       	}</span></span>
+<span class="giallo-l"><span>       	net-&gt;tx_ring.ring</span><span style="color: #F97583;"> =</span><span> ring;</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span>       	hopid </span><span style="color: #F97583;">=</span><span style="color: #B392F0;"> tb_xdomain_alloc_out_hopid</span><span>(xd,</span><span style="color: #F97583;"> -</span><span style="color: #79B8FF;">1</span><span>);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">       	if</span><span> (hopid </span><span style="color: #F97583;">&lt;</span><span style="color: #79B8FF;"> 0</span><span>) {</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">      		netdev_err</span><span>(dev,</span><span style="color: #9ECBFF;"> &quot;failed to allocate Tx HopID</span><span style="color: #79B8FF;">\n</span><span style="color: #9ECBFF;">&quot;</span><span>);</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">      		tb_ring_free</span><span>(net-&gt;tx_ring.ring);</span></span>
+<span class="giallo-l"><span>      		net-&gt;tx_ring.ring</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> NULL</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">      		return</span><span> hopid;</span></span>
+<span class="giallo-l"><span>       	}</span></span>
+<span class="giallo-l"><span>       	net-&gt;local_transmit_path</span><span style="color: #F97583;"> =</span><span> hopid;</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span>       	sof_mask </span><span style="color: #F97583;">=</span><span style="color: #B392F0;"> BIT</span><span>(TBIP_PDF_FRAME_START);</span></span>
+<span class="giallo-l"><span>       	eof_mask </span><span style="color: #F97583;">=</span><span style="color: #B392F0;"> BIT</span><span>(TBIP_PDF_FRAME_END);</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span>       	ring </span><span style="color: #F97583;">=</span><span style="color: #B392F0;"> tb_ring_alloc_rx</span><span>(xd-&gt;tb-&gt;nhi,</span><span style="color: #F97583;"> -</span><span style="color: #79B8FF;">1</span><span>, TBNET_RING_SIZE, flags,</span></span>
+<span class="giallo-l"><span>        				net-&gt;tx_ring.ring-&gt;hop, sof_mask,</span></span>
+<span class="giallo-l"><span>        				eof_mask, tbnet_start_poll, net);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">       	if</span><span> (</span><span style="color: #F97583;">!</span><span>ring) {</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">      		netdev_err</span><span>(dev,</span><span style="color: #9ECBFF;"> &quot;failed to allocate Rx ring</span><span style="color: #79B8FF;">\n</span><span style="color: #9ECBFF;">&quot;</span><span>);</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">      		tb_xdomain_release_out_hopid</span><span>(xd, hopid);</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">      		tb_ring_free</span><span>(net-&gt;tx_ring.ring);</span></span>
+<span class="giallo-l"><span>      		net-&gt;tx_ring.ring</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> NULL</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">      		return -</span><span>ENOMEM;</span></span>
+<span class="giallo-l"><span>       	}</span></span>
+<span class="giallo-l"><span>       	net-&gt;rx_ring.ring</span><span style="color: #F97583;"> =</span><span> ring;</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #B392F0;">       	napi_enable</span><span>(</span><span style="color: #F97583;">&amp;</span><span>net-&gt;napi);</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">       	start_login</span><span>(net);</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #F97583;">       	return</span><span style="color: #79B8FF;"> 0</span><span>;</span></span>
+<span class="giallo-l"><span>    }</span></span></code></pre>
+<p>This function is what creates the network device for the Thunderbolt controller- at a high level, it declares
+the new network interface, allocates and assigns one transmit and one receive ring buffer to it. Two interesting
+things here:</p>
+<ul>
+<li>We ask <code>tb_xdomain_alloc_out_hopid</code> for a <em>hopId</em> to use for the transmit ring buffer. This gets saved onto the main <code>tbnet</code> struct as <a rel="external" href="https://github.com/torvalds/linux/blob/v7.1-rc3/drivers/net/thunderbolt/main.c#L192"><code>local_transmit_path</code></a></li>
+<li>When allocating the buffers, we need an "NHI" device: <code>xd-&gt;tb-&gt;nhi</code></li>
+</ul>
+<p>Because we only have a single DMA ring for tx and rx, we only have one CPU core shuffling bytes on or off the wire- perhaps ~10Gbs is the fastest we can do this. Let's find out what this <em>HopId</em> and <em>NHI</em> things are.</p>
+<h3 id="nhi-controller">NHI Controller</h3>
+<p>NHI stands for <em>Native Host Interface</em> and it's the standard interface used by USB4/Thunderbolt controllers to speak to the OS. We can find it enumerated on our PCI bus:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">  ❯</span><span style="color: #9ECBFF;"> lspci</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> grep</span><span style="color: #9ECBFF;"> USB4</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  00:01.1</span><span style="color: #9ECBFF;"> PCI bridge: Advanced Micro Devices, Inc.</span><span> [AMD] Strix/Strix Halo PCIe USB4 Bridge (</span><span style="color: #B392F0;">rev</span><span style="color: #79B8FF;"> 02</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  00:01.2</span><span style="color: #9ECBFF;"> PCI bridge: Advanced Micro Devices, Inc.</span><span> [AMD] Strix/Strix Halo PCIe USB4 Bridge (</span><span style="color: #B392F0;">rev</span><span style="color: #79B8FF;"> 02</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  c8:00.5</span><span style="color: #9ECBFF;"> USB controller: Advanced Micro Devices, Inc.</span><span> [AMD] Strix Halo USB4 Host Router</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  c8:00.6</span><span style="color: #9ECBFF;"> USB controller: Advanced Micro Devices, Inc.</span><span> [AMD] Strix Halo USB4 Host Router  </span></span></code></pre>
+<p><em>the first two items are the PCI bridge devices that the USB4 controller is connected to, not the controller itself</em></p>
+<p>You can find the list of NHI devices that the linux kernel knows about <a rel="external" href="https://github.com/torvalds/linux/blob/v7.1-rc3/drivers/thunderbolt/nhi.h#L101">here</a>- one thing that is immediately obvious is that all of them are Intel controllers apart from the last, which covers <em>all</em> AMD USB4 controllers. The reason the linux kernel knows about so many Intel controllers is that they have <em>quirks</em> - small differences in hardware that require special handling. Intel have done the work to make linux aware of their quirks so that it can Do The Right Thing- either AMD controllers are perfect implementations of the USB4 spec that require no quirk handling- or simply that nobody at AMD has done the work, and we should expect bugs.</p>
+<h3 id="dma-rings">DMA Rings</h3>
+<p>The controller exchanges data with the host OS via <a rel="external" href="https://en.wikipedia.org/wiki/Direct_memory_access">DMA</a> <a rel="external" href="https://en.wikipedia.org/wiki/Circular_buffer">ring buffers</a>. Instead of the controller notifying the kernel "hey, here are some bytes that i read off the wire", the kernel will allocate a DMA buffer and instruct
+the controller to write data direct to it. When complete, the controller can simply notify the kernel 'data is ready'. On the PCIe platform, this mechanism is implemented via <a rel="external" href="https://en.wikipedia.org/wiki/MSI-X">MSI-X</a> interrupts.</p>
+<p>We need to go lower! Let's look at how the kernel implements <code>thunderbolt-net</code> and what primitives it's built on top of- perhaps we can test those primitives directly. Looking at thunderbolt.c, we can learn a bit about the thunderbolt/usb4 architecture. In <a rel="external" href="https://github.com/torvalds/linux/blob/v7.1-rc3/drivers/thunderbolt/nhi_regs.h">nhi_regs.h</a>, we can find the following definition:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="c"><span class="giallo-l"><span style="color: #F97583;">    enum</span><span> ring_flags {</span></span>
+<span class="giallo-l"><span>       	RING_FLAG_ISOCH_ENABLE </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 1</span><span style="color: #F97583;"> &lt;&lt;</span><span style="color: #79B8FF;"> 27</span><span>,</span><span style="color: #6A737D;"> /* TX only? */</span></span>
+<span class="giallo-l"><span>       	RING_FLAG_E2E_FLOW_CONTROL </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 1</span><span style="color: #F97583;"> &lt;&lt;</span><span style="color: #79B8FF;"> 28</span><span>,</span></span>
+<span class="giallo-l"><span>       	RING_FLAG_PCI_NO_SNOOP </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 1</span><span style="color: #F97583;"> &lt;&lt;</span><span style="color: #79B8FF;"> 29</span><span>,</span></span>
+<span class="giallo-l"><span>       	RING_FLAG_RAW </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 1</span><span style="color: #F97583;"> &lt;&lt;</span><span style="color: #79B8FF;"> 30</span><span>,</span><span style="color: #6A737D;"> /* ignore EOF/SOF mask, include checksum */</span></span>
+<span class="giallo-l"><span>       	RING_FLAG_ENABLE </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 1</span><span style="color: #F97583;"> &lt;&lt;</span><span style="color: #79B8FF;"> 31</span><span>,</span></span>
+<span class="giallo-l"><span>    };</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    /**</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    * struct ring_desc - TX/RX ring entry</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    * </span><span style="color: #F97583;">@phys:</span><span style="color: #6A737D;"> DMA mapped address of the frame</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    * </span><span style="color: #F97583;">@length:</span><span style="color: #6A737D;"> Size of the ring</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    * </span><span style="color: #F97583;">@eof:</span><span style="color: #6A737D;"> End of frame protocol defined field</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    * </span><span style="color: #F97583;">@sof:</span><span style="color: #6A737D;"> Start of frame protocol defined field</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    * </span><span style="color: #F97583;">@flags:</span><span style="color: #6A737D;"> Ring descriptor flags</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    * </span><span style="color: #F97583;">@time:</span><span style="color: #6A737D;"> Fill with zero</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    *</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    * For TX set length/eof/sof.</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    * For RX length/eof/sof are set by the NHI.</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    */</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    struct</span><span> ring_desc {</span></span>
+<span class="giallo-l"><span>           	u64 phys;</span></span>
+<span class="giallo-l"><span>           	u32 length:</span><span style="color: #79B8FF;">12</span><span>;</span></span>
+<span class="giallo-l"><span>           	u32 eof:</span><span style="color: #79B8FF;">4</span><span>;</span></span>
+<span class="giallo-l"><span>           	u32 sof:</span><span style="color: #79B8FF;">4</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">           	enum</span><span> ring_desc_flags flags:</span><span style="color: #79B8FF;">12</span><span>;</span></span>
+<span class="giallo-l"><span>           	u32 time;</span><span style="color: #6A737D;"> /* write zero */</span></span>
+<span class="giallo-l"><span>} __packed;</span></span></code></pre>
+<p>This struct defines the layout of a DMA ring descriptor used by the NHI- it has a <code>phys</code> field for the DMA address, <code>length</code>/<code>eof</code>/<code>sof</code> fields for the frame size, and <code>flags</code> for the ring descriptor flags.
+The NHI registers are mapped into the PCI BAR 0 region, starting at <code>REG_TX_RING_BASE</code>. The controller tells us how many of these rings are supported via <a rel="external" href="https://github.com/torvalds/linux/blob/master/drivers/thunderbolt/nhi_regs.h#L113"><code>REG_CAPS</code></a>:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="c"><span class="giallo-l"><span style="color: #6A737D;">    /* The last 11 bits contain the number of hops supported by the NHI port. */</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    #define</span><span style="color: #B392F0;"> REG_CAPS</span><span style="color: #F97583;">			0x</span><span style="color: #79B8FF;">39640</span></span></code></pre>
+<p>We know that <code>thunderbolt-net</code> is only using 1 ring, so there should be 2 left for other use.
+Let's add some debugging to our new driver- expose some per-ring statistics about the DMA rings used by <code>thunderbolt-net</code>.</p>
+<p>On our strix halo this reads <code>0x03</code>- 3 rings available! We know that <code>thunderbolt-net</code> is only using 1 ring, perhaps we can convince it to take advantage of the other 2 rings?</p>
+<h2 id="implementation">Implementation</h2>
+<p>At this point the shape of our prospective solution is starting to become clear: a kernel driver that sits alongside <code>thunderbolt-net</code>, allocating DMA rings from the controller's NHI port in the same way, powering a state-machine driven by the Infiniband verbs API. I scaffolded this up and loaded it alongside <code>thunderbolt-net</code>. The kernel module creates a new InfiniBand device:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="c"><span class="giallo-l"><span style="color: #F97583;">static int</span><span style="color: #B392F0;"> tbv_ibdev_register_one</span><span>(</span><span style="color: #F97583;">struct</span><span> tbv_state </span><span style="color: #F97583;">*</span><span style="color: #FFAB70;">state</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #F97583;">                                  enum</span><span> tbv_backend_type </span><span style="color: #FFAB70;">backend</span><span>,</span></span>
+<span class="giallo-l"><span style="color: #F97583;">                                  const char *</span><span style="color: #FFAB70;">name</span><span>)</span></span>
+<span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    struct</span><span> tbv_ibdev </span><span style="color: #F97583;">*</span><span>dev;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    struct</span><span> device </span><span style="color: #F97583;">*</span><span>dma_device;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    int</span><span> ret;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    dev </span><span style="color: #F97583;">=</span><span style="color: #B392F0;"> ib_alloc_device</span><span>(tbv_ibdev, base);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    if</span><span> (</span><span style="color: #F97583;">!</span><span>dev)</span></span>
+<span class="giallo-l"><span style="color: #F97583;">        return -</span><span>ENOMEM;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    dev-&gt;state</span><span style="color: #F97583;"> =</span><span> state;</span></span>
+<span class="giallo-l"><span>    dev-&gt;backend</span><span style="color: #F97583;"> =</span><span> backend;</span></span>
+<span class="giallo-l"><span>    dev-&gt;base.phys_port_cnt</span><span style="color: #F97583;"> =</span><span> TBV_IBDEV_PORTS;</span></span>
+<span class="giallo-l"><span>    dev-&gt;base.num_comp_vectors</span><span style="color: #F97583;"> =</span><span style="color: #B392F0;"> num_possible_cpus</span><span>();</span></span>
+<span class="giallo-l"><span>    dev-&gt;base.node_type</span><span style="color: #F97583;"> =</span><span> RDMA_NODE_IB_CA;</span></span>
+<span class="giallo-l"><span>    dev-&gt;base.uverbs_cmd_mask</span><span style="color: #F97583;"> |=</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">        BIT_ULL</span><span>(IB_USER_VERBS_CMD_POST_SEND)</span><span style="color: #F97583;"> |</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">        BIT_ULL</span><span>(IB_USER_VERBS_CMD_POST_RECV)</span><span style="color: #F97583;"> |</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">        BIT_ULL</span><span>(IB_USER_VERBS_CMD_POLL_CQ)</span><span style="color: #F97583;"> |</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">        BIT_ULL</span><span>(IB_USER_VERBS_CMD_REQ_NOTIFY_CQ);</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #B392F0;">    ib_set_device_ops</span><span>(</span><span style="color: #F97583;">&amp;</span><span>dev-&gt;base,</span><span style="color: #F97583;"> &amp;</span><span>tbv_ibdev_ops);</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    dma_device </span><span style="color: #F97583;">=</span><span style="color: #B392F0;"> tbv_state_get_verbs_parent</span><span>(state, backend);</span></span>
+<span class="giallo-l"><span>    dev-&gt;base.dev.parent</span><span style="color: #F97583;"> =</span><span> dma_device;</span></span>
+<span class="giallo-l"><span>    ret </span><span style="color: #F97583;">=</span><span style="color: #B392F0;"> ib_register_device</span><span>(</span><span style="color: #F97583;">&amp;</span><span>dev-&gt;base, name, dma_device);</span></span>
+<span class="giallo-l"><span>    ...</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>— from <a href="https://blog.hellas.ai/blog/thunderbolt-ibverbs/4-thunderbolt-ibverbs/kernel/ibdev.c"><code>kernel/ibdev.c</code></a>, <code>tbv_ibdev_register_one</code> (line 5476)</p>
+<p>After building and loading into the kernel, we can confirm it's alive:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>$ sudo dmesg | grep thunderbolt_ibverbs</span></span>
+<span class="giallo-l"><span>[12345.678901] thunderbolt_ibverbs: loaded</span></span>
+<span class="giallo-l"><span>[12345.683472] thunderbolt_ibverbs: registered ib_device usb4_rdma0 dma_device=0000:c8:00.5</span></span></code></pre>
+<p>To wire the module into a NixOS box on top of the patched kernel from earlier:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="nix"><span class="giallo-l"><span>{ config</span><span style="color: #F97583;">,</span><span> pkgs</span><span style="color: #F97583;">, ...</span><span> }:</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">  # Patched kernel from the previous chapter — `linuxPackages_usb4` is</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">  # the upstream Linux kernel with the LKML thunderbolt-stability</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">  # patches applied (see kernel-workflow/patches/).</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  boot</span><span>.</span><span style="color: #B392F0;">kernelPackages</span><span style="color: #F97583;"> =</span><span style="color: #FFAB70;"> pkgs</span><span style="color: #F97583;">.</span><span style="color: #FFAB70;">linuxPackages_usb4</span><span>;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">  # Our new out-of-tree module, built against that kernel.</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  boot</span><span>.</span><span style="color: #B392F0;">extraModulePackages</span><span style="color: #F97583;"> =</span><span> [</span><span style="color: #FFAB70;"> pkgs</span><span style="color: #F97583;">.</span><span style="color: #FFAB70;">linuxPackages_usb4</span><span style="color: #F97583;">.</span><span style="color: #FFAB70;">thunderbolt-ibverbs</span><span> ];</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  boot</span><span>.</span><span style="color: #B392F0;">extraKernelModules</span><span style="color: #F97583;">  =</span><span> [</span><span style="color: #9ECBFF;"> &quot;thunderbolt_ibverbs&quot;</span><span> ];</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>— <code>linuxPackages_usb4</code> overlay defined in <a href="https://blog.hellas.ai/blog/thunderbolt-ibverbs/4-thunderbolt-ibverbs/flake.nix"><code>flake.nix</code></a>; module derivation in <a href="https://blog.hellas.ai/blog/thunderbolt-ibverbs/4-thunderbolt-ibverbs/nix/kernel-module.nix"><code>nix/kernel-module.nix</code></a></p>
+<p>The init claims a Thunderbolt service slot so the controller calls back into us when a peer link comes up:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="c"><span class="giallo-l"><span style="color: #F97583;">static const struct</span><span> tb_service_id tbv_service_ids</span><span style="color: #F97583;">[] =</span><span> {</span></span>
+<span class="giallo-l"><span>    {</span></span>
+<span class="giallo-l"><span>        .match_flags  </span><span style="color: #F97583;">=</span><span> TBSVC_MATCH_PROTOCOL_KEY </span><span style="color: #F97583;">|</span></span>
+<span class="giallo-l"><span>                        TBSVC_MATCH_PROTOCOL_ID,</span></span>
+<span class="giallo-l"><span>        .protocol_key </span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;"> &quot;tbverbs&quot;</span><span>,</span></span>
+<span class="giallo-l"><span>        .protocol_id  </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 1</span><span>,</span></span>
+<span class="giallo-l"><span>    },</span></span>
+<span class="giallo-l"><span>    { },</span></span>
+<span class="giallo-l"><span>};</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">static struct</span><span> tb_service_driver tbv_service_driver </span><span style="color: #F97583;">=</span><span> {</span></span>
+<span class="giallo-l"><span>    .driver </span><span style="color: #F97583;">=</span><span> {</span></span>
+<span class="giallo-l"><span>        .owner </span><span style="color: #F97583;">=</span><span> THIS_MODULE,</span></span>
+<span class="giallo-l"><span>        .name  </span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;"> &quot;thunderbolt_ibverbs&quot;</span><span>,</span></span>
+<span class="giallo-l"><span>    },</span></span>
+<span class="giallo-l"><span>    .probe    </span><span style="color: #F97583;">=</span><span> tbv_service_probe,</span></span>
+<span class="giallo-l"><span>    .remove   </span><span style="color: #F97583;">=</span><span> tbv_service_remove,</span></span>
+<span class="giallo-l"><span>    .id_table </span><span style="color: #F97583;">=</span><span> tbv_service_ids,</span></span>
+<span class="giallo-l"><span>};</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">static int</span><span> __init </span><span style="color: #B392F0;">tbv_init</span><span>(</span><span style="color: #F97583;">void</span><span>)</span></span>
+<span class="giallo-l"><span>{</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    int</span><span> ret </span><span style="color: #F97583;">=</span><span style="color: #B392F0;"> tb_register_service_driver</span><span>(</span><span style="color: #F97583;">&amp;</span><span>tbv_service_driver);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    if</span><span> (ret)</span></span>
+<span class="giallo-l"><span style="color: #F97583;">        return</span><span> ret;</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    pr_info</span><span>(</span><span style="color: #9ECBFF;">&quot;loaded</span><span style="color: #79B8FF;">\n</span><span style="color: #9ECBFF;">&quot;</span><span>);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    return</span><span style="color: #79B8FF;"> 0</span><span>;</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">module_init</span><span>(tbv_init);</span></span></code></pre>
+<p>— from <a href="https://blog.hellas.ai/blog/thunderbolt-ibverbs/4-thunderbolt-ibverbs/kernel/service.c"><code>kernel/service.c</code></a> + <a href="https://blog.hellas.ai/blog/thunderbolt-ibverbs/4-thunderbolt-ibverbs/kernel/main.c"><code>kernel/main.c</code></a></p>
+<p>And the device appears under <code>ibv_devices</code>:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>$ sudo modprobe -r thunderbolt_net</span></span>
+<span class="giallo-l"><span>$ sudo insmod ./kernel/thunderbolt_ibverbs.ko</span></span>
+<span class="giallo-l"><span>$ ibv_devices</span></span>
+<span class="giallo-l"><span>    device                 node GUID</span></span>
+<span class="giallo-l"><span>    ------              ----------------</span></span>
+<span class="giallo-l"><span>    usb4_rdma0          0200544256524253</span></span></code></pre><h3 id="hops">Hops</h3>
+<p>With our module loaded in <code>thunderbolt-net</code>'s place, the controller's hops are ours to allocate. REG_CAPS said three, so let's just grab all three:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="c"><span class="giallo-l"><span style="color: #F97583;">struct</span><span> tb_ring </span><span style="color: #F97583;">*</span><span>r;</span></span>
+<span class="giallo-l"><span style="color: #F97583;">int</span><span> hop;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">for</span><span> (hop </span><span style="color: #F97583;">=</span><span style="color: #79B8FF;"> 0</span><span>; hop </span><span style="color: #F97583;">&lt;=</span><span style="color: #79B8FF;"> 2</span><span>; hop</span><span style="color: #F97583;">++</span><span>) {</span></span>
+<span class="giallo-l"><span>    r </span><span style="color: #F97583;">=</span><span style="color: #B392F0;"> tb_ring_alloc_tx</span><span>(nhi, hop, RING_SIZE, RING_FLAG_FRAME);</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">    pr_info</span><span>(</span><span style="color: #9ECBFF;">&quot;tb_ring_alloc_tx(hop=</span><span style="color: #79B8FF;">%d</span><span style="color: #9ECBFF;">) = </span><span style="color: #79B8FF;">%p\n</span><span style="color: #9ECBFF;">&quot;</span><span>, hop, r);</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    if</span><span> (r)</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">        tb_ring_free</span><span>(r);</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>$ sudo dmesg | tail -3</span></span>
+<span class="giallo-l"><span>[12348.901234] thunderbolt_ibverbs: tb_ring_alloc_tx(hop=0) = (null)</span></span>
+<span class="giallo-l"><span>[12348.901567] thunderbolt_ibverbs: tb_ring_alloc_tx(hop=1) = ffff8a000c4f3800</span></span>
+<span class="giallo-l"><span>[12348.901832] thunderbolt_ibverbs: tb_ring_alloc_tx(hop=2) = ffff8a000c4f3a00</span></span></code></pre>
+<p>Hm- failure- we managed to allocate hops 1 and 2, but not 0- something is already using it. Let's <a rel="external" href="https://github.com/torvalds/linux/blob/master/drivers/thunderbolt/ctl.c#L445">read the source</a> and find out why:</p>
+<p>Hop 0 is a <em>control channel</em>- it's reserved for a simple protocol orchestrating the control plane, not for data traffic- that's why we can't allocate it. But this is the first I've read about a control channel- lets learn more about it.</p>
+<h3 id="xdomain">XDomain</h3>
+<p><code>tb_ring_alloc_tx(nhi, -1, ...)</code> returns a <em>local</em> HopID — your end of a logical channel. The peer has its own local HopID for the same channel, and the two are unrelated. The cable doesn't carry that mapping; it has to be negotiated.</p>
+<p>Our driver registers its own <code>usb4_rdma</code> service UUID and property directory. When both ends load, they find each other over hop 0 and exchange HopIDs:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>$ sudo dmesg | grep thunderbolt_ibverbs</span></span>
+<span class="giallo-l"><span>[12350.123456] thunderbolt_ibverbs: advertised service tbverbs</span></span>
+<span class="giallo-l"><span>[12351.234567] thunderbolt_ibverbs: peer 0 created</span></span>
+<span class="giallo-l"><span>[12351.245678] thunderbolt_ibverbs: allocated rings service id=0 local_hop=1 remote_hop=1</span></span>
+<span class="giallo-l"><span>[12351.246789] thunderbolt_ibverbs: bound service id=0 key=tbverbs route=0x1 link_speed=20Gb/s</span></span></code></pre><h3 id="two-controller-striping">Two-controller striping</h3>
+<p>Now we can stripe across all four ring pairs from both controllers:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>$ ib_write_bw -d usb4_rdma0 -q 8 -s 1048576 --report_gbits</span></span>
+<span class="giallo-l"><span> #bytes     #iterations   BW peak[Gb/sec]   BW average[Gb/sec]   MsgRate[Mpps]</span></span>
+<span class="giallo-l"><span> 1048576    300           47.90             47.79                0.005697</span></span></code></pre>
+<p>— from <a href="https://blog.hellas.ai/blog/thunderbolt-ibverbs/4-thunderbolt-ibverbs/bench/perftest/"><code>bench/perftest/</code></a> (raw CSV: <code>2026-05-20-strix-strix-native-4rail.csv</code>, 4 rings × 2 QPs each, both cables trained at 20 Gb/s)</p>
+<p>That's the cap. REG_CAPS says 3 hops, the kernel believes 3, we're using 2 of them × 2 controllers — there's nowhere obvious left to find more bandwidth.</p>
+<h2 id="benchmark-low-level-rdma-primitives">Benchmark: low-level RDMA primitives</h2>
+<p>The <a rel="external" href="https://github.com/linux-rdma/perftest">perftest</a> tool gives us a suite of low-level benchmarks built on the standard InfiniBand verbs, which sanity-check both correctness and performance of our implementation.</p>
+<p><img src="../bench/perftest/bw_vs_size.svg" alt="Per-rail bandwidth by verb (read / write / send), strix-1 ↔ strix-2: native usb4_rdma vs RXE over TBnet vs RXE over 2.5G LAN, by message size and QPs" /></p>
+<p>With IOMMU disabled, per-rail bandwidth between the native module and soft-RoCE over TBnet sits within ~10% of each other once you give either of them enough QPs to fill the pipe — both saturate the ~10 Gb/s per-cable USB4 ceiling on writes and sends. The 2.5 GbE RXE path flatlines around 2 Gb/s, NIC-bound, as expected.</p>
+<p>Where the native module pulls ahead is latency. At 64 B / 1 QP, <code>ib_write_lat</code> is ~7 µs over native vs ~28 µs over RXE-on-Ethernet and ~65 µs over RXE-on-TBnet; reads are roughly twice that everywhere. Extending the sweep all the way to 1 MiB shows the curves crossing into the bandwidth-bound regime past the ~16 KiB knee, where "latency" is mostly <code>size / bandwidth</code>:</p>
+<p><img src="../bench/perftest/lat_vs_size.svg" alt="One-way latency by verb (read / write / send), 1 QP, 64 B → 1 MiB, native usb4_rdma vs RXE over TBnet vs RXE over 2.5G LAN" /></p>
+<p>Driving all four HCAs in parallel with bidirectional traffic, the native module sustains <strong>~48 Gb/s per direction (~95 Gb/s total) on <code>ib_write_bw</code> at 1 MiB / 8 QPs</strong>, with <code>ib_send_bw</code> and <code>ib_read_bw</code> landing at ~44 Gb/s and ~42 Gb/s respectively. The unidirectional 4-HCA aggregate is a touch higher (~52 Gb/s writes / ~47 Gb/s reverse):</p>
+<p><img src="../bench/perftest/4hca-basic/bw_per_hca.svg" alt="perftest 4-HCA aggregate at 1 MiB — per-HCA write/send bandwidth, fwd vs rev, with 4-rail totals annotated" /></p>
+<p>Dropping message size to 64 KiB costs ib_write_bw a few Gb/s per rail (down to ~10 Gb/s) but leaves ib_send_bw essentially unchanged — the 4-rail aggregate is still ~41 Gb/s for writes and ~43 Gb/s for sends in both directions:</p>
+<p><img src="../bench/perftest/4hca-basic/bw_per_hca_64k.svg" alt="perftest 4-HCA aggregate at 64 KiB — per-HCA write/send bandwidth, fwd vs rev, with 4-rail totals annotated" /></p>
+<p>Single-HCA 64B round-trip latency stays in the single-µs / low-µs range for the same verbs:</p>
+<p><img src="../bench/perftest/4hca-basic/lat_us.svg" alt="perftest 4-HCA basic — 64B single-HCA latency for write/read/send" /></p>
+<h2 id="vllm-support">vLLM support</h2>
+<p>For a real workload we want to plug <code>usb4_rdma</code> into vLLM's tensor-parallel transport.  vLLM uses NCCL under the hood; on AMD that becomes RCCL.  RCCL talks to whichever IB device you point it at via the standard <code>NCCL_IB_HCA</code> environment variable, so we just need to load the module on both hosts, expose all four rails as separate HCAs, and point RCCL at them:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span>NCCL_IB_DISABLE</span><span style="color: #F97583;">=</span><span style="color: #9ECBFF;">0</span><span style="color: #B392F0;"> \</span></span>
+<span class="giallo-l"><span>NCCL_IB_HCA=usb4_rdma0,usb4_rdma1,usb4_rdma2,usb4_rdma3</span><span style="color: #79B8FF;"> \</span></span>
+<span class="giallo-l"><span>NCCL_NET_MERGE_LEVEL=LOC</span><span style="color: #79B8FF;"> \</span></span>
+<span class="giallo-l"><span>NCCL_MIN_NCHANNELS=4</span><span style="color: #9ECBFF;"> NCCL_MAX_NCHANNELS=</span><span style="color: #79B8FF;">4 \</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">  vllm serve</span><span> $MODEL</span><span style="color: #79B8FF;"> --tensor-parallel-size 2</span><span style="color: #9ECBFF;"> ...</span></span></code></pre>
+<p>No changes to vLLM, no changes to RCCL — just the kernel module and a few environment knobs.</p>
+<h3 id="vllm-benchmarks">vLLM benchmarks</h3>
+<p>End-to-end on Llama-3.1-8B with TP=2 across <code>strix-1</code> and <code>strix-2</code>, sweeping concurrency from 1 to 256:</p>
+<p><img src="../bench/workload/tps_vs_concurrency.svg" alt="vLLM Llama-3.1-8B transport matrix, tps vs concurrency, line per transport" /></p>
+<p><code>usb4_rdma</code> cleanly beats the alternatives at every concurrency level above ~16; at concurrency 256 it hits <strong>891 tps</strong> vs <strong>634</strong> for TCP-over-TBnet and <strong>563</strong> for RXE-over-TBnet — a ~40% uplift over the next-best Thunderbolt option, and ~3× the 2.5 GbE baseline.</p>
+<p>Pinned head-to-head against a single-host baseline at concurrency 256, TP=2 over 4-HCA RDMA also gives a clear win — <strong>767 total tok/s vs 567</strong> on solo, a ~35% bump for an 8B model that fits on either host:</p>
+<p><img src="../bench/workload/llama3-8b/tps_vs_transport.svg" alt="vLLM Llama 3.1 8B — solo vs TP=2 4-HCA RDMA at concurrency 256" /></p>
+<p>Even a small dense model like Qwen3-0.6B — which has no business being distributed — picks up a ~18% throughput gain from the same setup, suggesting the per-token interconnect tax is essentially in the noise:</p>
+<p><img src="../bench/workload/qwen3-0p6b/tps_vs_transport.svg" alt="vLLM Qwen3-0.6B — solo vs TP=2 4-HCA RDMA at concurrency 256" /></p>
+<p>To put a number on how much of the win is RDMA-specific rather than just "going distributed at all", we re-ran the same two models on a clean 20 Gb/s link (wifi off to remove interference) and forced the TP=2 path through plain TCP over the 2.5G LAN as the comparator.  TCP TP=2 lands at roughly <strong>half</strong> of either solo or RDMA for both models — 309 tps vs 588 solo on Llama, 780 vs 1913 solo on Qwen — so essentially all of the TP=2 RDMA uplift is the interconnect doing useful work, not Ray/vLLM TP scheduling:</p>
+<p><img src="../bench/workload/vllm-tp2-2026-05-26-clean/tps_solo_vs_tp2.svg" alt="vLLM solo vs TP=2 RDMA vs TP=2 TCP at concurrency 256, clean 20 Gb/s link (wifi off), 2026-05-26" /></p>
+<p>To sanity-check how much of that uplift depends on actually running USB4 at its rated speed, we re-ran the same two scenarios with each rail forced down to 10 Gb/s (one lane per cable instead of two — the "degraded" mode you'd see if Thunderbolt negotiation fell back, or one cable were a USB4 v1 / 10G-only part). Single-host inference is essentially unaffected — Qwen3 lands at 1915 vs 1925 tps, Llama at 589 vs 567 tps, well inside run-to-run noise. The 4-HCA TP=2 path, however, refuses to come up at all: the vLLM server fails to start on both hosts (<code>Connection refused</code> on every request, no successful row in the CSV). The headroom we have at 20 Gb/s isn't a luxury — it's what makes RCCL's NIC-bonded TP=2 collective feasible in the first place:</p>
+<p><img src="../bench/workload/degraded-10g/tps_vs_link_speed.svg" alt="vLLM throughput at concurrency 256: 20 Gb/s vs degraded 10 Gb/s, solo and TP=2 RDMA, for Qwen3-0.6B and Llama 3.1 8B" /></p>
+<p>For a model that doesn't fit comfortably on a single Strix Halo, Gemma-4-26B-A4B (~52 GB bf16), the picture is more mixed.  At low concurrency a TP=2 RDMA split actually <em>loses</em> to running TP=1 on a single host (where the network overhead is pure tax) — at c=2 the RDMA path catches and slightly beats local, and at c=8 the RDMA path collapses.  Distribution wins decisively only for models that genuinely don't fit on one box:</p>
+<p><img src="../bench/workload/gemma4-26b-a4b/tps_vs_concurrency.svg" alt="vLLM Gemma-4-26B-A4B: TP=1 local vs TP=2 RDMA variants" /></p>
+<p>The lesson, repeated from the finetune section: distribution is a tax until the model is big enough that you have no choice.</p>
+<h3 id="finetune">Finetune</h3>
+<p>A 2-node FSDP fine-tune of SmolLM2-135M-Instruct (1 epoch, 800 examples) tells the same story even more starkly. We added a single-node baseline as a reference point:</p>
+<p><img src="../bench/finetune/runtime_vs_transport.svg" alt="SmolLM2-135M FSDP train wall time, by transport" /></p>
+<ul>
+<li><strong>Single-node</strong> completes in 66 seconds.</li>
+<li>2-node ETH takes 542 s — <strong>8× <em>slower</em> than just running on one host</strong>.</li>
+<li>2-node RDMA (single-HCA) takes 162 s.</li>
+<li>2-node RDMA (4-HCA, new per-port module) takes 73 s — within ~10% of the single-node baseline, and with <code>train_loss = 1.11</code> matching the other transports.</li>
+</ul>
+<p>For a 135M model that fits trivially in 128 GB, distributing the training across two hosts is pure overhead.  The interconnect-bandwidth chart explains the <em>relative</em> ranking of the distributed options:</p>
+<p><img src="../bench/finetune/bw_vs_transport.svg" alt="SmolLM2-135M FSDP interconnect bandwidth, by transport" /></p>
+<p>Correctness held up across all four transports — <code>train_loss</code> lands within a couple of percent of 1.11 everywhere, well under the anomaly threshold on the loss chart:</p>
+<p><img src="../bench/finetune/loss_vs_transport.svg" alt="SmolLM2-135M FSDP train_loss / eval_loss, by transport" /></p>
+<p>Stepping up to a real workload — a 1-step LoRA FSDP fine-tune of <code>google/gemma-3-27b-it</code> at batch=1, max_length=128 — the same transport ranking holds, with the absolute gap now measured in minutes rather than seconds:</p>
+<p><img src="../bench/finetune/gemma3-27b/runtime_vs_transport.svg" alt="Gemma 3 27B LoRA FSDP train wall time, by transport" /></p>
+<ul>
+<li>2-node ETH takes <strong>1359 s</strong> for a single training step (gradient sync over br0.lan).</li>
+<li>2-node RDMA single-HCA drops that to <strong>406 s</strong> — a 3.3× speedup, same shape as the SmolLM2 result.</li>
+<li>2-node RDMA 4-HCA finishes in <strong>126 s</strong> — <strong>10.8× faster than ETH</strong>, and a further 3.2× over single-HCA RDMA.</li>
+</ul>
+<p>The effective per-direction throughput tracks the wall-clock ranking exactly:</p>
+<p><img src="../bench/finetune/gemma3-27b/bw_vs_transport.svg" alt="Gemma 3 27B LoRA FSDP interconnect bandwidth, by transport" /></p>
+<p>Pushing further into the "real workload" end of the spectrum — a 1-step <strong>full</strong> (non-LoRA) FSDP train of <code>google/gemma-3-12b-it</code> at batch=1, max_length=128 — the headline gap actually widens: 622 s on Ethernet drops to <strong>56 s on 4-HCA RDMA</strong>, an 11× speedup that lines up cleanly with the LoRA result above:</p>
+<p><img src="../bench/finetune/gemma3-12b-full/runtime_vs_transport.svg" alt="Gemma 3 12B FULL FSDP train wall time, by transport" /></p>
+
+  </div>
+
+  
+  
+  <nav class="flex justify-between max-w-3xl border-t border-hellas-cool-grey/20 pt-8 mt-12 font-sans">
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;3-agentic-harness&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+        ← A New Hope: Agentic Harnesses
+      </a>
+    
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;5-closing&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline text-right">
+        Closing →
+      </a>
+    
+  </nav>
+  
+
+  <!-- Post Footer -->
+  
+  
+  
+  <div class="border-t border-hellas-cool-grey/20 pt-8 mt-8 max-w-3xl">
+    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;thunderbolt-ibverbs&#x2F;" class="inline-flex items-center text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+      </svg>
+      Back
+    </a>
+  </div>
+</article>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-hellas-black text-hellas-white py-12 border-t border-hellas-cool-grey/20">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 mb-4">
+          <p class="text-hellas-cool-grey mb-4 font-sans">Powering limitless intelligence</p>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Links</h3>
+          <ul class="space-y-2 font-sans">
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="hover:text-hellas-yellow transition duration-200">Home</a></li>
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="hover:text-hellas-yellow transition duration-200">Blog</a></li>
+            <li><a href="https://hellas.ai" class="hover:text-hellas-yellow transition duration-200">Main Site</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="https://twitter.com/hellasdotai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-twitter-white.svg" alt="Twitter" class="h-6 w-6">
+            </a>
+            <a href="https://discord.gg/qHqZyuAa3u" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+
+              <img src="https://blog.hellas.ai/socials/socials-discord-white.svg" alt="Discord" class="h-6 w-6">
+            </a>
+            <a href="https://t.me/hellasai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-telegram-white.svg" alt="Telegram" class="h-6 w-6">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-hellas-cool-grey/20 mt-8 pt-8 text-hellas-cool-grey text-sm font-sans">
+        <p>© 2026 Hellas.ai — All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

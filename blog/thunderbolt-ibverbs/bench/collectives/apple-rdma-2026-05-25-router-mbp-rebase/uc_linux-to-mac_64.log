@@ -1,0 +1,13 @@
+Result directory: /mnt/Home/src/blog/content/blog/thunderbolt-ibverbs/bench/collectives/apple-rdma-2026-05-25-router-mbp-rebase/uc_linux-to-mac_64
+copying 3 paths...
+copying path '/nix/store/pvrv84cna34hv55gq9g1l392ncldjzxm-uc_oneway.c' to 'ssh://router'...
+copying path '/nix/store/wc6j2l3k5qdjzwkvd27nb4v490qn0i9w-rdma-core-usb4-62.0' to 'ssh://router'...
+copying path '/nix/store/5jsl8zs6rl4nn1hdpmwvb8b20iyprdsh-uc-oneway' to 'ssh://router'...
+Using Linux HCA usb4_rdma0 and macOS HCA rdma_en3
+== linux-to-mac-size64-count64-depth1 port=18610 ==
+-- mac output --
+created QP qp_num=2336 actual_cap send_wr=1 recv_wr=1 send_sge=1 recv_sge=1
+tcp connect: Connection refused
+-- linux output --
+failed to open RDMA device usb4_rdma0
+linux-to-mac-size64-count64-depth1 failed: mac_rc=1 linux_rc=1

@@ -1,0 +1,383 @@
+<svg height="104" viewBox="-0.25 -0.25 28.5 6.5" width="456" xmlns="http://www.w3.org/2000/svg">
+<style>
+svg { color-scheme: light dark; } .spider { color: #111; } .drawable { color: #111; } .spider text, .drawable text { fill: currentColor !important; } .spider path, .spider line, .spider rect, .spider circle, .spider ellipse, .spider polyline, .spider polygon, .drawable path, .drawable line, .drawable rect, .drawable circle, .drawable ellipse, .drawable polyline, .drawable polygon { stroke: currentColor !important; } @media (prefers-color-scheme: dark) { .spider, .drawable { color: #f5f5f5; } }
+</style>
+<g>
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 6)"/>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 1)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(1, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+<g transform="translate(2, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+<g transform="translate(0, 1)">
+<g class="spider">
+<path d="M 1.1 1 L 1.5 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 3 0 L 2.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 3 2 L 2.6 2" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 1.9 1 L 1.5 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 0 C 2.25 0 2.25 1 1.9 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 2 C 2.25 2 2.25 1 1.9 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 1.1 0.8 L 1.1 1.2" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+<g transform="translate(0, 4)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(1, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+<g transform="translate(2, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+</g>
+<g transform="translate(3, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 0 1 L 0.4 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0 2 L 0.4 2" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0 4 L 0.4 4" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0 5 L 0.4 5" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 0 L 3 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 2 L 3 2" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 4 L 3 4" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 5 L 3 5" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 1 C 1.5 1 1.5 2 2.6 2" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 2 C 1.5 2 1.5 0 2.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 4 C 1.5 4 1.5 4 2.6 4" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 5 C 1.5 5 1.5 5 2.6 5" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+</g>
+<g transform="translate(6, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 1.6 0 L 2 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 1 0 1 0 1.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(2, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+<g transform="translate(3, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 1.6 0 L 2 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 1 0 1 0 1.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+<g transform="translate(0, 1)">
+<g class="drawable gate-nor">
+  <path d="M 0 1 L 1.15 1" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 0 3 L 1.15 3" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 3.95 2 L 5 2" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 0.8 0.55 C 1.35 1.35 1.35 2.65 0.8 3.45" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 1.05 0.55 C 1.85 0.9 2.7 1.05 3.55 2 C 2.7 2.95 1.85 3.1 1.05 3.45 C 1.52 2.55 1.52 1.45 1.05 0.55 Z" fill="none" stroke="black" stroke-width="0.05"/>
+  <circle cx="3.8" cy="2" r="0.2" fill="none" stroke="black" stroke-width="0.05"/>
+  <text x="2.25" y="2.18" text-anchor="middle" font-size="0.4">nor</text>
+</g>
+
+</g>
+</g>
+<g transform="translate(0, 5)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 1.6 0 L 2 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 1 0 1 0 1.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(2, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+<g transform="translate(3, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 1.6 0 L 2 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 1 0 1 0 1.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+</g>
+<g transform="translate(11, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 3 0 L 2.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 3 2 L 2.6 2" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 3 4 L 2.6 4" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 3 5 L 2.6 5" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 L 0 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 3 L 0 3" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 5 L 0 5" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 0 C 1.5 0 1.5 0 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 2 C 1.5 2 1.5 5 0.4 5" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 4 C 1.5 4 1.5 3 0.4 3" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 5 C 1.5 5 1.5 3 0.4 3" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+</g>
+<g transform="translate(14, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 1.6 0 L 2 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 1 0 1 0 1.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(2, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+<g transform="translate(3, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 1.6 0 L 2 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 1 0 1 0 1.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+<g transform="translate(0, 1)">
+<g class="drawable gate-nor">
+  <path d="M 0 1 L 1.15 1" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 0 3 L 1.15 3" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 3.95 2 L 5 2" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 0.8 0.55 C 1.35 1.35 1.35 2.65 0.8 3.45" fill="none" stroke="black" stroke-width="0.05"/>
+  <path d="M 1.05 0.55 C 1.85 0.9 2.7 1.05 3.55 2 C 2.7 2.95 1.85 3.1 1.05 3.45 C 1.52 2.55 1.52 1.45 1.05 0.55 Z" fill="none" stroke="black" stroke-width="0.05"/>
+  <circle cx="3.8" cy="2" r="0.2" fill="none" stroke="black" stroke-width="0.05"/>
+  <text x="2.25" y="2.18" text-anchor="middle" font-size="0.4">nor</text>
+</g>
+
+</g>
+</g>
+<g transform="translate(0, 5)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 1.6 0 L 2 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 1 0 1 0 1.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(2, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+<g transform="translate(3, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 1.6 0 L 2 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 1 0 1 0 1.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+</g>
+<g transform="translate(19, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0 3 L 0.4 3" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0 5 L 0.4 5" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 1 L 3 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 3 L 3 3" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 4 L 3 4" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 1.5 0 1.5 1 2.6 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 3 C 1.5 3 1.5 3 2.6 3" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 5 C 1.5 5 1.5 4 2.6 4" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+</g>
+<g transform="translate(22, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)"/>
+<g transform="translate(0, 1)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0 2 L 0.4 2" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 1 L 3 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 1.5 0 1.5 1 2.6 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 2 C 1.5 2 1.5 1 2.6 1" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(0, 3)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(1, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+<g transform="translate(2, 0)">
+<g class="spider">
+<path d="M 0 0 L 0.4 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.6 0 L 1 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 0 C 0.5 0 0.5 0 0.6 0" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+<g transform="translate(0, 5)"/>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+</g>
+<g transform="translate(25, 0)">
+<g transform="translate(0, 0)">
+<g transform="translate(0, 0)">
+<g class="spider">
+<path d="M 0 2 L 0.4 2" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0 4 L 0.4 4" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 2 L 3 2" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 2.6 4 L 3 4" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 2 C 1.5 2 1.5 4 2.6 4" fill="transparent" stroke="black" stroke-width="0.05"/>
+<path d="M 0.4 4 C 1.5 4 1.5 2 2.6 2" fill="transparent" stroke="black" stroke-width="0.05"/>
+</g>
+</g>
+<g transform="translate(0, 5)"/>
+</g>
+<g transform="translate(0, 6)"/>
+</g>
+</g>
+<style>
+
+.tp-cli-label { fill: #111; }
+@media (prefers-color-scheme: dark) {
+  .tp-cli-label { fill: #f5f5f5; }
+}
+
+</style>
+</svg>

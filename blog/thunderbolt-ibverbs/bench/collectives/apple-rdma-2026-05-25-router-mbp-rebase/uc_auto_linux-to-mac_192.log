@@ -1,0 +1,31 @@
+Result directory: /mnt/Home/src/blog/content/blog/thunderbolt-ibverbs/bench/collectives/apple-rdma-2026-05-25-router-mbp-rebase/uc_auto_linux-to-mac_192
+copying 0 paths...
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+== linux-to-mac-size192-count64-depth1 port=18610 ==
+-- mac output --
+created QP qp_num=2336 actual_cap send_wr=1 recv_wr=1 send_sge=1 recv_sge=1
+recv local_qpn=2336 remote_qpn=2304 size=192 count=64 depth=1 recv_posts=1 mtu=4096
+transitioning QP to RTS
+modify INIT ret=0 errno=0
+modify RTR ret=0 errno=0 dest_qpn=2304 sgid_index=1 dlid=0
+modify RTS ret=0 errno=0
+QP is RTS
+posting 1 receives
+posted receives
+check failed completed=1 wr_id=0 recv_slot=0 expected_seq=1 observed_seq=2 byte_len=192 off=0 got=0x02 want=0x01
+-- linux output --
+created QP qp_num=2304 actual_cap send_wr=1 recv_wr=1 send_sge=1 recv_sge=1
+listening on TCP port 18610
+send local_qpn=2304 remote_qpn=2336 size=192 count=64 depth=1 recv_posts=0 mtu=4096
+transitioning QP to RTS
+modify INIT ret=0 errno=0
+modify RTR ret=0 errno=0 dest_qpn=2336 sgid_index=1 dlid=3
+modify RTS ret=0 errno=0
+QP is RTS
+send progress done=42/64 delta=42 rate=0.06 Mbit/s elapsed=1.000 s
+send progress done=42/64 delta=0 rate=0.00 Mbit/s elapsed=2.000 s
+send progress done=42/64 delta=0 rate=0.00 Mbit/s elapsed=3.000 s
+send progress done=42/64 delta=0 rate=0.00 Mbit/s elapsed=4.000 s
+send progress done=42/64 delta=0 rate=0.00 Mbit/s elapsed=5.000 s
+send wc error wr_id=42 status=12 opcode=0
+linux-to-mac-size192-count64-depth1 failed: mac_rc=1 linux_rc=1

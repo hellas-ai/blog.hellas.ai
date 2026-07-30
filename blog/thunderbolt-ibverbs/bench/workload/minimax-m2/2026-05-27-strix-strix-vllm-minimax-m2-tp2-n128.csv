@@ -1,0 +1,4 @@
+run_id,model,transport,rdma_config,workload,iommu,num_requests,elapsed_s,requests_per_s,tokens_per_s
+20260527T143919Z,ayysasha/MiniMax-M2.7-AWQ-G32-STRIX-2H,rdma-4hca,qps2split1-seqs64,random64x16-n128,off,128,29.764,4.3005,344.04
+20260527T143514Z,ayysasha/MiniMax-M2.7-AWQ-G32-STRIX-2H,rdma-4hca,fastpath2-seqs64,random64x16-n128,off,128,30.987,4.1305,330.44
+20260527T152755Z,ayysasha/MiniMax-M2.7-AWQ-G32-STRIX-2H,tbnet,tcp-over-thunderbolt,random64x16-n128,off,128,31.987,4.0017,320.13

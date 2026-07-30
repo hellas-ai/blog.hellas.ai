@@ -1,0 +1,420 @@
+copying 0 paths...
+copying 0 paths...
+== linux module load cycle 1/1 ==
+peer 1 backend=apple rails=1
+  rail=0x0 route=0x2 local=0 remote=0 path=64087 link_speed=20Gb/s link_width=0x2 active=1 data_ready=1 state=tunnel_enabled negotiated=0 ready_sent=0 remote_ready=0 attempts=0 last_error=0 local_out=9 local_tx=2 local_rx=2 remote_rail=0x0 remote_out=-1 remote_tx=-1 remote_rx=-1
+    data_tx_enqueued=0 data_tx_posted=0 data_tx_completed=0 data_tx_credit_stalls=0 data_tx_credit_received=0 tx_credits=0/0
+    path_cfg tx_flags=0x2 rx_flags=0x6 e2e=1 wire_flags=0x3 tx_ring=1024 rx_ring=1024 sof_mask=0x2 eof_mask=0xc
+    data_rx_completed=0 data_rx_credit_sent=0 data_rx_credit_send_error=0 data_rx_repost_failed=0 rx_credit_pending=0
+hca_id:	usb4_rdma4
+	transport:			InfiniBand (0)
+	node_guid:			0300:5442:5752:4253
+	sys_image_guid:			0300:5442:5752:4253
+	vendor_id:			0x1d6b
+	vendor_part_id:			21570
+	hw_ver:				0x1
+	phys_port_cnt:			1
+	max_mr_size:			0xffffffffffffffff
+	page_size_cap:			0x40201000
+	max_qp:				1
+	max_qp_wr:			1024
+	device_cap_flags:		0x00000020
+					CHANGE_PHY_PORT
+	max_sge:			4
+	max_sge_rd:			4
+	max_cq:				256
+	max_cqe:			4096
+	max_mr:				1024
+	max_pd:				256
+	max_qp_rd_atom:			0
+	max_ee_rd_atom:			0
+	max_res_rd_atom:		0
+	max_qp_init_rd_atom:		0
+	max_ee_init_rd_atom:		0
+	atomic_cap:			ATOMIC_NONE (0)
+	max_ee:				0
+	max_rdd:			0
+	max_mw:				0
+	max_raw_ipv6_qp:		0
+	max_raw_ethy_qp:		0
+	max_mcast_grp:			0
+	max_mcast_qp_attach:		0
+	max_total_mcast_qp_attach:	0
+	max_ah:				0
+	max_fmr:			0
+	max_srq:			0
+	max_pkeys:			1
+	local_ca_ack_delay:		15
+	general_odp_caps:
+	rc_odp_caps:
+					NO SUPPORT
+	uc_odp_caps:
+					NO SUPPORT
+	ud_odp_caps:
+					NO SUPPORT
+	xrc_odp_caps:
+					NO SUPPORT
+	completion_timestamp_mask not supported
+	core clock not supported
+	device_cap_flags_ex:		0x20
+	tso_caps:
+		max_tso:			0
+	rss_caps:
+		max_rwq_indirection_tables:			0
+		max_rwq_indirection_table_size:			0
+		rx_hash_function:				0x0
+		rx_hash_fields_mask:				0x0
+	max_wq_type_rq:			0
+	packet_pacing_caps:
+		qp_rate_limit_min:	0kbps
+		qp_rate_limit_max:	0kbps
+	tag matching not supported
+	num_comp_vectors:		16
+		port:	1
+			state:			PORT_ACTIVE (4)
+			max_mtu:		4096 (5)
+			active_mtu:		4096 (5)
+			sm_lid:			0
+			port_lid:		0
+			port_lmc:		0x00
+			link_layer:		Ethernet
+			max_msg_sz:		0x1000000
+			port_cap_flags:		0x00000000
+			port_cap_flags2:	0x0000
+			max_vl_num:		1 (1)
+			bad_pkey_cntr:		0x0
+			qkey_viol_cntr:		0x0
+			sm_sl:			0
+			pkey_tbl_len:		1
+			gid_tbl_len:		8
+			subnet_timeout:		0
+			init_type_reply:	0
+			active_width:		4X (2)
+			active_speed:		10.0 Gbps (8)
+			phys_state:		LINK_UP (5)
+			GID[  0]:		fe80::5835:18ff:fedb:8d52, RoCE v2
+			GID[  1]:		::ffff:10.0.3.44, RoCE v2
+
+Using Linux HCA usb4_rdma4 and macOS HCA rdma_en3
+en3: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 9000
+	options=460<TSO4,TSO6,CHANNEL_IO>
+	ether 36:26:af:6d:62:08
+	inet 10.0.3.3 netmask 0xffffff00 broadcast 10.0.3.255
+	media: autoselect <full-duplex>
+	status: active
+			state:			PORT_ACTIVE (4)
+			GID[  0]:		fe80::3426:afff:fe6d:6208
+			GID[  1]:		::ffff:10.0.3.3
+== mac0-linux1 barrier ==
+-- mac output (rank 0) --
+rank 0 entering barrier
+rank 0 exited barrier
+rank 0: post-barrier all_sum OK (3)
+-- linux output (rank 1) --
+[jaccl] Connection attempt 0 waiting 1000 ms
+rank 1 entering barrier
+rank 1 exited barrier
+rank 1: post-barrier all_sum OK (3)
+== mac0-linux1 allreduce ==
+-- mac output (rank 0) --
+# JACCL All-Reduce Benchmark
+# Ranks:   2
+# Dtype:   float32
+# Warmup:  3 iters
+# Timed:   20 iters
+# Sizes:   64 KB .. 4 MB (x2)
+# Barrier between sizes: yes
+#
+#    size            count        type     time (us)       algo BW        bus BW     check
+#   (bytes)        (elems)                                  (GB/s)        (GB/s)          
+65536                16384     float32        3909.7          0.02          0.02        OK
+131072               32768     float32        3807.3          0.03          0.03        OK
+262144               65536     float32        4194.1          0.06          0.06        OK
+524288              131072     float32        5145.6          0.10          0.10        OK
+1048576             262144     float32        5907.8          0.18          0.18        OK
+2097152             524288     float32        7729.6          0.27          0.27        OK
+4194304            1048576     float32       11590.7          0.36          0.36        OK
+# Done.
+-- linux output (rank 1) --
+[jaccl] Connection attempt 0 waiting 1000 ms
+== linux0-mac1 barrier ==
+-- mac output (rank 1) --
+rank 1 entering barrier
+rank 1 exited barrier
+rank 1: post-barrier all_sum OK (3)
+-- linux output (rank 0) --
+rank 0 entering barrier
+rank 0 exited barrier
+rank 0: post-barrier all_sum OK (3)
+== linux0-mac1 allreduce ==
+-- mac output (rank 1) --
+libc++abi: terminating due to uncaught exception of type std::runtime_error: [jaccl] Recv failed with errno=54
+-- linux output (rank 0) --
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+-- linux thunderbolt_ibverbs summary --
+profile: mac_compat
+native_enabled: 0
+apple_enabled: 1
+rc_supported: 0
+uc_supported: 1
+native_control: off
+native_same_peer_multicable: off
+native_legacy_ambiguous_limited: 0
+tbnet_identity: stock_proxy
+tbnet_identity_state: 0x7
+tbnet_identity_tbnet: thunderbolt0
+tbnet_identity_gid: ardma0
+tbnet_identity_proxy_ipv4: 10.0.3.44
+tbnet_identity_minimal_e2e: 0
+tbnet_identity_minimal_apple_only: 1
+tbnet_identity_minimal_neighbor_seen: 0
+tbnet_identity_rx_handler: 1
+tbnet_identity_minimal_started: 0
+tbnet_identity_minimal_login_rx: 0
+tbnet_identity_minimal_login_tx: 0
+tbnet_identity_minimal_logout_rx: 0
+tbnet_identity_minimal_logout_tx: 0
+tbnet_identity_minimal_status_rx: 0
+tbnet_identity_minimal_status_tx: 0
+tbnet_identity_minimal_packet_rx: 0
+tbnet_identity_minimal_packet_tx_posted: 0
+tbnet_identity_minimal_packet_tx: 0
+tbnet_identity_minimal_packet_tx_errors: 0
+tbnet_identity_minimal_path_errors: 0
+tbnet_identity_arp_requests: 1
+tbnet_identity_arp_replies: 1
+tbnet_identity_arp_ignored: 0
+tbnet_identity_arp_errors: 0
+tbnet_policy: allow
+native_service_count: 0
+apple_service_registered: 1
+services_registered: 1
+allocate_rings: 1
+start_rings: 1
+negotiate_native: 0
+enable_tunnels: 1
+apple_tunnels_wait_tbnet: 0
+apple_tunnels_pending: 0
+native_data: 1
+apple_data: 1
+native_fragment_striping: 0
+register_verbs: 1
+verbs_registered: 1
+verbs_ucontexts: 0
+verbs_pds: 0
+verbs_cqs: 0
+verbs_qps: 0
+verbs_mrs: 0
+verbs_recv_wqes: 0
+data_wr_send: 348
+data_wr_op_send: 348
+data_wr_op_send_imm: 0
+data_wr_op_write: 0
+data_wr_op_write_imm: 0
+data_wr_op_unsupported: 0
+data_wr_live: 0
+data_wr_no_path: 0
+data_wr_no_recv_credit: 0
+data_wr_copied: 348
+data_wr_zcopy: 0
+data_wr_zcopy_fallback: 0
+data_wr_zcopy_fallback_striping: 0
+data_wr_zcopy_fallback_unsafe_sge: 0
+data_wr_copy_error: 0
+data_wr_path_send: 51468
+data_wr_path_send_error: 0
+data_wr_timeout: 0
+apple_sq_queued: 348
+apple_sq_dequeued: 348
+apple_sq_full: 0
+apple_sq_flushed: 0
+data_tx_accepted: 348
+data_tx_posted: 51468
+data_tx_completed: 51468
+data_tx_canceled: 0
+data_tx_errors: 0
+data_tx_credit_stalls: 0
+data_tx_credit_received: 0
+data_rx_completed: 51466
+data_rx_credit_sent: 0
+data_rx_credit_send_error: 0
+data_rx_repost_failed: 0
+data_rx_bad_frame: 0
+data_rx_bad_header: 0
+data_rx_send: 347
+data_rx_op_send: 347
+data_rx_op_send_imm: 0
+data_rx_op_write: 0
+data_rx_op_write_imm: 0
+data_rx_ack: 0
+data_tx_read_ack_ok: 0
+data_tx_read_ack_retry: 0
+data_tx_read_ack_error: 0
+data_rx_read_ack_ok: 0
+data_rx_read_ack_retry: 0
+data_rx_read_ack_error: 0
+data_read_resp_retransmit: 0
+data_read_resp_drop: 0
+data_rx_read_resp_duplicate: 0
+data_rx_read_resp_gap: 0
+data_rx_read_resp_remote_error: 0
+data_rx_read_resp_bad_header: 0
+data_rx_read_resp_copy_error: 0
+data_rx_read_resp_short: 0
+data_rx_read_req_no_access: 0
+data_rx_read_req_no_mr: 0
+data_rx_read_req_mr_access: 0
+data_rx_read_req_too_large: 0
+data_rx_read_req_bad_iova: 0
+data_rx_read_req_alloc_error: 0
+data_rx_read_req_resp_busy: 0
+data_rx_read_req_resp_error: 0
+data_rx_no_qp: 0
+data_rx_bad_peer: 0
+data_rx_unconnected_qp: 0
+data_rx_qp_error: 0
+data_rx_no_recv: 0
+data_rx_copy_error: 0
+data_rx_active_timeout: 0
+data_rx_reorder_buffered: 42
+data_rx_reorder_delivered: 42
+data_rx_reorder_dropped: 0
+data_rx_reorder_timeout: 0
+data_rx_reorder_window: 0
+data_rx_pending_discarded: 0
+apple_rx_sof: 51466
+apple_rx_eof3: 347
+apple_rx_eof_other: 51119
+apple_rx_sof_while_active: 51118
+apple_rx_no_sof_when_idle: 0
+apple_rx_eof_without_active: 0
+apple_rx_len_overrun: 0
+data_cq_overflow: 0
+-- linux thunderbolt_ibverbs peers --
+peer 1 backend=apple rails=1
+  rail=0x0 route=0x2 local=0 remote=0 path=64087 link_speed=20Gb/s link_width=0x2 active=1 data_ready=1 state=tunnel_enabled negotiated=0 ready_sent=0 remote_ready=0 attempts=0 last_error=0 local_out=9 local_tx=2 local_rx=2 remote_rail=0x0 remote_out=-1 remote_tx=-1 remote_rx=-1
+    data_tx_enqueued=51468 data_tx_posted=51468 data_tx_completed=51468 data_tx_credit_stalls=0 data_tx_credit_received=0 tx_credits=0/0
+    path_cfg tx_flags=0x2 rx_flags=0x6 e2e=1 wire_flags=0x3 tx_ring=1024 rx_ring=1024 sof_mask=0x2 eof_mask=0xc
+    data_rx_completed=51466 data_rx_credit_sent=0 data_rx_credit_send_error=0 data_rx_repost_failed=0 rx_credit_pending=0
+-- linux dmesg tail --
+[280248.295164] WARNING: drivers/gpu/drm/amd/amdgpu/../display/dc/dce/dce_aux.c:393 at dce_aux_transfer_raw+0x73a/0x770 [amdgpu], CPU#11: .fwupd-wrapped/7416
+[280248.295510] Modules linked in: thunderbolt_ibverbs(O) thunderbolt_net thunderbolt cdc_mbim cdc_wdm cdc_ncm apple_mfi_fastcharge joydev mousedev input_leds hid_generic rndis_host cdc_ether usbhid usbnet mii sd_mod bluetooth ecdh_generic ecc nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib veth nft_flow_offload overlay nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject af_packet bridge stp llc dummy cfg80211 rfkill nft_masq nft_nat nft_ct nft_chain_nat nls_iso8859_1 nls_cp437 vfat fat edac_mce_amd edac_core amd_atl intel_rapl_msr intel_rapl_common snd_sof_amd_acp70 snd_sof_amd_acp63 snd_sof_amd_vangogh snd_sof_amd_rembrandt snd_sof_amd_renoir snd_sof_amd_acp snd_sof_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils snd_pci_ps snd_soc_acpi_amd_match snd_soc_acpi_amd_sdca_quirks snd_amd_sdw_acpi soundwire_amd soundwire_generic_allocation soundwire_bus snd_soc_sdca snd_hda_codec_alc269 snd_hda_codec_realtek_lib hid kvm_amd snd_hda_codec_atihdmi snd_hda_scodec_component snd_hda_codec_generic spd5118 snd_hda_codec_hdmi
+[280248.295539]  snd_soc_core kvm snd_hda_intel snd_compress ac97_bus snd_pcm_dmaengine snd_hda_codec snd_rpl_pci_acp6x snd_acp_pci snd_hda_core snd_amd_acpi_mach snd_intel_dspcfg snd_acp_legacy_common irqbypass snd_intel_sdw_acpi snd_pci_acp6x ghash_clmulni_intel snd_hwdep sp5100_tco aesni_intel snd_pcm rapl watchdog snd_pci_acp5x snd_timer snd_rn_pci_acp3x snd snd_acp_config i2c_piix4 snd_soc_acpi ccp k10temp i2c_smbus soundcore rtc_cmos snd_pci_acp3x mlx5_ib mlx5_fwctl r8127(O) fwctl evdev tiny_power_button mac_hid thermal button sch_fq_codel ib_uverbs nf_nat_ftp nf_conntrack_ftp nf_flow_table_inet wireguard nf_flow_table nf_nat ib_core libcurve25519 nf_conntrack libchacha20poly1305 libchacha atkbd libpoly1305 amdxdna libps2 ip6_udp_tunnel nf_defrag_ipv6 tls serio udp_tunnel loop nf_defrag_ipv4 tcp_bbr fuse ryzen_smu(O) vivaldi_fmap configfs dmi_sysfs ahci libahci nvme libata nvme_core nvme_keyring nvme_auth xhci_pci scsi_mod amdgpu xhci_hcd hkdf scsi_common zfs(PO) mlx5_core ixgbe crc16 amdxcp i2c_algo_bit
+[280248.295573]  drm_ttm_helper ttm drm_exec drm_panel_backlight_quirks gpu_sched drm_suballoc_helper mdio mdio_devres of_mdio video fixed_phy fwnode_mdio nft_compat wmi libphy x_tables drm_buddy vfio_iommu_type1 igc mdio_bus drm_display_helper vfio nf_tables libie_fwlog xfrm_algo dm_mod dca iommufd mlxfw spl(O) led_class pci_hyperv_intf ptp cec pps_core nfnetlink efivarfs autofs4 [last unloaded: thunderbolt_ibverbs(O)]
+[280248.295590] CPU: 11 UID: 0 PID: 7416 Comm: .fwupd-wrapped Tainted: P S   U  W  O        7.0.5 #1-NixOS PREEMPT(lazy) 
+[280248.295592] Tainted: [P]=PROPRIETARY_MODULE, [S]=CPU_OUT_OF_SPEC, [U]=USER, [W]=WARN, [O]=OOT_MODULE
+[280248.295593] Hardware name: Default string Default string/Default string, BIOS FMA01_P5C9V10 07/11/2024
+[280248.295594] RIP: 0010:dce_aux_transfer_raw+0x73a/0x770 [amdgpu]
+[280248.295868] Code: b8 04 00 00 00 41 89 45 00 bd ff ff ff ff e9 93 fd ff ff 3c 01 19 c0 83 e0 c0 83 c0 50 e9 76 f9 ff ff b8 02 00 00 00 eb dc 90 <0f> 0b 90 b8 03 00 00 00 eb d1 b8 03 00 00 00 eb ca 41 c7 45 00 05
+[280248.295869] RSP: 0018:ffffcdd267f1bbd8 EFLAGS: 00010246
+[280248.295870] RAX: 0000000060000000 RBX: ffff8c2cfa9d5480 RCX: 0000000060000000
+[280248.295871] RDX: ffffcdd244695130 RSI: 000000000000544c RDI: ffff8c2cd8700000
+[280248.295872] RBP: ffff8c2cfd56ad00 R08: ffffffffc29d0410 R09: 00000000000001dc
+[280248.295873] R10: ffffffffa6a5f680 R11: ffffcdd267f1b900 R12: ffffcdd267f1bc48
+[280248.295873] R13: ffffcdd267f1bc44 R14: 00000000ffffff92 R15: ffff8c2cfd56adf8
+[280248.295874] FS:  00007194688b1c80(0000) GS:ffff8c3b3aa62000(0000) knlGS:0000000000000000
+[280248.295875] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[280248.295875] CR2: 0000703fca0e0000 CR3: 00000001d3597000 CR4: 0000000000f50ef0
+[280248.295876] PKRU: 55555554
+[280248.295877] Call Trace:
+[280248.295877]  <TASK>
+[280248.295879]  dm_dp_aux_transfer+0x11a/0x290 [amdgpu]
+[280248.296148]  drm_dp_dpcd_access+0xb1/0x140 [drm_display_helper]
+[280248.296157]  drm_dp_dpcd_read+0xd4/0x120 [drm_display_helper]
+[280248.296164]  auxdev_read_iter+0xa8/0x1a0 [drm_display_helper]
+[280248.296171]  vfs_read+0x26b/0x390
+[280248.296175]  ksys_read+0x73/0xf0
+[280248.296176]  do_syscall_64+0x10f/0x1540
+[280248.296178]  ? __x64_sys_openat+0x61/0xa0
+[280248.296180]  ? do_syscall_64+0x14e/0x1540
+[280248.296181]  ? ksys_read+0xcd/0xf0
+[280248.296182]  ? do_syscall_64+0x14e/0x1540
+[280248.296183]  ? irqentry_exit+0x70/0x5f0
+[280248.296185]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[280248.296186] RIP: 0033:0x71946a655922
+[280248.296191] Code: 08 0f 85 51 36 ff ff 49 89 fb 48 89 f0 48 89 d7 48 89 ce 4c 89 c2 4d 89 ca 4c 8b 44 24 08 4c 8b 4c 24 10 4c 89 5c 24 08 0f 05 <c3> 66 2e 0f 1f 84 00 00 00 00 00 66 2e 0f 1f 84 00 00 00 00 00 66
+[280248.296191] RSP: 002b:00007fff7c88bdf8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+[280248.296192] RAX: ffffffffffffffda RBX: 00005f7da96fca00 RCX: 000071946a655922
+[280248.296193] RDX: 000000000000000d RSI: 00005f7da9557fd0 RDI: 000000000000000e
+[280248.296194] RBP: 00007fff7c88be20 R08: 0000000000000000 R09: 0000000000000000
+[280248.296195] R10: 0000000000000000 R11: 0000000000000246 R12: 00005f7da98bbb10
+[280248.296195] R13: 000000000000000d R14: 00005f7da9714700 R15: 0000000000000000
+[280248.296197]  </TASK>
+[280248.296197] ---[ end trace 0000000000000000 ]---
+[280248.298970] amdgpu 0000:ca:00.0: [drm] REG_WAIT timeout 10us * 240 tries - get_channel_status line:350
+[280248.298986] ------------[ cut here ]------------
+[280248.298987] WARNING: drivers/gpu/drm/amd/amdgpu/../display/dc/dce/dce_aux.c:393 at dce_aux_transfer_raw+0x73a/0x770 [amdgpu], CPU#11: .fwupd-wrapped/7416
+[280248.299332] Modules linked in: thunderbolt_ibverbs(O) thunderbolt_net thunderbolt cdc_mbim cdc_wdm cdc_ncm apple_mfi_fastcharge joydev mousedev input_leds hid_generic rndis_host cdc_ether usbhid usbnet mii sd_mod bluetooth ecdh_generic ecc nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib veth nft_flow_offload overlay nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject af_packet bridge stp llc dummy cfg80211 rfkill nft_masq nft_nat nft_ct nft_chain_nat nls_iso8859_1 nls_cp437 vfat fat edac_mce_amd edac_core amd_atl intel_rapl_msr intel_rapl_common snd_sof_amd_acp70 snd_sof_amd_acp63 snd_sof_amd_vangogh snd_sof_amd_rembrandt snd_sof_amd_renoir snd_sof_amd_acp snd_sof_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils snd_pci_ps snd_soc_acpi_amd_match snd_soc_acpi_amd_sdca_quirks snd_amd_sdw_acpi soundwire_amd soundwire_generic_allocation soundwire_bus snd_soc_sdca snd_hda_codec_alc269 snd_hda_codec_realtek_lib hid kvm_amd snd_hda_codec_atihdmi snd_hda_scodec_component snd_hda_codec_generic spd5118 snd_hda_codec_hdmi
+[280248.299362]  snd_soc_core kvm snd_hda_intel snd_compress ac97_bus snd_pcm_dmaengine snd_hda_codec snd_rpl_pci_acp6x snd_acp_pci snd_hda_core snd_amd_acpi_mach snd_intel_dspcfg snd_acp_legacy_common irqbypass snd_intel_sdw_acpi snd_pci_acp6x ghash_clmulni_intel snd_hwdep sp5100_tco aesni_intel snd_pcm rapl watchdog snd_pci_acp5x snd_timer snd_rn_pci_acp3x snd snd_acp_config i2c_piix4 snd_soc_acpi ccp k10temp i2c_smbus soundcore rtc_cmos snd_pci_acp3x mlx5_ib mlx5_fwctl r8127(O) fwctl evdev tiny_power_button mac_hid thermal button sch_fq_codel ib_uverbs nf_nat_ftp nf_conntrack_ftp nf_flow_table_inet wireguard nf_flow_table nf_nat ib_core libcurve25519 nf_conntrack libchacha20poly1305 libchacha atkbd libpoly1305 amdxdna libps2 ip6_udp_tunnel nf_defrag_ipv6 tls serio udp_tunnel loop nf_defrag_ipv4 tcp_bbr fuse ryzen_smu(O) vivaldi_fmap configfs dmi_sysfs ahci libahci nvme libata nvme_core nvme_keyring nvme_auth xhci_pci scsi_mod amdgpu xhci_hcd hkdf scsi_common zfs(PO) mlx5_core ixgbe crc16 amdxcp i2c_algo_bit
+[280248.299397]  drm_ttm_helper ttm drm_exec drm_panel_backlight_quirks gpu_sched drm_suballoc_helper mdio mdio_devres of_mdio video fixed_phy fwnode_mdio nft_compat wmi libphy x_tables drm_buddy vfio_iommu_type1 igc mdio_bus drm_display_helper vfio nf_tables libie_fwlog xfrm_algo dm_mod dca iommufd mlxfw spl(O) led_class pci_hyperv_intf ptp cec pps_core nfnetlink efivarfs autofs4 [last unloaded: thunderbolt_ibverbs(O)]
+[280248.299413] CPU: 11 UID: 0 PID: 7416 Comm: .fwupd-wrapped Tainted: P S   U  W  O        7.0.5 #1-NixOS PREEMPT(lazy) 
+[280248.299415] Tainted: [P]=PROPRIETARY_MODULE, [S]=CPU_OUT_OF_SPEC, [U]=USER, [W]=WARN, [O]=OOT_MODULE
+[280248.299416] Hardware name: Default string Default string/Default string, BIOS FMA01_P5C9V10 07/11/2024
+[280248.299417] RIP: 0010:dce_aux_transfer_raw+0x73a/0x770 [amdgpu]
+[280248.299724] Code: b8 04 00 00 00 41 89 45 00 bd ff ff ff ff e9 93 fd ff ff 3c 01 19 c0 83 e0 c0 83 c0 50 e9 76 f9 ff ff b8 02 00 00 00 eb dc 90 <0f> 0b 90 b8 03 00 00 00 eb d1 b8 03 00 00 00 eb ca 41 c7 45 00 05
+[280248.299726] RSP: 0018:ffffcdd267f1bbd8 EFLAGS: 00010246
+[280248.299727] RAX: 0000000060000000 RBX: ffff8c2cfa9d5480 RCX: 0000000060000000
+[280248.299728] RDX: ffffcdd244695130 RSI: 000000000000544c RDI: ffff8c2cd8700000
+[280248.299729] RBP: ffff8c2cfd56ad00 R08: ffffffffc29d0410 R09: 00000000000001dc
+[280248.299730] R10: ffffffffa6a5f680 R11: ffffcdd267f1b900 R12: ffffcdd267f1bc48
+[280248.299731] R13: ffffcdd267f1bc44 R14: 00000000ffffff92 R15: ffff8c2cfd56adf8
+[280248.299732] FS:  00007194688b1c80(0000) GS:ffff8c3b3aa62000(0000) knlGS:0000000000000000
+[280248.299733] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[280248.299734] CR2: 0000703fca0e0000 CR3: 00000001d3597000 CR4: 0000000000f50ef0
+[280248.299735] PKRU: 55555554
+[280248.299736] Call Trace:
+[280248.299737]  <TASK>
+[280248.299739]  dm_dp_aux_transfer+0x11a/0x290 [amdgpu]
+[280248.300086]  drm_dp_dpcd_access+0xb1/0x140 [drm_display_helper]
+[280248.300097]  drm_dp_dpcd_read+0xd4/0x120 [drm_display_helper]
+[280248.300107]  auxdev_read_iter+0xa8/0x1a0 [drm_display_helper]
+[280248.300117]  vfs_read+0x26b/0x390
+[280248.300122]  ksys_read+0x73/0xf0
+[280248.300123]  do_syscall_64+0x10f/0x1540
+[280248.300126]  ? __x64_sys_openat+0x61/0xa0
+[280248.300129]  ? do_syscall_64+0x14e/0x1540
+[280248.300131]  ? ksys_read+0xcd/0xf0
+[280248.300132]  ? do_syscall_64+0x14e/0x1540
+[280248.300134]  ? irqentry_exit+0x70/0x5f0
+[280248.300136]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[280248.300138] RIP: 0033:0x71946a655922
+[280248.300144] Code: 08 0f 85 51 36 ff ff 49 89 fb 48 89 f0 48 89 d7 48 89 ce 4c 89 c2 4d 89 ca 4c 8b 44 24 08 4c 8b 4c 24 10 4c 89 5c 24 08 0f 05 <c3> 66 2e 0f 1f 84 00 00 00 00 00 66 2e 0f 1f 84 00 00 00 00 00 66
+[280248.300145] RSP: 002b:00007fff7c88bdf8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+[280248.300147] RAX: ffffffffffffffda RBX: 00005f7da96fca00 RCX: 000071946a655922
+[280248.300148] RDX: 000000000000000d RSI: 00005f7da9557fd0 RDI: 000000000000000e
+[280248.300148] RBP: 00007fff7c88be20 R08: 0000000000000000 R09: 0000000000000000
+[280248.300149] R10: 0000000000000000 R11: 0000000000000246 R12: 00005f7da98bbb10
+[280248.300150] R13: 000000000000000d R14: 00005f7da9714700 R15: 0000000000000000
+[280248.300153]  </TASK>
+[280248.300153] ---[ end trace 0000000000000000 ]---
+[280281.179958] thunderbolt_ibverbs: unregistered per-rail ib_device peer=1 rail=0
+[280281.181035] thunderbolt_ibverbs: peer 1 destroyed backend=apple
+[280281.181106] thunderbolt_ibverbs: unloaded
+[280281.265121] thunderbolt_ibverbs: armed TBnet ARP proxy on thunderbolt0 for 10.0.3.44 via ardma0
+[280281.265132] thunderbolt_ibverbs: TBnet identity uses stock ThunderboltIP with RDMA GID proxying tbnet=thunderbolt0 gid=ardma0
+[280281.265138] thunderbolt_ibverbs: backend apple-fa57 rc=0 uc=1 tbnet_identity=1
+[280281.265138] thunderbolt_ibverbs: core ready profile=mac_compat rc=0 uc=1
+[280281.265160] thunderbolt_ibverbs: peer 1 created backend=apple
+[280281.266425] thunderbolt_ibverbs: allocated rings service id=1 native_lane=0 tx_hop=2 rx_hop=2 out_hop=9
+[280281.266642] thunderbolt_ibverbs: started rings service id=1 native_lane=0 tx_hop=2 rx_hop=2
+[280281.266726] thunderbolt_ibverbs: enabled Apple data path service route=0x2 tx_path=9 rx_path=9 tx_hop=2 rx_hop=2
+[280281.266727] thunderbolt_ibverbs: bound apple service id=1 key=\xff\xff\xff\xff\xff\xffAD native_lane=0 route=0x2 link_speed=20Gb/s width=0x2 rail=0x57c2d9aa path_id=64087
+[280281.266744] thunderbolt_ibverbs: Thunderbolt service binding enabled
+[280281.267063] thunderbolt_ibverbs: registered apple ib_device usb4_rdma4 rail=peer1/0 domain=0 guid=0300544257524253
+[280281.267065] thunderbolt_ibverbs: loaded compat=auto profile=mac_compat resolved_profile=mac_compat tbnet=allow tbnet_identity=stock_proxy tbnet_identity_minimal_e2e=0 tbnet_identity_minimal_apple_only=1 lanes=1 native_control=off native_data=1 apple_data=1 native_fragment_striping=0
+[280308.182941] thunderbolt_ibverbs: unregistered per-rail ib_device peer=1 rail=0
+[280308.184146] thunderbolt_ibverbs: peer 1 destroyed backend=apple
+[280308.184232] thunderbolt_ibverbs: unloaded
+[280308.258863] thunderbolt_ibverbs: armed TBnet ARP proxy on thunderbolt0 for 10.0.3.44 via ardma0
+[280308.258875] thunderbolt_ibverbs: TBnet identity uses stock ThunderboltIP with RDMA GID proxying tbnet=thunderbolt0 gid=ardma0
+[280308.258880] thunderbolt_ibverbs: backend apple-fa57 rc=0 uc=1 tbnet_identity=1
+[280308.258881] thunderbolt_ibverbs: core ready profile=mac_compat rc=0 uc=1
+[280308.258908] thunderbolt_ibverbs: peer 1 created backend=apple
+[280308.260256] thunderbolt_ibverbs: allocated rings service id=1 native_lane=0 tx_hop=2 rx_hop=2 out_hop=9
+[280308.260480] thunderbolt_ibverbs: started rings service id=1 native_lane=0 tx_hop=2 rx_hop=2
+[280308.260562] thunderbolt_ibverbs: enabled Apple data path service route=0x2 tx_path=9 rx_path=9 tx_hop=2 rx_hop=2
+[280308.260563] thunderbolt_ibverbs: bound apple service id=1 key=\xff\xff\xff\xff\xff\xffAD native_lane=0 route=0x2 link_speed=20Gb/s width=0x2 rail=0x57c2d9aa path_id=64087
+[280308.260579] thunderbolt_ibverbs: Thunderbolt service binding enabled
+[280308.260861] thunderbolt_ibverbs: registered apple ib_device usb4_rdma4 rail=peer1/0 domain=0 guid=0300544257524253
+[280308.260863] thunderbolt_ibverbs: loaded compat=auto profile=mac_compat resolved_profile=mac_compat tbnet=allow tbnet_identity=stock_proxy tbnet_identity_minimal_e2e=0 tbnet_identity_minimal_apple_only=1 lanes=1 native_control=off native_data=1 apple_data=1 native_fragment_striping=0
+linux0-mac1 allreduce failed: mac_rc=255 linux_rc=255

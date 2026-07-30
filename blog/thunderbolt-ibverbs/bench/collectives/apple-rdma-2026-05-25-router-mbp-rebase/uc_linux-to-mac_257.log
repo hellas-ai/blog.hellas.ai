@@ -1,0 +1,4 @@
+Result directory: /mnt/Home/src/blog/content/blog/thunderbolt-ibverbs/bench/collectives/apple-rdma-2026-05-25-router-mbp-rebase/uc_linux-to-mac_257
+copying 0 paths...
+Using Linux HCA usb4_rdma0 and macOS HCA rdma_en3
+== linux-to-mac-size257-count64-depth1 port=18610 ==

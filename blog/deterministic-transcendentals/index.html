@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" class="dark:bg-hellas-black bg-hellas-white">
+
+<head>
+  
+  
+  <!-- HTML Meta Tags -->
+  <title>Deterministic transcendental functions</title>
+  <meta name="description" content="Overview of transcendental function implementations">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <link rel="stylesheet" type="text/css" href="https://blog.hellas.ai/style.css">
+  <link rel="alternate" type="application/atom+xml" title="Hellas Blog Atom Feed" href="https://blog.hellas.ai/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="Hellas Blog RSS Feed" href="https://blog.hellas.ai/rss.xml">
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Deterministic transcendental functions">
+  <meta property="og:description" content="Overview of transcendental function implementations">
+  <meta property="og:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="hellas.ai">
+  <meta property="twitter:url" content="https:&#x2F;&#x2F;blog.hellas.ai">
+  <meta name="twitter:title" content="Deterministic transcendental functions">
+  <meta name="twitter:description" content="Overview of transcendental function implementations">
+  <meta name="twitter:image" content="https://blog.hellas.ai/social_preview.jpg">
+
+  <!-- e.g. for safari tab bar -->
+  <meta name="theme-color" content="#1C1C1C" />
+
+  <!-- MathJax for LaTeX support -->
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Mobile menu toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+    });
+  </script>
+ 
+<style>
+    .prose pre {
+        min-width: 120%;
+        max-width: 120%;
+    }
+
+    .prose pre code {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+</style>
+
+</head>
+
+<body class="dark:bg-hellas-black bg-hellas-white dark:text-hellas-white text-hellas-black flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30">
+    <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="flex items-center">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_Black.svg" alt="Hellas" class="h-8 dark:hidden">
+        <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 hidden dark:block">
+      </a>
+      <nav class="hidden md:flex space-x-8 font-sans">
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Home</a>
+        <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200">Blog</a>
+        <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200">Main Site</a>
+      </nav>
+      <div class="md:hidden">
+        <button id="mobile-menu-button" type="button" class="text-hellas-cool-grey">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+      <!-- Mobile menu, hidden by default -->
+      <div id="mobile-menu" class="hidden fixed top-[70px] right-0 left-0 bg-hellas-white dark:bg-hellas-black border-b border-hellas-cool-grey/20 dark:border-hellas-cool-grey/30 md:hidden">
+        <nav class="container mx-auto px-4 py-4 flex flex-col space-y-4 font-sans">
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Home</a>
+          <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Blog</a>
+          <a href="https://hellas.ai" class="text-lg hover:text-hellas-yellow transition duration-200 py-2">Main Site</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8 flex-grow">
+    
+
+
+
+<article class="py-12">
+  <!-- Post Header -->
+  <header class="mb-8">
+    <h1 class="font-paplane text-7xl mb-4 text-hellas-black dark:text-hellas-white">
+      Deterministic transcendental functions
+    </h1>
+    <div class="flex items-center text-hellas-cool-grey">
+      <time datetime="2026-06-08">June  8, 2026</time>
+      
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <div class="prose prose-lg dark:prose-invert max-w-3xl mb-12 text-hellas-black dark:text-hellas-white font-sans">
+    <h2 id="background">Background</h2>
+<p>We want our inference process to be deterministic, meaning that for a given model checkpoint, the same input should result in a reproducible output, identical across all platforms.
+This requires careful control of what optimizations the CPU/Metal/CUDA/HIP compilers are allowed to make, what platform APIs and primitives can be relied on and how operations and reductions are ordered during execution. Due to floating point rounding the latter is a notorious source of nondeterminism, making FP addition be non-associative, but it is important even in pure low precision integer arithmetic due to saturation and clamping.</p>
+<p>Since all current realistic workloads contain floating point operations (even quantized models keep a few sensitive layers in high precision), we will not discuss integer arithmetic here.</p>
+<p>For deterministic execution all the component building blocks of the computation graph must themselves be deterministic. While in a modern transformer model the majority of these are matmuls, there are a few blocks using transcendental functions too:</p>
+<ul>
+<li>softmax relies on <strong>exp</strong> and is present in most self-attention and output layers</li>
+<li>positional embeddings use <strong>sin</strong> and <strong>cos</strong></li>
+<li>the softplus function in Mamba-like layers is defined as <strong>ln(1+e^x)</strong></li>
+</ul>
+<p>The problem is these functions are not guaranteed to produce bitwise identical results on different platforms. This snippet will likely write False for all four functions.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #F97583;">import</span><span> torch</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;"># Create tensor on CPU</span></span>
+<span class="giallo-l"><span>a</span><span style="color: #F97583;"> =</span><span> torch.rand(</span><span style="color: #79B8FF;">200</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">for</span><span> f</span><span style="color: #F97583;"> in</span><span> torch.sin, torch.cos, torch.log, torch.exp:</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    print</span><span>(torch.equal(f(a), f(a.to(</span><span style="color: #9ECBFF;">&#39;cuda:0&#39;</span><span>)).to(</span><span style="color: #9ECBFF;">&#39;cpu&#39;</span><span>)))</span></span></code></pre>
+<p>This post will look at how to make these transcendental functions have reproducible outputs.</p>
+<h2 id="floating-point-notions">Floating point notions</h2>
+<p><em><strong>IEEE 754</strong></em> - The IEEE Standard for Floating-Point Arithmetic, originally published in 1985, most recently updated in 2019.
+It defines the floating point formats, operations, rounding modes and exceptions that a conforming implementation should support.</p>
+<p><em><strong>Floating point formats</strong></em> - the different precision bit representations on floating point numbers. IEEE 754 describes binary16, binary32, binary64, binary128 and binary256 along with a few decimal formats. binary32 and binary64 used to be called single and double in the original text and correspond to the float and double C types. For deep learning only binary16 and binary32 are relevant.</p>
+<p><em><strong>Rounding modes</strong></em> - the standard describes five rounding modes: toward −∞, toward ∞, toward 0, round to nearest ties away from 0, round to nearest ties to even. The latter is the most commonly used in deep learning, for determinism one should pick this one and stick to it.</p>
+<p><em><strong>Correctly rounded</strong></em> - a floating point operation that behaves as if it computed the exact real result and then rounded it according to the chosen rounding mode. This makes it deterministic.</p>
+<p><em><strong>Faithfully rounded</strong></em> - a floating point operation where the returned result is either one of the two floating-point numbers neighbouring the exact result. This makes it nondeterministic but the implementation is usually faster than for correctly rounded alternatives.</p>
+<p><em><strong>Transcendental functions</strong></em> - functions that are not algebraic, so cannot be written as a polynomial equation. They can be trigonometric, exponential, hyperbolic and their inverses, for example sin, cos, exp, ln, tanh.</p>
+<p><em><strong>Elementary functions</strong></em> - in floating point and approximation theory literature these refer to the transcendental and also some algebraic functions like sqrt(1-x^2), basic functions that are not primitive arithmetic operations but are commonly used in numerical computations.</p>
+<p><em><strong>Required operations</strong></em> in IEEE 754: +, -, *, /, sqrt, and starting with the the 2008 update FMA (fused-multiply-add). The standard requires these to be correctly rounded.</p>
+<p><em><strong>Recommended operations</strong></em> in IEEE 754: most of the elementary functions are recommended but not required to be part of an IEEE 754 compliant implementation.</p>
+<h2 id="implementing-transcendental-functions">Implementing transcendental functions</h2>
+<p>Since these are not required operations in IEEE 754, they generally do not have correctly rounded implementations in most libraries. If that were the case, determinism would be a solved problem for transcendentals.</p>
+<p>These functions are usually provided by the platform <a rel="external" href="https://en.wikipedia.org/wiki/C_mathematical_functions">libm</a> or its equivalents - they are independent implementations part of the Linux glibc, LLVM libc and the CUDA and HIP runtime libraries, tailored to specific platforms with different trade-offs between performance and accuracy. Their outputs' bitwise representations are not identical due to the approximation method used, rounding choice and other implementation details.
+The CUDA API even has two variants, the very fast <a rel="external" href="https://docs.nvidia.com/cuda/cuda-math-api/cuda_math_api/group__CUDA__MATH__INTRINSIC__SINGLE.html">intrinsics</a> like <strong>__sinf</strong> and <strong>__cosf</strong> that translate to hardware instructions run on the GPU's Special Function Unit, and the slower but more accurate APIs building on these intrinsics.</p>
+<p>We need reproducible, reasonably performant and reasonably accurate implementations of transcendental functions for deep learning workloads. The reproducibility requirement rules out relying on platform APIs. Using a correctly rounded implementation from projects like the <a rel="external" href="https://core-math.gitlabpages.inria.fr">Core-Math</a>, <a rel="external" href="https://people.cs.rutgers.edu/~sn349/rlibm">RLibm</a> or <a rel="external" href="https://sleef.org">SLEEF</a> as a starting point is one possibility, but these are more generic and complex than necessary for deep learning, target high precision scientific computing too and more often than not need porting to non-CPU platforms. The other option left is to implement the functions from scratch, specifically for our use case.</p>
+<h3 id="polynomial-approximation">Polynomial approximation</h3>
+<p>Transcendental functions do not have exact formulas in terms of primitive operations, so they are usually implemented using approximation methods like polynomial expansions and/or lookup tables.
+According to <a rel="external" href="https://en.wikipedia.org/wiki/Weierstrass_approximation_theorem">the Weierstrass approximation theorem</a> any continuous function can be approximated to an arbitrary precision using a polynomial, the higher the degree the better the approximation. Briefly, to approximate a given function for a given input range, a function-specific polynomial is picked according to the desired accuracy, then each call to the function evaluates this fixed polynomial on the input. For example a very straightforward and naive implementation for <strong>sin</strong> and <strong>cos</strong> would be the sum of the first few terms of their respective Taylor series (also known as Maclaurin series in this particular case of looking at the derivatives of sin at 0):</p>
+<p>\[
+\sin(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{(2n+1)!}
+\]</p>
+<p>and</p>
+<p>\[
+\cos(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n}}{(2n)!}
+\]</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #F97583;">import</span><span> math</span></span>
+<span class="giallo-l"><span style="color: #F97583;">import</span><span> torch</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">def</span><span style="color: #B392F0;"> sin_taylor</span><span>(x):</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    return</span><span> x</span><span style="color: #F97583;"> -</span><span> x</span><span style="color: #F97583;">**</span><span style="color: #79B8FF;">3</span><span style="color: #F97583;">/</span><span>math.factorial(</span><span style="color: #79B8FF;">3</span><span>)</span><span style="color: #F97583;"> +</span><span> x</span><span style="color: #F97583;">**</span><span style="color: #79B8FF;">5</span><span style="color: #F97583;">/</span><span>math.factorial(</span><span style="color: #79B8FF;">5</span><span>)</span><span style="color: #F97583;"> -</span><span> x</span><span style="color: #F97583;">**</span><span style="color: #79B8FF;">7</span><span style="color: #F97583;">/</span><span>math.factorial(</span><span style="color: #79B8FF;">7</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">def</span><span style="color: #B392F0;"> cos_taylor</span><span>(x):</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    return</span><span style="color: #79B8FF;"> 1</span><span style="color: #F97583;"> -</span><span> x</span><span style="color: #F97583;">**</span><span style="color: #79B8FF;">2</span><span style="color: #F97583;">/</span><span>math.factorial(</span><span style="color: #79B8FF;">2</span><span>)</span><span style="color: #F97583;"> +</span><span> x</span><span style="color: #F97583;">**</span><span style="color: #79B8FF;">4</span><span style="color: #F97583;">/</span><span>math.factorial(</span><span style="color: #79B8FF;">4</span><span>)</span><span style="color: #F97583;"> -</span><span> x</span><span style="color: #F97583;">**</span><span style="color: #79B8FF;">6</span><span style="color: #F97583;">/</span><span>math.factorial(</span><span style="color: #79B8FF;">6</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>inputs</span><span style="color: #F97583;"> =</span><span> torch.linspace(</span><span style="color: #F97583;">-</span><span>math.pi</span><span style="color: #F97583;">/</span><span style="color: #79B8FF;">4</span><span>, math.pi</span><span style="color: #F97583;">/</span><span style="color: #79B8FF;">4</span><span>,</span><span style="color: #79B8FF;"> 100</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #79B8FF;">print</span><span>(torch.allclose(inputs.sin(), sin_taylor(inputs)))</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">print</span><span>(torch.allclose(inputs.cos(), cos_taylor(inputs)))</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="plain"><span class="giallo-l"><span>True</span></span>
+<span class="giallo-l"><span>True</span></span></code></pre>
+<p>If the input interval is small and close to zero, such an approximation can be acceptable, but in the script above changing the interval to <code>[-π/2, π/2]</code> will cause divergence and extra terms need to be added from the Taylor expansion to keep the errors under control. In production implementations that have to deal with large input ranges another approach is needed, one that involves better polynomials and mapping the inputs to a smaller range.</p>
+<h3 id="minimax-polynomial">Minimax polynomial</h3>
+<p>Because the Taylor polynomial is increasingly inaccurate as the input moves away from zero, even as more terms of the expansion are used, a so-called <a rel="external" href="https://en.wikipedia.org/wiki/Minimax_polynomial">minimax polynomial</a> is the usual choice.
+At the expense of a bit more divergence close to zero, it provides uniform accuracy over the entire input range. It is called minimax because it minimizes the maximum error over the input range. Where the Taylor polynomial approximation error shoots up as we move away from zero, the minimax polynomial error is a small bounded uniform sine-like oscillation. The theory behind computing the such a polynomial involves Chebyshev nodes, Lagrange interpolation and the <a rel="external" href="https://en.wikipedia.org/wiki/Remez_algorithm">Remez algorithm</a>, which is the standard iterative method of producing the coefficients.</p>
+<p>Depending on the input range and the accuracy requirements, there are multiple possible minimax polynomials for a given function. The coefficients can be lifted from existing production libraries or computed from scratch using the Remez algorithm. One popular implementation is in the <a rel="external" href="https://sollya.org">Sollya</a> project, which is both a library and small scripting language for safe floating-point code development.</p>
+<p>Here are invocations of Sollya from the command line to compute the minimax polynomials for <code>sin(x)</code> and <code>cos(x)</code>:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #79B8FF;">echo</span><span style="color: #9ECBFF;"> &quot;fpminimax(sin(x), [|1,3,5,7|], [|SG...|], [-pi/4, pi/4], absolute);&quot;</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> sollya</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">x</span><span style="color: #79B8FF;"> *</span><span> (1</span><span style="color: #9ECBFF;"> + x^2</span><span style="color: #79B8FF;"> *</span><span> (-0.166666507720947265625</span><span style="color: #9ECBFF;"> + x^2</span><span style="color: #79B8FF;"> *</span><span> (8.331983350217342376708984375e-3</span><span style="color: #9ECBFF;"> + x^2</span><span style="color: #79B8FF;"> *</span><span> (-1.94961365195922553539276123046875e-4))))</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">echo</span><span style="color: #9ECBFF;"> &quot;fpminimax(cos(x), [|0,2,4,6|], [|SG...|], [-pi/4, pi/4], absolute);&quot;</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> sollya</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">1</span><span style="color: #9ECBFF;"> + x^2</span><span style="color: #79B8FF;"> *</span><span> (-0.49999892711639404296875</span><span style="color: #9ECBFF;"> + x^2</span><span style="color: #79B8FF;"> *</span><span> (4.16561998426914215087890625e-2</span><span style="color: #9ECBFF;"> + x^2</span><span style="color: #79B8FF;"> *</span><span> (-1.35968066751956939697265625e-3)))</span></span></code></pre>
+<p>We passed the <code>[-π/4, π/4]</code> range on which to approximate, and the degrees of the polynomials to use. Since sin is an odd function (<code>f(-x) = -f(x)</code>), and cos is an even function (<code>f(-x) = f(x)</code>), their minimax polynomials also have non-zero coefficients only for odd and even powers of x respectively, but they are slightly different from the corresponding Taylor coefficients.</p>
+<p>The output of Sollya is an expression that can be used to evaluate the polynomial for any input value on the given interval. It is of the form \[C0 + x * (C1 + x* (C2 + x * (...)))\] so that the polynomial can be evaluated with fewer multiplications than the naive Python Taylor expressions above. This is known as <a rel="external" href="https://en.wikipedia.org/wiki/Horner%27s_scheme">Horner's scheme</a>. There's a parallelized version known as Estrin's scheme, but for such low degree polynomials as used in most transcendental function implementations with only 4-5 terms, it is rarely justified. On the other hand one frequent optimization is using FMA (fused multiply-add) instead of explicit multiplication and addition operations because the fused operation will only require a single rounding operation instead of two, yielding better precision. FMA is present on most modern CPUs and GPUs so it is recommended to be used consistently in a deterministic implementation.</p>
+<p>Here are examples of sin and cos approximations using the minimax polynomials computed above, evaluated using Horner's scheme, one using explicit multiplication and addition operations and the other using FMA:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #F97583;">def</span><span style="color: #B392F0;"> sin_approx</span><span>(x):</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">    &quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">    Approximates sin(x) using a minimax polynomial of degree 7 on the reduced interval [-π/4, π/4].</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">    &quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span>    C1</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 1</span></span>
+<span class="giallo-l"><span>    C3</span><span style="color: #F97583;"> = -</span><span style="color: #79B8FF;">0.166666507720947265625</span></span>
+<span class="giallo-l"><span>    C5</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 8.331983350217342376708984375e-3</span></span>
+<span class="giallo-l"><span>    C7</span><span style="color: #F97583;"> = -</span><span style="color: #79B8FF;">1.94961365195922553539276123046875e-4</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Horner&#39;s scheme for sin</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    return</span><span> x</span><span style="color: #F97583;"> *</span><span> (C1</span><span style="color: #F97583;"> +</span><span> x</span><span style="color: #F97583;">*</span><span>x</span><span style="color: #F97583;">*</span><span>(C3</span><span style="color: #F97583;"> +</span><span> x</span><span style="color: #F97583;">*</span><span>x</span><span style="color: #F97583;">*</span><span>(C5</span><span style="color: #F97583;"> +</span><span> x</span><span style="color: #F97583;">*</span><span>x</span><span style="color: #F97583;">*</span><span>C7)))</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">def</span><span style="color: #B392F0;"> cos_approx</span><span>(x):</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">    &quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">    Approximates cos(x) using a minimax polynomial of degree 6 on the reduced interval [-π/4, π/4].</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">    &quot;&quot;&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    C0</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 1</span></span>
+<span class="giallo-l"><span>    C2</span><span style="color: #F97583;"> = -</span><span style="color: #79B8FF;">0.49999892711639404296875</span></span>
+<span class="giallo-l"><span>    C4</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 4.16561998426914215087890625e-2</span></span>
+<span class="giallo-l"><span>    C6</span><span style="color: #F97583;"> = -</span><span style="color: #79B8FF;">1.35968066751956939697265625e-3</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Horner&#39;s scheme for cos using FMA</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # return C0 + x*x*(C2 + x*x*(C4 + x*x*C6))</span></span>
+<span class="giallo-l"><span>    x2</span><span style="color: #F97583;"> =</span><span> x</span><span style="color: #F97583;"> *</span><span> x</span></span>
+<span class="giallo-l"><span>    c</span><span style="color: #F97583;"> =</span><span> math.fma(x2, C6, C4)</span></span>
+<span class="giallo-l"><span>    c</span><span style="color: #F97583;"> =</span><span> math.fma(x2, c, C2)</span></span>
+<span class="giallo-l"><span>    c</span><span style="color: #F97583;"> =</span><span> math.fma(x2, c, C0)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">    return</span><span> c</span></span></code></pre><h3 id="range-reduction">Range reduction</h3>
+<p>Even with minimax polynomials it is impractical to approximate a function over a large input range. To maintain accuracy the degree of the polynomial needs to increase as the range increases, slowing down computation and causing representation issues if coefficients become too large or small. One way around this is piecewise approximation, where the input range is divided into smaller intervals and a different polynomial is used for each one, but this makes the code more complicated.</p>
+<p>The standard approach is range reduction:</p>
+<ul>
+<li>find a small fixed range for the input values where the approximation of the function we are interested in is good enough with small degree polynomials</li>
+<li>find an algebraic relation that expresses the function using itself called on only input values from this small fixed range</li>
+<li>implement the function by translating inputs to the small range, approximate the output on that range, and compute the final result based on this reduced approximation by doing an inverse translation</li>
+</ul>
+<p>Since they are related periodic functions, sin(x) and cos(x) can be expressed as ±sin(xr) or ±cos(xr) where xr is in the <code>[-π/4, π/4]</code> range.</p>
+<p>Let \(x = q\frac{\pi}{2} + r\) where \(r \in \left[-\frac{\pi}{4}, \frac{\pi}{4}\right]\) and \(q \in \mathbb{Z}\). Then, depending on \(q \bmod 4\):</p>
+<p>\[sin(x) = \begin{cases}
+\sin(r) &amp; q \equiv 0 \pmod{4} \\
+\cos(r) &amp; q \equiv 1 \pmod{4} \\
+-\sin(r) &amp; q \equiv 2 \pmod{4} \\
+-\cos(r) &amp; q \equiv 3 \pmod{4}
+\end{cases}\]</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #F97583;">def</span><span style="color: #B392F0;"> reduced_sincos</span><span>(x):</span></span>
+<span class="giallo-l"><span>    q</span><span style="color: #F97583;"> =</span><span> (x</span><span style="color: #F97583;"> /</span><span> (math.pi</span><span style="color: #F97583;">/</span><span style="color: #79B8FF;">2</span><span>)).round()</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # direct subtraction causing catastrophic cancellation</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # xr = x - q * (math.pi/2)</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # use Cody-Waite subtraction instead</span></span>
+<span class="giallo-l"><span>    xr</span><span style="color: #F97583;"> =</span><span> cody_waite_subtract(x, q)</span></span>
+<span class="giallo-l"><span>    sin</span><span style="color: #F97583;"> =</span><span> sin_approx(xr)</span></span>
+<span class="giallo-l"><span>    cos</span><span style="color: #F97583;"> =</span><span> cos_approx(xr)</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    match</span><span> q:</span></span>
+<span class="giallo-l"><span style="color: #F97583;">        case</span><span style="color: #79B8FF;"> 0</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #F97583;">            return</span><span> sin, cos</span></span>
+<span class="giallo-l"><span style="color: #F97583;">        case</span><span style="color: #79B8FF;"> 1</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #F97583;">            return</span><span> cos,</span><span style="color: #F97583;"> -</span><span>sin</span></span>
+<span class="giallo-l"><span style="color: #F97583;">        case</span><span style="color: #79B8FF;"> 2</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #F97583;">            return -</span><span>sin,</span><span style="color: #F97583;"> -</span><span>cos</span></span>
+<span class="giallo-l"><span style="color: #F97583;">        case</span><span style="color: #79B8FF;"> 3</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #F97583;">            return -</span><span>cos, sin</span></span></code></pre>
+<p>The naive reduction <code>xr = x - q * (math.pi/2)</code> calculation can suffer from <a rel="external" href="https://en.wikipedia.org/wiki/Catastrophic_cancellation">catastrophic cancellation</a> so most implementations use the Cody-Waite reduction: π/2 is expressed as a sum of constants of different magnitudes, each being exactly representable, and instead of a single subtraction, these constants are subtracted individually.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #F97583;">def</span><span style="color: #B392F0;"> cody_waite_subtract</span><span>(x, q):</span></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # P0 + P1 = π/2</span></span>
+<span class="giallo-l"><span>    P0</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> float</span><span>.fromhex(</span><span style="color: #9ECBFF;">&quot;0x1.92p+0&quot;</span><span>)</span></span>
+<span class="giallo-l"><span>    P1</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> float</span><span>.fromhex(</span><span style="color: #9ECBFF;">&quot;0x1.fb54442d18p-12&quot;</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    return</span><span> (x</span><span style="color: #F97583;"> -</span><span> q</span><span style="color: #F97583;">*</span><span>P0)</span><span style="color: #F97583;"> -</span><span> q</span><span style="color: #F97583;">*</span><span>P1</span></span></code></pre>
+<p>It is better to express constants as hexadecimal or binary literals to avoid any possible ambiguity in parsing and bit representation of decimal literals.
+This is a generic approach, used regardless of the reduction interval - for example <code>[-π/2, π/2]</code> is used for approximating <strong>tan</strong>.  When working with double precision there are variants of expressing the sum using 3 or 4 constants instead of just the 2 here.</p>
+<h3 id="approximating-exponential-and-logarithm">Approximating exponential and logarithm</h3>
+<p>The same principles apply for <strong>log</strong> and <strong>exp</strong> as for the trigonometric functions: find a reduction interval and a formula to map arbitrarily large inputs to that interval, then use polynomial approximation on it. Unlike for the periodic trigonometric functions where these approximated values can be readily used, here we need a reconstruction step to map the values on the small interval back to the full range.</p>
+<h4 id="exponential">Exponential</h4>
+<p>For <strong>exp</strong> we reduce to the interval <code>[0, log(2)]</code> and use a minimax polynomial where the coefficients are computed using Sollya. Any exp value can be expressed as
+\[
+e^x = 2^k e^{x - k \log 2}
+\]
+where k is the integer part of x/log(2).</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #79B8FF;">echo</span><span style="color: #9ECBFF;"> &quot;fpminimax(exp(x), [|0,1,2,3|], [|SG...|], [0, log(2)], absolute);&quot;</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> sollya</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">0.9998929500579833984375</span><span style="color: #9ECBFF;"> + x</span><span style="color: #79B8FF;"> *</span><span> (1.0047757625579833984375</span><span style="color: #9ECBFF;"> + x</span><span style="color: #79B8FF;"> *</span><span> (0.4669305980205535888671875</span><span style="color: #9ECBFF;"> + x</span><span style="color: #79B8FF;"> * 0.23783318698406219482421875</span><span>))</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #F97583;">def</span><span style="color: #B392F0;"> reduced_exp</span><span>(x):</span></span>
+<span class="giallo-l"><span>    k</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> round</span><span>(x</span><span style="color: #F97583;">/</span><span>math.log(</span><span style="color: #79B8FF;">2</span><span>))</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #6A737D;">    # Split log(2) in two to avoid catastrophic cancellation</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    LN2_HI</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> float</span><span>.fromhex(</span><span style="color: #9ECBFF;">&#39;0x1.62e4000000000p-1&#39;</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">    LN2_LO</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> float</span><span>.fromhex(</span><span style="color: #9ECBFF;">&#39;0x1.7f7d1cf780000p-20&#39;</span><span>)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    xr</span><span style="color: #F97583;"> =</span><span> x</span><span style="color: #F97583;"> -</span><span> k</span><span style="color: #F97583;">*</span><span style="color: #79B8FF;">LN2_HI</span><span style="color: #F97583;"> -</span><span> k</span><span style="color: #F97583;">*</span><span style="color: #79B8FF;">LN2_LO</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>    C0</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 0.9998929500579833984375</span></span>
+<span class="giallo-l"><span>    C1</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 1.0047757625579833984375</span></span>
+<span class="giallo-l"><span>    C2</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 0.4669305980205535888671875</span></span>
+<span class="giallo-l"><span>    C3</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 0.23783318698406219482421875</span></span>
+<span class="giallo-l"><span>    xr</span><span style="color: #F97583;"> =</span><span> C0</span><span style="color: #F97583;"> +</span><span> xr</span><span style="color: #F97583;"> *</span><span> (C1</span><span style="color: #F97583;"> +</span><span> xr</span><span style="color: #F97583;"> *</span><span> (C2</span><span style="color: #F97583;"> +</span><span> xr</span><span style="color: #F97583;"> *</span><span> C3))</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    return</span><span>  xr</span><span style="color: #F97583;"> *</span><span> (</span><span style="color: #79B8FF;">2</span><span style="color: #F97583;">**</span><span>k)</span></span></code></pre><h4 id="logarithm">Logarithm</h4>
+<p>The natural logarithm of a number can be expressed using the mantissa and exponent of its float representation.</p>
+<p>\[
+\ln(x) = \ln(m) + e \ln(2)
+\]</p>
+<p>If we use frexp, the mantissa is normalized to <code>[0.5, 1)</code>, so that is the reduction range we look for minimax coefficients on:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #79B8FF;">echo</span><span style="color: #9ECBFF;"> &quot;fpminimax(log(x), [|0,1,2,3|], [|SG...|], [0.5, 1], absolute);&quot;</span><span style="color: #F97583;"> |</span><span style="color: #B392F0;"> sollya</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">-2.1859228610992431640625</span><span style="color: #9ECBFF;"> + x</span><span style="color: #79B8FF;"> *</span><span> (4.22526264190673828125</span><span style="color: #9ECBFF;"> + x</span><span style="color: #79B8FF;"> *</span><span> (-2.9164140224456787109375</span><span style="color: #9ECBFF;"> + x</span><span style="color: #79B8FF;"> * 0.877515852451324462890625</span><span>))</span></span></code></pre><pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="python"><span class="giallo-l"><span style="color: #F97583;">def</span><span style="color: #B392F0;"> reduced_log</span><span>(x):</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    assert</span><span> x</span><span style="color: #F97583;"> &gt;</span><span style="color: #79B8FF;"> 0</span></span>
+<span class="giallo-l"><span>    m,e</span><span style="color: #F97583;"> =</span><span> math.frexp(x)</span></span>
+<span class="giallo-l"><span>    C0</span><span style="color: #F97583;"> = -</span><span style="color: #79B8FF;">2.1859228610992431640625</span></span>
+<span class="giallo-l"><span>    C1</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 4.22526264190673828125</span></span>
+<span class="giallo-l"><span>    C2</span><span style="color: #F97583;"> = -</span><span style="color: #79B8FF;">2.9164140224456787109375</span></span>
+<span class="giallo-l"><span>    C3</span><span style="color: #F97583;"> =</span><span style="color: #79B8FF;"> 0.877515852451324462890625</span></span>
+<span class="giallo-l"><span>    rl</span><span style="color: #F97583;"> =</span><span> C0</span><span style="color: #F97583;"> +</span><span> m</span><span style="color: #F97583;"> *</span><span> (C1</span><span style="color: #F97583;"> +</span><span> m</span><span style="color: #F97583;"> *</span><span> (C2</span><span style="color: #F97583;"> +</span><span> m</span><span style="color: #F97583;"> *</span><span> C3))</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">    return</span><span> rl</span><span style="color: #F97583;"> +</span><span> e</span><span style="color: #F97583;">*</span><span>math.log(</span><span style="color: #79B8FF;">2</span><span>)</span></span></code></pre><h3 id="zeros-nans-and-infinities">Zeros, NaNs and infinities</h3>
+<p>These edge values need explicit handling because NaN representation can vary across platforms. We should pick a valid NaN bit pattern of the several available, and use it consistently. The checks for NaN and infinity should come first, before any other computation, so range reduction and approximation works on valid inputs only. The above python snippets do not include these checks.</p>
+<ul>
+<li>For <strong>sin and cos</strong>, Inf input should be treated as NaN and return NaN.</li>
+<li>For <strong>sin</strong>, if the input is ±0 return the same sign 0.</li>
+<li>For <strong>cos</strong> and <strong>exp</strong>, if the input is ±0 return 1 directly.</li>
+<li>For <strong>exp</strong>, if the input is +Inf return +Inf, and if the input is -Inf return +0.</li>
+</ul>
+<h3 id="deep-learning-specific-considerations">Deep learning specific considerations</h3>
+<p>It makes sense to also implement a function that computes both sine and cosine at the same time. They share the reduction stage and often both values are needed for the same input anyway, as in the case of positional embeddings.</p>
+<p>Plain table lookup without polynomial approximation is a good option when the range of possible inputs is known to be small and fixed such as in FP8 or a subset of BF16, although these are not really used for positional embeddings due to loss of accuracy at longer contexts.</p>
+<p>The Cody-Waite method cannot very accurately compute the reduced range for sin and cosine for very large inputs (&gt; 2^20), and in those cases Payne-Hanek reduction is used instead, but for positional embeddings we're fine with the simpler approximation.</p>
+<p>We can get away with using interval reduction and Taylor series expansion of four terms for sin, cos and exp for running LLMs, but since minimax polynomials can get the same or better accuracy with fewer terms, we prefer to use them instead.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>For determinism we must pick a rounding mode, decide whether or not to use FMA, the range reduction method, the polynomial approximation method and coefficients and the evaluation method and implement the algorithm in the same way for all target platforms. These choices should be made depending on the input range, the accuracy requirements and even benchmarking various options for speed and compliance. There is a wide range of options for each of them but it is safe to just use FMA, round to nearest ties to even, a minimax polynomial generated by Sollya and Horner evaluation.</p>
+<h3 id="references">References</h3>
+<p><a rel="external" href="https://docs.nvidia.com/cuda/floating-point/index.html">Nvidia article on floating point</a></p>
+<p><a rel="external" href="https://dl.acm.org/doi/full/10.1145/3747840">Correctly Rounded Evaluation of a Function: Why, How, and at What Cost?</a></p>
+<p><a rel="external" href="https://link.springer.com/book/10.1007/978-1-4899-7983-4">Elementary Functions: Algorithms and Implementation</a>, a book by Jean-Michel Muller</p>
+
+  </div>
+
+  
+  
+  <nav class="flex justify-between max-w-3xl border-t border-hellas-cool-grey/20 pt-8 mt-12 font-sans">
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;cyclic-hypergraph-layout&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+        ← Layered Cyclic Diagram Layout
+      </a>
+    
+    
+      <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;inductive-types-in-lean&#x2F;" class="text-hellas-cool-grey dark:text-hellas-yellow hover:underline text-right">
+        Inductive Types in Lean →
+      </a>
+    
+  </nav>
+  
+
+  <!-- Post Footer -->
+  
+  
+  
+  <div class="border-t border-hellas-cool-grey/20 pt-8 mt-8 max-w-3xl">
+    <a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="inline-flex items-center text-hellas-cool-grey dark:text-hellas-yellow hover:underline">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-hellas-cool-grey dark:text-hellas-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+      </svg>
+      Back
+    </a>
+  </div>
+</article>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-hellas-black text-hellas-white py-12 border-t border-hellas-cool-grey/20">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <img src="https://blog.hellas.ai/logo/Hellas_Logotype_White.svg" alt="Hellas" class="h-8 mb-4">
+          <p class="text-hellas-cool-grey mb-4 font-sans">Powering limitless intelligence</p>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Links</h3>
+          <ul class="space-y-2 font-sans">
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;" class="hover:text-hellas-yellow transition duration-200">Home</a></li>
+            <li><a href="https:&#x2F;&#x2F;blog.hellas.ai&#x2F;blog&#x2F;" class="hover:text-hellas-yellow transition duration-200">Blog</a></li>
+            <li><a href="https://hellas.ai" class="hover:text-hellas-yellow transition duration-200">Main Site</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-sans font-semibold text-lg mb-4">Connect</h3>
+          <div class="flex space-x-4">
+            <a href="https://twitter.com/hellasdotai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-twitter-white.svg" alt="Twitter" class="h-6 w-6">
+            </a>
+            <a href="https://discord.gg/qHqZyuAa3u" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+
+              <img src="https://blog.hellas.ai/socials/socials-discord-white.svg" alt="Discord" class="h-6 w-6">
+            </a>
+            <a href="https://t.me/hellasai" class="text-hellas-cool-grey hover:text-hellas-yellow transition duration-200">
+              <img src="https://blog.hellas.ai/socials/socials-telegram-white.svg" alt="Telegram" class="h-6 w-6">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-hellas-cool-grey/20 mt-8 pt-8 text-hellas-cool-grey text-sm font-sans">
+        <p>© 2026 Hellas.ai — All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
